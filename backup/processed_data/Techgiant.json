@@ -1,0 +1,285 @@
+{
+  "data": {
+    "data": [
+      {
+        "Year": "2010",
+        "Percentage": "37.7",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2010",
+        "Percentage": "20.7",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2010",
+        "Percentage": "33.2",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2010",
+        "Percentage": "8.4",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2011",
+        "Percentage": "39.7",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2011",
+        "Percentage": "21.7",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2011",
+        "Percentage": "27.1",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2011",
+        "Percentage": "11.5",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2012",
+        "Percentage": "49.9",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2012",
+        "Percentage": "18.0",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2012",
+        "Percentage": "22.7",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2012",
+        "Percentage": "9.4",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2013",
+        "Percentage": "40.5",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2013",
+        "Percentage": "22.6",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2013",
+        "Percentage": "24.6",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2013",
+        "Percentage": "12.3",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2014",
+        "Percentage": "41.0",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2014",
+        "Percentage": "26.0",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2014",
+        "Percentage": "22.0",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2014",
+        "Percentage": "10.9",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2015",
+        "Percentage": "44.9",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2015",
+        "Percentage": "22.2",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2015",
+        "Percentage": "21.5",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2015",
+        "Percentage": "11.4",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2016",
+        "Percentage": "30.2",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2016",
+        "Percentage": "27.9",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2016",
+        "Percentage": "23.0",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2016",
+        "Percentage": "18.9",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2017",
+        "Percentage": "33.1",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2017",
+        "Percentage": "25.9",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2017",
+        "Percentage": "22.0",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2017",
+        "Percentage": "19.0",
+        "Companies": "Amazon"
+      },
+      {
+        "Year": "2018",
+        "Percentage": "28.9",
+        "Companies": "Apple"
+      },
+      {
+        "Year": "2018",
+        "Percentage": "23.2",
+        "Companies": "Alphabet"
+      },
+      {
+        "Year": "2018",
+        "Percentage": "23.5",
+        "Companies": "Microsoft"
+      },
+      {
+        "Year": "2018",
+        "Percentage": "24.4",
+        "Companies": "Amazon"
+      }
+    ],
+    "columns": [
+      {
+        "name": "Year",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "temporal",
+        "role": "x"
+      },
+      {
+        "name": "Percentage",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "numerical",
+        "role": "y"
+      },
+      {
+        "name": "Companies",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "categorical",
+        "role": "group"
+      }
+    ]
+  },
+  "chart_type": "",
+  "data_format": {},
+  "metadata": {
+    "title": "",
+    "description": "",
+    "main_insight": "",
+    "titles": {},
+    "data_facts": []
+  },
+  "secondary_data": [],
+  "variables": {},
+  "typography": {
+    "title": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "description": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "label": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "annotation": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    }
+  },
+  "datafacts": [],
+  "titles": {
+    "main_title": "",
+    "sub_title": ""
+  },
+  "processed": false,
+  "colors": {
+    "field": {
+      "iOS App Store": "#3f8aff",
+      "Google Play Store": "#ca96e5"
+    },
+    "other": {
+      "primary": "#3f8aff",
+      "secondary": "#ee62f5"
+    },
+    "available_colors": [
+      "#12bcb0",
+      "#667485",
+      "#7d95ac"
+    ],
+    "background_color": "#E2F1F6",
+    "text_color": "#414141"
+  },
+  "colors_dark": {
+    "field": {
+      "iOS App Store": "#b2d0ff",
+      "Google Play Store": "#e0c0f1"
+    },
+    "other": {
+      "primary": "#b2d0ff",
+      "secondary": "#f9b4fc"
+    },
+    "available_colors": [
+      "#3af7ea",
+      "#97aac1",
+      "#b3c0ce"
+    ],
+    "background_color": "#2b2b3d",
+    "text_color": "#a38e8e"
+  }
+}

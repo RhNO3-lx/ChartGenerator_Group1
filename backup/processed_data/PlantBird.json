@@ -1,0 +1,165 @@
+{
+  "data": {
+    "data": [
+      {
+        "Cover Crop Technique": "No Cover Crop",
+        "Average Bird Species Richness": "8.2",
+        "Farm Location": "Iowa"
+      },
+      {
+        "Cover Crop Technique": "No Cover Crop",
+        "Average Bird Species Richness": "7.9",
+        "Farm Location": "Illinois"
+      },
+      {
+        "Cover Crop Technique": "No Cover Crop",
+        "Average Bird Species Richness": "8.5",
+        "Farm Location": "Indiana"
+      },
+      {
+        "Cover Crop Technique": "Rye-Oats Mix",
+        "Average Bird Species Richness": "14.2",
+        "Farm Location": "Iowa"
+      },
+      {
+        "Cover Crop Technique": "Rye-Oats Mix",
+        "Average Bird Species Richness": "13.9",
+        "Farm Location": "Illinois"
+      },
+      {
+        "Cover Crop Technique": "Rye-Oats Mix",
+        "Average Bird Species Richness": "14.5",
+        "Farm Location": "Indiana"
+      },
+      {
+        "Cover Crop Technique": "Multi-Species Mix",
+        "Average Bird Species Richness": "15.7",
+        "Farm Location": "Iowa"
+      },
+      {
+        "Cover Crop Technique": "Multi-Species Mix",
+        "Average Bird Species Richness": "15.4",
+        "Farm Location": "Illinois"
+      },
+      {
+        "Cover Crop Technique": "Multi-Species Mix",
+        "Average Bird Species Richness": "16.0",
+        "Farm Location": "Indiana"
+      },
+      {
+        "Cover Crop Technique": "Clover",
+        "Average Bird Species Richness": "10.1",
+        "Farm Location": "Iowa"
+      },
+      {
+        "Cover Crop Technique": "Clover",
+        "Average Bird Species Richness": "9.8",
+        "Farm Location": "Illinois"
+      },
+      {
+        "Cover Crop Technique": "Clover",
+        "Average Bird Species Richness": "10.4",
+        "Farm Location": "Indiana"
+      }
+    ],
+    "columns": [
+      {
+        "name": "Cover Crop Technique",
+        "importance": "primary",
+        "description": "",
+        "unit": "",
+        "data_type": "categorical",
+        "role": "x"
+      },
+      {
+        "name": "Average Bird Species Richness",
+        "importance": "primary",
+        "description": "",
+        "unit": "",
+        "data_type": "numerical",
+        "role": "y"
+      },
+      {
+        "name": "Farm Location",
+        "importance": "primary",
+        "description": "",
+        "unit": "",
+        "data_type": "categorical",
+        "role": "group"
+      }
+    ]
+  },
+  "chart_type": "",
+  "data_format": {},
+  "metadata": {
+    "title": "",
+    "description": "",
+    "main_insight": "",
+    "titles": {},
+    "data_facts": []
+  },
+  "secondary_data": [],
+  "variables": {},
+  "typography": {
+    "title": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "description": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "label": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "annotation": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    }
+  },
+  "datafacts": [],
+  "titles": {
+    "main_title": "",
+    "sub_title": ""
+  },
+  "processed": false,
+  "colors": {
+    "field": {
+      "iOS App Store": "#3f8aff",
+      "Google Play Store": "#ca96e5"
+    },
+    "other": {
+      "primary": "#3f8aff",
+      "secondary": "#ee62f5"
+    },
+    "available_colors": [
+      "#12bcb0",
+      "#667485",
+      "#7d95ac"
+    ],
+    "background_color": "#E2F1F6",
+    "text_color": "#414141"
+  },
+  "colors_dark": {
+    "field": {
+      "iOS App Store": "#b2d0ff",
+      "Google Play Store": "#e0c0f1"
+    },
+    "other": {
+      "primary": "#b2d0ff",
+      "secondary": "#f9b4fc"
+    },
+    "available_colors": [
+      "#3af7ea",
+      "#97aac1",
+      "#b3c0ce"
+    ],
+    "background_color": "#2b2b3d",
+    "text_color": "#a38e8e"
+  }
+}

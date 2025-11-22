@@ -1,0 +1,1015 @@
+{
+  "step": "title_generation",
+  "status": "completed",
+  "progress": "绘制标题中...",
+  "completed": true,
+  "style": {
+    "colors": [
+      [
+        45,
+        86,
+        200
+      ],
+      [
+        89,
+        80,
+        83
+      ],
+      [
+        236,
+        237,
+        242
+      ],
+      [
+        201,
+        125,
+        185
+      ],
+      [
+        232,
+        112,
+        29
+      ]
+    ],
+    "bg_color": [
+      12,
+      27,
+      43
+    ],
+    "variation": [
+      [
+        "d3-js/stacked circular bar chart/stacked_circular_bar_chart_03",
+        [
+          "x",
+          "y",
+          "group"
+        ]
+      ],
+      [
+        "d3-js/circular stacked bar chart/circular_stacked_bar_plain_chart_01",
+        [
+          "x",
+          "y",
+          "group"
+        ]
+      ],
+      [
+        "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_02",
+        [
+          "x",
+          "y",
+          "group"
+        ]
+      ],
+      [
+        "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_01",
+        [
+          "x",
+          "y",
+          "group"
+        ]
+      ],
+      [
+        "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_03",
+        [
+          "x",
+          "y",
+          "group"
+        ]
+      ]
+    ]
+  },
+  "selected_data": "processed_data/App.json",
+  "selected_pictogram": "",
+  "selected_title": "",
+  "extraction_templates": [
+    [
+      "d3-js/multiple pie chart/multiple_pie_chart_05",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple pie chart/multiple_pie_chart_04",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple pie chart/multiple_pie_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple pie chart/multiple_pie_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal group bar chart/horizontal_group_bar_chart_13",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal group bar chart/horizontal_group_bar_chart_06",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal group bar chart/horizontal_group_bar_chart_16",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal group bar chart/horizontal_group_bar_chart_03_hand",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal group bar chart/horizontal_group_bar_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal group bar chart/horizontal_group_bar_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal group bar chart/horizontal_group_bar_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/range chart/horizontal_range_bar_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/range chart/vertical_range_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal diverging bar chart/horizontal_diverging_bar_chart_11",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal diverging bar chart/horizontal_diverging_bar_chart_05",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal diverging bar chart/horizontal_diverging_bar_chart_07",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/horizontal diverging bar chart/horizontal_diverging_bar_chart_12",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/group dot bar chart/horizontal_group_dot_bar_chart_0",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/vertical group bar chart/vertical_group_bar_chart_13",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/vertical group bar chart/vertical_group_bar_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/vertical group bar chart/vertical_group_bar_chart_5",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/diverging bar chart/diverging_bar_plain_chart_04",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/diverging bar chart/diverging_bar_plain_chart_05",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/diverging bar chart/diverging_bar_plain_chart_06",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple radar chart/multiple_radar_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple radar chart/multiple_radar_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple radar spline chart/multiple_radar_spline_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple radar spline chart/multiple_radar_spline_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple radar spline chart/multiple_radar_spline_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple radar line chart/multiple_radar_line_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked area chart/stacked_area_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked area chart/stacked_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked area chart/stacked_area_chart_icons_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked area chart/stacked_area_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked area chart/stacked_area_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked area chart/spline_stacked_area_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked area chart/stacked_area_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/alluvial diagram/alluvial_diagram_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/alluvial diagram/alluvial_diagram_01_dark",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked circular bar chart/stacked_circular_bar_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/group radial bar chart/group_radial_bar_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/group radial bar chart/group_radial_bar_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/group radial bar chart/group_radial_bar_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial bar chart/radial_bar_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked radial bar chart/stacked_radial_bar_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stacked radial bar chart/stacked_radial_bar_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/circular stacked bar chart/circular_stacked_bar_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiples of spline area charts/small_multiple_spline_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial stacked bar chart/radial_stacked_bar_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiple stepped line graph/small_multiple_step_line_graph_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiple step line graph/small_multiple_step_line_graph_icons_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/diverging spline area chart/diverging_spline_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_07",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_10",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_08",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_12",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_09",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_06",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/multiple_line_graph_11",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple spline graph/multiple_spline_graph_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple spline graph/multiple_spline_graph_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/slope chart/slope_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/slope chart/slope_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/slope chart/slope_chart_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiple line graph/small_multiple_line_graph_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/spline graph/spline_graph_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/spline graph/spline_graph_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/spline graph/spline_graph_plain_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple step line graph/multiple_step_line_graph_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiples of area charts/small_multiple_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial stacked area chart/radial_stacked_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial stacked area chart/radial_stacked_area_chart_grid_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/vertical grouped bar chart/vertical_group_bar_plain_chart_04",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/vertical grouped bar chart/vertical_group_bar_chart_8",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/vertical grouped bar chart/triangle_group_bar_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiples of pie charts/small_multiples_semicircle_pie_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/layered spline area chart/layered_spline_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial layered spline area chart/radial_layered_spline_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial layered spline area chart/radial_layered_spline_area_chart_grid_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/test/test",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiple area chart/small_multiple_area_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiple area chart/small_multiple_area_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/range area chart/range_area_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/range area chart/range_area_chart_icons_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/range area chart/range_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple area chart/spline_multiple_area_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/multiple area chart/multiple_area_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/layered area chart/layered_area_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/layered area chart/spline_layered_area_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/layered area chart/layered_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial layered area chart/radial_layered_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial layered area chart/radial_layered_area_chart_grid_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/diverging area chart/diverging_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/span chart/span_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/span chart/span_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/line graph/line_graph_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/line graph/line_graph_plain_chart_03",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/line graph/line_graph_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiples of gauge chart/small_multiples_gauge_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial range area chart/radial_range_area_chart_grid_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/radial range area chart/radial_range_area_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiples of line graphs/small_multiples_line_graphs_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/stepped line graph/stepped_line_graph_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/dumbbell plot/dumbbell_plot_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/dumbbell plot/dumbbell_plot_plain_chart_02",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ],
+    [
+      "d3-js/small multiples of spline graphs/small_multiples_spline_graphs_plain_chart_01",
+      [
+        "x",
+        "y",
+        "group"
+      ]
+    ]
+  ],
+  "id": "test_id",
+  "title_options": {
+    "title_1.png": {
+      "title_text": "Data Insights",
+      "title_prompt": "Create a simple title image about Data Insights"
+    },
+    "title_0.png": {
+      "title_text": "Data Insights",
+      "title_prompt": "Create a simple title image about Data Insights"
+    },
+    "title_3.png": {
+      "title_text": "Data Insights",
+      "title_prompt": "Create a simple title image about Data Insights"
+    },
+    "title_4.png": {
+      "title_text": "Data Insights",
+      "title_prompt": "Create a simple title image about Data Insights"
+    },
+    "title_2.png": {
+      "title_text": "Data Insights",
+      "title_prompt": "Create a simple title image about Data Insights"
+    }
+  },
+  "pictogram_options": {
+    "pictogram_1.png": {
+      "pictogram_prompt": "Create a simple pictogram image about Data Insights"
+    },
+    "pictogram_2.png": {
+      "pictogram_prompt": "Create a simple pictogram image about Data Insights"
+    },
+    "pictogram_0.png": {
+      "pictogram_prompt": "Create a simple pictogram image about Data Insights"
+    },
+    "pictogram_3.png": {
+      "pictogram_prompt": "Create a simple pictogram image about Data Insights"
+    },
+    "pictogram_4.png": {
+      "pictogram_prompt": "Create a simple pictogram image about Data Insights"
+    }
+  }
+}

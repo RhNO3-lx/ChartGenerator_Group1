@@ -1,0 +1,295 @@
+{
+  "data": {
+    "data": [
+      {
+        "Country": "United States",
+        "Units": "0.48",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "United States",
+        "Units": "88.5",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "China",
+        "Units": "0.26",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "China",
+        "Units": "63.2",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Japan",
+        "Units": "0.25",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Japan",
+        "Units": "84.1",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Germany",
+        "Units": "0.2",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Germany",
+        "Units": "86.7",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "United Kingdom",
+        "Units": "0.18",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "United Kingdom",
+        "Units": "82.3",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "France",
+        "Units": "0.15",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "France",
+        "Units": "79.8",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Italy",
+        "Units": "0.12",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Italy",
+        "Units": "72.5",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Canada",
+        "Units": "0.1",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Canada",
+        "Units": "80.1",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "South Korea",
+        "Units": "0.35",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "South Korea",
+        "Units": "87.9",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Russia",
+        "Units": "0.17",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Russia",
+        "Units": "52.4",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Australia",
+        "Units": "0.08",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Australia",
+        "Units": "78.6",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Brazil",
+        "Units": "0.05",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Brazil",
+        "Units": "45.3",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "India",
+        "Units": "0.06",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "India",
+        "Units": "48.7",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Mexico",
+        "Units": "0.03",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Mexico",
+        "Units": "42.1",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Indonesia",
+        "Units": "0.02",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Indonesia",
+        "Units": "38.5",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Saudi Arabia",
+        "Units": "0.04",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Saudi Arabia",
+        "Units": "35.2",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Turkey",
+        "Units": "0.07",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Turkey",
+        "Units": "40.8",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "Argentina",
+        "Units": "0.01",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "Argentina",
+        "Units": "41.5",
+        "Category": "InnovationIndex"
+      },
+      {
+        "Country": "South Africa",
+        "Units": "0.03",
+        "Category": "SpaceFundingPercentage"
+      },
+      {
+        "Country": "South Africa",
+        "Units": "43.9",
+        "Category": "InnovationIndex"
+      }
+    ],
+    "columns": [
+      {
+        "name": "Country",
+        "importance": "primary",
+        "description": "",
+        "unit": "",
+        "data_type": "categorical",
+        "role": "x"
+      },
+      {
+        "name": "Units",
+        "importance": "primary",
+        "description": "",
+        "unit": "",
+        "data_type": "numerical",
+        "role": "y"
+      },
+      {
+        "name": "Category",
+        "importance": "primary",
+        "description": "",
+        "unit": "",
+        "data_type": "categorical",
+        "role": "group"
+      }
+    ]
+  },
+  "chart_type": "",
+  "data_format": {},
+  "metadata": {
+    "title": "",
+    "description": "",
+    "main_insight": "",
+    "titles": {},
+    "data_facts": []
+  },
+  "secondary_data": [],
+  "variables": {},
+  "typography": {
+    "title": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "description": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "label": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "annotation": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    }
+  },
+  "datafacts": [],
+  "titles": {
+    "main_title": "",
+    "sub_title": ""
+  },
+  "processed": false,
+  "colors": {
+    "field": {
+      "iOS App Store": "#3f8aff",
+      "Google Play Store": "#ca96e5"
+    },
+    "other": {
+      "primary": "#3f8aff",
+      "secondary": "#ee62f5"
+    },
+    "available_colors": [
+      "#12bcb0",
+      "#667485",
+      "#7d95ac"
+    ],
+    "background_color": "#E2F1F6",
+    "text_color": "#414141"
+  },
+  "colors_dark": {
+    "field": {
+      "iOS App Store": "#b2d0ff",
+      "Google Play Store": "#e0c0f1"
+    },
+    "other": {
+      "primary": "#b2d0ff",
+      "secondary": "#f9b4fc"
+    },
+    "available_colors": [
+      "#3af7ea",
+      "#97aac1",
+      "#b3c0ce"
+    ],
+    "background_color": "#2b2b3d",
+    "text_color": "#a38e8e"
+  }
+}

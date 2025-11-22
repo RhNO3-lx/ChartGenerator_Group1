@@ -1,0 +1,235 @@
+{
+  "data": {
+    "data": [
+      {
+        "Year": "2018",
+        "IncreasedCost": "125.5",
+        "City": "New York"
+      },
+      {
+        "Year": "2019",
+        "IncreasedCost": "130.2",
+        "City": "New York"
+      },
+      {
+        "Year": "2020",
+        "IncreasedCost": "110.8",
+        "City": "New York"
+      },
+      {
+        "Year": "2021",
+        "IncreasedCost": "135.7",
+        "City": "New York"
+      },
+      {
+        "Year": "2022",
+        "IncreasedCost": "142.3",
+        "City": "New York"
+      },
+      {
+        "Year": "2023",
+        "IncreasedCost": "148.9",
+        "City": "New York"
+      },
+      {
+        "Year": "2018",
+        "IncreasedCost": "95.3",
+        "City": "Los Angeles"
+      },
+      {
+        "Year": "2019",
+        "IncreasedCost": "98.7",
+        "City": "Los Angeles"
+      },
+      {
+        "Year": "2020",
+        "IncreasedCost": "85.1",
+        "City": "Los Angeles"
+      },
+      {
+        "Year": "2021",
+        "IncreasedCost": "102.5",
+        "City": "Los Angeles"
+      },
+      {
+        "Year": "2022",
+        "IncreasedCost": "108.2",
+        "City": "Los Angeles"
+      },
+      {
+        "Year": "2023",
+        "IncreasedCost": "114.0",
+        "City": "Los Angeles"
+      },
+      {
+        "Year": "2018",
+        "IncreasedCost": "65.8",
+        "City": "Chicago"
+      },
+      {
+        "Year": "2019",
+        "IncreasedCost": "68.2",
+        "City": "Chicago"
+      },
+      {
+        "Year": "2020",
+        "IncreasedCost": "58.5",
+        "City": "Chicago"
+      },
+      {
+        "Year": "2021",
+        "IncreasedCost": "72.1",
+        "City": "Chicago"
+      },
+      {
+        "Year": "2022",
+        "IncreasedCost": "75.9",
+        "City": "Chicago"
+      },
+      {
+        "Year": "2023",
+        "IncreasedCost": "79.8",
+        "City": "Chicago"
+      },
+      {
+        "Year": "2018",
+        "IncreasedCost": "50.2",
+        "City": "Houston"
+      },
+      {
+        "Year": "2019",
+        "IncreasedCost": "52.1",
+        "City": "Houston"
+      },
+      {
+        "Year": "2020",
+        "IncreasedCost": "44.7",
+        "City": "Houston"
+      },
+      {
+        "Year": "2021",
+        "IncreasedCost": "55.9",
+        "City": "Houston"
+      },
+      {
+        "Year": "2022",
+        "IncreasedCost": "58.8",
+        "City": "Houston"
+      },
+      {
+        "Year": "2023",
+        "IncreasedCost": "61.8",
+        "City": "Houston"
+      },
+      {
+        "Year": "2018",
+        "IncreasedCost": "40.5",
+        "City": "Phoenix"
+      },
+      {
+        "Year": "2019",
+        "IncreasedCost": "42.0",
+        "City": "Phoenix"
+      },
+      {
+        "Year": "2020",
+        "IncreasedCost": "36.1",
+        "City": "Phoenix"
+      },
+      {
+        "Year": "2021",
+        "IncreasedCost": "44.8",
+        "City": "Phoenix"
+      },
+      {
+        "Year": "2022",
+        "IncreasedCost": "47.2",
+        "City": "Phoenix"
+      },
+      {
+        "Year": "2023",
+        "IncreasedCost": "49.7",
+        "City": "Phoenix"
+      }
+    ],
+    "columns": [
+      {
+        "name": "Year",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "temporal",
+        "role": "x"
+      },
+      {
+        "name": "IncreasedCost",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "numerical",
+        "role": "y"
+      },
+      {
+        "name": "City",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "categorical",
+        "role": "group"
+      }
+    ]
+  },
+  "chart_type": "",
+  "data_format": {},
+  "metadata": {
+    "title": "",
+    "description": "",
+    "main_insight": "",
+    "titles": {},
+    "data_facts": []
+  },
+  "secondary_data": [],
+  "variables": {},
+  "typography": {
+    "title": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "description": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "label": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "annotation": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    }
+  },
+  "datafacts": [],
+  "titles": {
+    "main_title": "",
+    "sub_title": ""
+  },
+  "processed": false,
+  "colors": {
+    "field": {},
+    "other": {},
+    "available_colors": [],
+    "background_color": "",
+    "text_color": ""
+  },
+  "colors_dark": {
+    "field": {},
+    "other": {},
+    "available_colors": [],
+    "background_color": "",
+    "text_color": ""
+  }
+}

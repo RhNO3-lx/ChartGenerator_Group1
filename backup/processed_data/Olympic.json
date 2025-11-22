@@ -1,0 +1,260 @@
+{
+  "data": {
+    "data": [
+      {
+        "Year": 1996,
+        "MedalCount": 44.0,
+        "Country": "USA"
+      },
+      {
+        "Year": 1996,
+        "MedalCount": 16.0,
+        "Country": "China"
+      },
+      {
+        "Year": 1996,
+        "MedalCount": 3.0,
+        "Country": "Japan"
+      },
+      {
+        "Year": 1996,
+        "MedalCount": 26.0,
+        "Country": "Russia"
+      },
+      {
+        "Year": 1996,
+        "MedalCount": 20.0,
+        "Country": "Germany"
+      },
+      {
+        "Year": 2000,
+        "MedalCount": 37.0,
+        "Country": "USA"
+      },
+      {
+        "Year": 2000,
+        "MedalCount": 28.0,
+        "Country": "China"
+      },
+      {
+        "Year": 2000,
+        "MedalCount": 5.0,
+        "Country": "Japan"
+      },
+      {
+        "Year": 2000,
+        "MedalCount": 32.0,
+        "Country": "Russia"
+      },
+      {
+        "Year": 2000,
+        "MedalCount": 13.0,
+        "Country": "Germany"
+      },
+      {
+        "Year": 2004,
+        "MedalCount": 36.0,
+        "Country": "USA"
+      },
+      {
+        "Year": 2004,
+        "MedalCount": 32.0,
+        "Country": "China"
+      },
+      {
+        "Year": 2004,
+        "MedalCount": 16.0,
+        "Country": "Japan"
+      },
+      {
+        "Year": 2004,
+        "MedalCount": 27.0,
+        "Country": "Russia"
+      },
+      {
+        "Year": 2004,
+        "MedalCount": 13.0,
+        "Country": "Germany"
+      },
+      {
+        "Year": 2008,
+        "MedalCount": 36.0,
+        "Country": "USA"
+      },
+      {
+        "Year": 2008,
+        "MedalCount": 48.0,
+        "Country": "China"
+      },
+      {
+        "Year": 2008,
+        "MedalCount": 9.0,
+        "Country": "Japan"
+      },
+      {
+        "Year": 2008,
+        "MedalCount": 23.0,
+        "Country": "Russia"
+      },
+      {
+        "Year": 2008,
+        "MedalCount": 16.0,
+        "Country": "Germany"
+      },
+      {
+        "Year": 2012,
+        "MedalCount": 46.0,
+        "Country": "USA"
+      },
+      {
+        "Year": 2012,
+        "MedalCount": 38.0,
+        "Country": "China"
+      },
+      {
+        "Year": 2012,
+        "MedalCount": 7.0,
+        "Country": "Japan"
+      },
+      {
+        "Year": 2012,
+        "MedalCount": 24.0,
+        "Country": "Russia"
+      },
+      {
+        "Year": 2012,
+        "MedalCount": 11.0,
+        "Country": "Germany"
+      },
+      {
+        "Year": 2016,
+        "MedalCount": 46.0,
+        "Country": "USA"
+      },
+      {
+        "Year": 2016,
+        "MedalCount": 26.0,
+        "Country": "China"
+      },
+      {
+        "Year": 2016,
+        "MedalCount": 12.0,
+        "Country": "Japan"
+      },
+      {
+        "Year": 2016,
+        "MedalCount": 19.0,
+        "Country": "Russia"
+      },
+      {
+        "Year": 2016,
+        "MedalCount": 17.0,
+        "Country": "Germany"
+      },
+      {
+        "Year": 2020,
+        "MedalCount": 39.0,
+        "Country": "USA"
+      },
+      {
+        "Year": 2020,
+        "MedalCount": 38.0,
+        "Country": "China"
+      },
+      {
+        "Year": 2020,
+        "MedalCount": 27.0,
+        "Country": "Japan"
+      },
+      {
+        "Year": 2020,
+        "MedalCount": 20.0,
+        "Country": "Russia"
+      },
+      {
+        "Year": 2020,
+        "MedalCount": 10.0,
+        "Country": "Germany"
+      }
+    ],
+    "columns": [
+      {
+        "name": "Year",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "temporal",
+        "role": "x"
+      },
+      {
+        "name": "MedalCount",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "numerical",
+        "role": "y"
+      },
+      {
+        "name": "Country",
+        "importance": "primary",
+        "description": "",
+        "unit": "none",
+        "data_type": "categorical",
+        "role": "group"
+      }
+    ]
+  },
+  "chart_type": "",
+  "data_format": {},
+  "metadata": {
+    "title": "",
+    "description": "",
+    "main_insight": "",
+    "titles": {},
+    "data_facts": []
+  },
+  "secondary_data": [],
+  "variables": {},
+  "typography": {
+    "title": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "description": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "label": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    },
+    "annotation": {
+      "font_family": "",
+      "font_size": "",
+      "font_weight": ""
+    }
+  },
+  "datafacts": [],
+  "titles": {
+    "main_title": "",
+    "sub_title": ""
+  },
+  "processed": false,
+  "colors": {
+    "field": {},
+    "other": {},
+    "available_colors": [],
+    "background_color": "",
+    "text_color": ""
+  },
+  "colors_dark": {
+    "field": {},
+    "other": {},
+    "available_colors": [],
+    "background_color": "",
+    "text_color": ""
+  }
+}

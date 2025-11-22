@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChartGalaxy - 信息图表生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: #FF6B6B;
+            color: white;
+            padding: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .data-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .data-table tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 320px;
+            max-width: 90vw;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #e1e8ed;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .result-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-message {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .reference-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 600px;
+            margin-bottom: 20px;
+            overflow: visible;
+        }
+
+        .main-reference {
+            height: 100%;
+            min-height: 0;
+        }
+
+        .other-references {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .reference-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            background: #f8f9ff;
+            padding: 8px;
+            height: 100%;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        .reference-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .reference-item.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            background: #f0f2ff;
+        }
+
+        .reference-image-container {
+            width: 100%;
+            height: calc(100% - 16px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            padding: 6px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .reference-image {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .reference-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+        }
+
+        .reference-label.best-match {
+            background: #f0b810;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* 标题和配图选择的样式 */
+        .selection-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 600px;
+            margin-bottom: 20px;
+            overflow: visible;
+        }
+
+        .main-selection {
+            height: 100%;
+            min-height: 0;
+        }
+
+        .other-selections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .selection-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            background: #f8f9ff;
+            padding: 8px;
+            height: 100%;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        .selection-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .selection-item.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            background: #f0f2ff;
+        }
+
+        .selection-image-container {
+            width: 100%;
+            height: calc(100% - 16px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            padding: 6px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .selection-image {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .selection-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+        }
+
+        .selection-label.origin {
+            background: #28a745;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .selection-label.best-match {
+            background: #f0b810;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .reference-container, .selection-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                gap: 15px;
+            }
+            
+            .main-reference, .main-selection {
+                height: 300px;
+                min-height: 300px;
+            }
+            
+            .other-references, .other-selections {
+                grid-template-columns: repeat(2, 1fr);
+                height: 240px;
+                min-height: 240px;
+                gap: 8px;
+            }
+            
+            .reference-label, .selection-label {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+                top: 8px;
+                left: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .reference-container, .selection-container {
+                height: auto;
+                gap: 10px;
+            }
+            
+            .main-reference, .main-selection {
+                height: 250px;
+                min-height: 250px;
+            }
+            
+            .other-references, .other-selections {
+                height: 200px;
+                min-height: 200px;
+                gap: 5px;
+            }
+            
+            .reference-item, .selection-item {
+                padding: 4px;
+            }
+            
+            .reference-image-container, .selection-image-container {
+                padding: 3px;
+                height: calc(100% - 8px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 ChartGalaxy</h1>
+            <p>智能信息图表生成</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                📊 数据选择与预览
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label" for="dataSelect">选择数据集：</label>
+                    <select class="form-select" id="dataSelect">
+                        <option value="">请选择一个数据集...</option>
+                        {% for file in csv_files %}
+                        <option value="{{ file }}">{{ file.replace('.csv', '') }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div id="dataPreview" class="hidden">
+                    <div class="table-container">
+                        <table class="data-table" id="dataTable">
+                            <thead id="tableHeader"></thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="text-center" style="margin-top: 25px;">
+                        <button class="btn btn-primary" id="nextStepBtn" onclick="findReferenceImages()">
+                            ➡️ 下一步
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="referenceCard" class="card hidden">
+            <div class="card-header">
+                🎨 选择参考图表
+            </div>
+            <div class="card-body">
+                <div class="reference-container">
+                    <div class="main-reference">
+                        <div class="reference-item" id="mainReference">
+                            <div class="reference-image-container">
+                                <img class="reference-image" alt="最佳匹配参考图">
+                            </div>
+                            <div class="reference-label best-match">最佳匹配</div>
+                        </div>
+                    </div>
+                    <div class="other-references">
+                        <div class="reference-item" id="otherRef1">
+                            <div class="reference-image-container">
+                                <img class="reference-image" alt="参考图1">
+                            </div>
+                        </div>
+                        <div class="reference-item" id="otherRef2">
+                            <div class="reference-image-container">
+                                <img class="reference-image" alt="参考图2">
+                            </div>
+                        </div>
+                        <div class="reference-item" id="otherRef3">
+                            <div class="reference-image-container">
+                                <img class="reference-image" alt="参考图3">
+                            </div>
+                        </div>
+                        <div class="reference-item" id="otherRef4">
+                            <div class="reference-image-container">
+                                <img class="reference-image" alt="参考图4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" style="margin-top: 30px;">
+                    <button class="btn btn-primary" id="selectReferenceBtn" onclick="startLayoutExtraction()" disabled>
+                        ✨ 选择此参考图表
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="variationCard" class="card hidden">
+            <div class="card-header">
+                📝 选择图表类型
+            </div>
+            <div class="card-body">
+                <div class="selection-container">
+                    <div class="main-selection">
+                        <div class="selection-item" id="mainVariation">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="最佳匹配类型">
+                            </div>
+                            <div class="selection-label best-match">最佳匹配</div>
+                        </div>
+                    </div>
+                    <div class="other-selections">
+                        <div class="selection-item" id="variationOption1">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="类型选项1">
+                            </div>
+                            <div class="selection-label">选项1</div>
+                        </div>
+                        <div class="selection-item" id="variationOption2">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="类型选项2">
+                            </div>
+                            <div class="selection-label">选项2</div>
+                        </div>
+                        <div class="selection-item" id="variationOption3">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="类型选项3">
+                            </div>
+                            <div class="selection-label">选项3</div>
+                        </div>
+                        <div class="selection-item" id="variationOption4">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="类型选项4">
+                            </div>
+                            <div class="selection-label">选项4</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" style="margin-top: 30px;">
+                    <button class="btn btn-primary" id="selectVariationBtn" onclick="startTitleGeneration()" disabled>
+                        ✅ 选择此类型
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="titleCard" class="card hidden">
+            <div class="card-header">
+                📝 选择标题
+            </div>
+            <div class="card-body">
+                <div class="selection-container">
+                    <div class="main-selection">
+                        <div class="selection-item" id="mainTitle">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="最佳匹配标题">
+                            </div>
+                            <div class="selection-label best-match">最佳匹配</div>
+                        </div>
+                    </div>
+                    <div class="other-selections">
+                        <div class="selection-item" id="titleOption1">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="标题选项1">
+                            </div>
+                            <div class="selection-label">选项1</div>
+                        </div>
+                        <div class="selection-item" id="titleOption2">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="标题选项2">
+                            </div>
+                            <div class="selection-label">选项2</div>
+                        </div>
+                        <div class="selection-item" id="titleOption3">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="标题选项3">
+                            </div>
+                            <div class="selection-label">选项3</div>
+                        </div>
+                        <div class="selection-item" id="titleOption4">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="标题选项4">
+                            </div>
+                            <div class="selection-label">选项4</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" style="margin-top: 30px;">
+                    <button class="btn btn-primary" id="selectTitleBtn" onclick="startPictogramGeneration()" disabled>
+                        ✅ 选择此标题
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pictogramCard" class="card hidden">
+            <div class="card-header">
+                🎭 选择配图
+            </div>
+            <div class="card-body">
+                <div class="selection-container">
+                    <div class="main-selection">
+                        <div class="selection-item" id="mainPictogram">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="最佳匹配配图">
+                            </div>
+                            <div class="selection-label best-match">最佳匹配</div>
+                        </div>
+                    </div>
+                    <div class="other-selections">
+                        <div class="selection-item" id="pictogramOption1">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="配图选项1">
+                            </div>
+                            <div class="selection-label">选项1</div>
+                        </div>
+                        <div class="selection-item" id="pictogramOption2">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="配图选项2">
+                            </div>
+                            <div class="selection-label">选项2</div>
+                        </div>
+                        <div class="selection-item" id="pictogramOption3">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="配图选项3">
+                            </div>
+                            <div class="selection-label">选项3</div>
+                        </div>
+                        <div class="selection-item" id="pictogramOption4">
+                            <div class="selection-image-container">
+                                <img class="selection-image" alt="配图选项4">
+                            </div>
+                            <div class="selection-label">选项4</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" style="margin-top: 30px;">
+                    <button class="btn btn-primary" id="selectPictogramBtn" onclick="generateFinalInfographic()" disabled>
+                        🎨 生成最终图表
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultCard" class="card hidden">
+            <div class="card-header">
+                🎯 生成结果
+            </div>
+            <div class="card-body">
+                <div id="successMessage" class="success-message">
+                    ✅ 信息图表生成成功！
+                </div>
+                <div class="text-center">
+                    <img id="resultImage" class="result-image" alt="生成的信息图表">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text" id="loadingText">准备中...</div>
+        </div>
+    </div>
+
+    <script src="/static/script/index/index.js"></script>
+    <script src="/static/script/index/reference.js"></script>
+    <script src="/static/script/index/variation.js"></script>
+    <script src="/static/script/index/title.js"></script>
+    <script src="/static/script/index/pictogram.js"></script>
+    <script src="/static/script/index/status.js"></script>
+</body>
+</html> 
