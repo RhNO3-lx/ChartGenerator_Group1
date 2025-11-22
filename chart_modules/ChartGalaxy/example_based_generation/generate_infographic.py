@@ -72,9 +72,8 @@ class InfographicImageGenerator:
         
     def load_prompt_file(self, filename: str) -> str:
         """Load prompt file content"""
-        if prompt_type == "pictogram":
-            prompt_path = os.path.join(str(Path(__file__).parent), filename)
-        
+        prompt_path = os.path.join(str(Path(__file__).parent), filename)
+
         with open(prompt_path, 'r', encoding='utf-8') as f:
             return f.read()
         
@@ -168,15 +167,15 @@ class InfographicImageGenerator:
         """Generate image using GPT-Image-1"""
         try:
             print(f"Generating {image_type} image: {filename}")
-            
+
             response = self.client.images.generate(
-                model="gpt-image-1", 
+                model="gpt-image-1",
                 prompt=prompt,
                 n=1,
                 size="1024x1024",
                 quality="high",
             )
-            
+
             if response and response.data:
                 image_base64 = response.data[0].b64_json
                 image_data = base64.b64decode(image_base64)
@@ -184,7 +183,7 @@ class InfographicImageGenerator:
                 # Convert to RGBA mode
                 image = image.convert('RGBA')
                 data = image.getdata()
-                
+
                 # Convert white (tolerance 20) to transparent
                 new_data = []
                 for item in data:
@@ -193,25 +192,25 @@ class InfographicImageGenerator:
                         new_data.append((255, 255, 255, 0))
                     else:
                         new_data.append(item)
-                        
+
                 image.putdata(new_data)
 
                 # Convert image to numpy array
                 img_array = np.array(image)
-                
+
                 # Create binary mask, non-transparent pixels are 1, transparent pixels are 0
                 mask = (img_array[:,:,3] > 0).astype(np.uint8)
-                
+
                 # Mark connected regions
                 num_labels, labels = cv2.connectedComponents(mask)
-                
+
                 # Calculate number of pixels in each connected region
                 for label in range(1, num_labels):
                     area = np.sum(labels == label)
                     # If region pixel count is less than 20, set it to transparent
                     if area < 20:
                         img_array[labels == label] = [255, 255, 255, 0]
-                        
+
                 # Convert back to PIL image
                 image = Image.fromarray(img_array)
 
@@ -223,9 +222,115 @@ class InfographicImageGenerator:
             else:
                 print(f"Failed to generate image: {response.status_code}")
                 return False
-                
+
         except Exception as e:
             print(f"Failed to generate image: {e}")
+            return False
+
+    def generate_title_image(self, title_text: str, reference_image_path: str, output_filename: str) -> bool:
+        """
+        Generate title image using Gemini model with reference image style
+
+        Args:
+            title_text: The title text to generate image for
+            reference_image_path: Path to the reference chart image for style
+            output_filename: Path to save the generated image
+
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            print(f"Generating title image for: {title_text}")
+
+            # Read and encode reference image
+            with open(reference_image_path, 'rb') as img_file:
+                reference_image_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+
+            # Determine image mime type
+            if reference_image_path.lower().endswith('.png'):
+                mime_type = "image/png"
+            elif reference_image_path.lower().endswith('.jpg') or reference_image_path.lower().endswith('.jpeg'):
+                mime_type = "image/jpeg"
+            elif reference_image_path.lower().endswith('.svg'):
+                # SVG needs special handling - convert to PNG first or use as text
+                mime_type = "image/svg+xml"
+            else:
+                mime_type = "image/png"
+
+            # Create prompt for Gemini
+            prompt = f"""参考这个图表的视觉风格（颜色搭配、字体风格），生成一个**纯标题文字图片**。
+
+标题内容："{title_text}"
+
+严格要求：
+1. **只生成标题文字**，禁止生成任何图表、数据、图形、图标或其他元素
+2. 标题文字必须清晰可读，使用与参考图表相似的字体风格和颜色
+3. 背景必须是透明
+4. 图片比例为宽扁形（宽高比约为 4:1 或 5:1），适合作为信息图表的横幅标题
+5. 文字居中排列，可以是单行或两行
+6. 不要添加任何装饰性图案、边框或阴影
+
+输出：一张简洁的标题文字图片，仅包含"{title_text}"这几个字"""
+
+            # Call Gemini API
+            response = self.client.chat.completions.create(
+                model="gemini-3-pro-image-preview",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:{mime_type};base64,{reference_image_base64}"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "text": prompt
+                            }
+                        ],
+                    },
+                ],
+                modalities=["text", "image"],
+                temperature=0.7,
+            )
+
+            # Process response
+            if (
+                hasattr(response.choices[0].message, "multi_mod_content")
+                and response.choices[0].message.multi_mod_content is not None
+            ):
+                for part in response.choices[0].message.multi_mod_content:
+                    if "inline_data" in part and part["inline_data"] is not None:
+                        print("🖼️ Title image content received")
+                        image_data = base64.b64decode(part["inline_data"]["data"])
+                        image = Image.open(BytesIO(image_data))
+
+                        # Convert to RGBA for transparency
+                        image = image.convert('RGBA')
+
+                        # Process white background to transparent
+                        data = image.getdata()
+                        new_data = []
+                        for item in data:
+                            if item[0] > 235 and item[1] > 235 and item[2] > 235:
+                                new_data.append((255, 255, 255, 0))
+                            else:
+                                new_data.append(item)
+                        image.putdata(new_data)
+
+                        # Save image
+                        os.makedirs(os.path.dirname(output_filename), exist_ok=True)
+                        image.save(output_filename)
+                        print(f"✅ Title image saved to: {output_filename}")
+                        return True
+
+            print("No valid image response received from Gemini")
+            return False
+
+        except Exception as e:
+            print(f"Failed to generate title image: {e}")
             return False
     
     def process_csv_file(self, csv_file: str):
@@ -291,15 +396,37 @@ class InfographicImageGenerator:
                 print(f"Error processing file {csv_file}: {e}")
                 continue
     
-    def generate_title_option(self, csv_path: str, colors):
-        """Generate title options in parallel"""
+    def generate_title_option(self, csv_path: str, reference_image_path: str, output_dir: str = None):
+        """
+        Generate title options in parallel
+
+        Args:
+            csv_path: Path to the CSV data file
+            reference_image_path: Path to the reference chart image for style
+            output_dir: Directory to save generated title images (optional)
+
+        Returns:
+            Dict with title options including text and image paths
+        """
         title_options = {}
         csv_data = self.read_csv_data(csv_path)
 
+        if output_dir is None:
+            output_dir = f"{self.output_dir}/titles"
+
         def generate_single_title(i):
+            # Step 1: Generate title text from CSV data using LLM
             title_text = self.generate_title_text(csv_data)
-            title_prompt = self.generate_image_prompt(title_text, "title", colors)
-            return f"title_{i}.png", {'title_text': title_text,'title_prompt': title_prompt}
+
+            # Step 2: Generate title image using Gemini with reference image style
+            output_filename = os.path.join(output_dir, f"title_{i}.png")
+            success = self.generate_title_image(title_text, reference_image_path, output_filename)
+
+            return f"title_{i}.png", {
+                'title_text': title_text,
+                'image_path': output_filename if success else None,
+                'success': success
+            }
 
         with ThreadPoolExecutor(max_workers=5) as executor:
             futures = [executor.submit(generate_single_title, i) for i in range(5)]
@@ -307,9 +434,58 @@ class InfographicImageGenerator:
                 key, value = future.result()
                 title_options[key] = value
 
-        # print("title_options:",title_options)
         return title_options
-            
+
+    def generate_single_title(self, csv_path: str, reference_image_path: str, output_filename: str):
+        """
+        Generate a single title image
+
+        Args:
+            csv_path: Path to the CSV data file
+            reference_image_path: Path to the reference chart image for style
+            output_filename: Path to save the generated title image
+
+        Returns:
+            Dict with title text and image path
+        """
+        csv_data = self.read_csv_data(csv_path)
+
+        # Step 1: Generate title text from CSV data using LLM
+        title_text = self.generate_title_text(csv_data)
+
+        # Step 2: Generate title image using Gemini with reference image style
+        success = self.generate_title_image(title_text, reference_image_path, output_filename)
+
+        return {
+            'title_text': title_text,
+            'image_path': output_filename if success else None,
+            'success': success
+        }
+
+    def generate_single_pictogram(self, title_text: str, colors, output_filename: str):
+        """
+        Generate a single pictogram image
+
+        Args:
+            title_text: The title text for context
+            colors: Color palette to use
+            output_filename: Path to save the generated pictogram image
+
+        Returns:
+            Dict with pictogram prompt and success status
+        """
+        # Generate pictogram prompt
+        pictogram_prompt = self.generate_image_prompt(title_text, "pictogram", colors)
+
+        # Generate the pictogram image
+        success = self.generate_image(pictogram_prompt, "pictogram", output_filename)
+
+        return {
+            'pictogram_prompt': pictogram_prompt,
+            'image_path': output_filename if success else None,
+            'success': success
+        }
+
     def generate_pictogram_option(self, title_text, colors):
         """Generate pictogram options"""
         pictogram_options = {}

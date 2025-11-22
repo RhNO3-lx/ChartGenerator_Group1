@@ -193,11 +193,35 @@ def start_pictogram_generation(title):
     global generation_status
     load_generation_status()
     app.logger.debug(f"title_text:{title}")
-    
+
     # 启动配图生成线程
     thread = Thread(target=threaded_task, args=(conduct_pictogram_generation, title, generation_status,))
     thread.start()
-    
+
+    return jsonify({'status': 'started'})
+
+@app.route('/api/regenerate_title/<datafile>')
+def regenerate_title(datafile):
+    """重新生成单张标题图片"""
+    global generation_status
+    load_generation_status()
+
+    # 启动标题重新生成线程
+    thread = Thread(target=threaded_task, args=(conduct_title_generation, datafile, generation_status,))
+    thread.start()
+
+    return jsonify({'status': 'started'})
+
+@app.route('/api/regenerate_pictogram/<title>')
+def regenerate_pictogram(title):
+    """重新生成单张配图图片"""
+    global generation_status
+    load_generation_status()
+
+    # 启动配图重新生成线程
+    thread = Thread(target=threaded_task, args=(conduct_pictogram_generation, title, generation_status,))
+    thread.start()
+
     return jsonify({'status': 'started'})
 
 # @app.route('/api/generate_final/<filename>')

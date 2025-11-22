@@ -4,12 +4,12 @@
     "small_multiple_area_plain_chart_01": 38
   },
   "horizontal group bar chart": {
-    "total_count": 129,
-    "horizontal_group_bar_chart_03": 90,
-    "horizontal_group_bar_chart_13": 18,
-    "horizontal_group_bar_chart_06": 8,
-    "horizontal_group_bar_chart_03_hand": 6,
-    "horizontal_group_bar_chart_16": 7
+    "total_count": 134,
+    "horizontal_group_bar_chart_03": 91,
+    "horizontal_group_bar_chart_13": 19,
+    "horizontal_group_bar_chart_06": 9,
+    "horizontal_group_bar_chart_03_hand": 7,
+    "horizontal_group_bar_chart_16": 8
   },
   "group dot bar chart": {
     "total_count": 2,
@@ -46,9 +46,9 @@
     "multiple_line_graph_01": 1
   },
   "vertical grouped bar chart": {
-    "total_count": 35,
-    "vertical_group_bar_plain_chart_04": 29,
-    "vertical_group_bar_chart_8": 6
+    "total_count": 39,
+    "vertical_group_bar_plain_chart_04": 31,
+    "vertical_group_bar_chart_8": 8
   },
   "range area chart": {
     "total_count": 4,
@@ -71,21 +71,21 @@
     "group_radial_bar_chart_02": 2
   },
   "multiple pie chart": {
-    "total_count": 818,
-    "multiple_pie_chart_02": 329,
-    "multiple_pie_chart_03": 164,
-    "multiple_pie_chart_04": 164,
-    "multiple_pie_chart_05": 161
+    "total_count": 822,
+    "multiple_pie_chart_02": 330,
+    "multiple_pie_chart_03": 165,
+    "multiple_pie_chart_04": 165,
+    "multiple_pie_chart_05": 162
   },
   "dumbbell plot": {
-    "total_count": 140,
-    "dumbbell_plot_plain_chart_01": 140
+    "total_count": 141,
+    "dumbbell_plot_plain_chart_01": 141
   },
   "vertical group bar chart": {
-    "total_count": 17,
-    "vertical_group_bar_chart_5": 7,
-    "vertical_group_bar_chart_13": 6,
-    "vertical_group_bar_plain_chart_01": 4
+    "total_count": 23,
+    "vertical_group_bar_chart_5": 9,
+    "vertical_group_bar_chart_13": 8,
+    "vertical_group_bar_plain_chart_01": 6
   },
   "horizontal diverging bar chart": {
     "total_count": 1,

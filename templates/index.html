@@ -425,6 +425,55 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
+        /* 单张图片选择容器样式 */
+        .single-selection-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .single-selection-item {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #667eea;
+            background: #f8f9ff;
+            padding: 8px;
+            box-sizing: border-box;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .title-text-display {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: #f0f2ff;
+            border-radius: 8px;
+            max-width: 500px;
+        }
+
+        /* 重新生成按钮样式 */
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         @media (max-width: 768px) {
             .reference-container, .selection-container {
                 grid-template-columns: 1fr;
@@ -614,48 +663,25 @@
 
         <div id="titleCard" class="card hidden">
             <div class="card-header">
-                📝 选择标题
+                📝 标题预览
             </div>
             <div class="card-body">
-                <div class="selection-container">
-                    <div class="main-selection">
-                        <div class="selection-item" id="mainTitle">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="最佳匹配标题">
-                            </div>
-                            <div class="selection-label best-match">最佳匹配</div>
+                <div class="single-selection-container">
+                    <div class="single-selection-item" id="mainTitle">
+                        <div class="selection-image-container">
+                            <img class="selection-image" alt="生成的标题">
                         </div>
                     </div>
-                    <div class="other-selections">
-                        <div class="selection-item" id="titleOption1">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="标题选项1">
-                            </div>
-                            <div class="selection-label">选项1</div>
-                        </div>
-                        <div class="selection-item" id="titleOption2">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="标题选项2">
-                            </div>
-                            <div class="selection-label">选项2</div>
-                        </div>
-                        <div class="selection-item" id="titleOption3">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="标题选项3">
-                            </div>
-                            <div class="selection-label">选项3</div>
-                        </div>
-                        <div class="selection-item" id="titleOption4">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="标题选项4">
-                            </div>
-                            <div class="selection-label">选项4</div>
-                        </div>
+                    <div class="title-text-display" id="titleTextDisplay">
+                        <!-- 标题文字将显示在这里 -->
                     </div>
                 </div>
-                <div class="text-center" style="margin-top: 30px;">
-                    <button class="btn btn-primary" id="selectTitleBtn" onclick="startPictogramGeneration()" disabled>
-                        ✅ 选择此标题
+                <div class="text-center" style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+                    <button class="btn btn-secondary" id="regenerateTitleBtn" onclick="regenerateTitle()">
+                        🔄 重新生成
+                    </button>
+                    <button class="btn btn-primary" id="selectTitleBtn" onclick="startPictogramGeneration()">
+                        ✅ 确认标题
                     </button>
                 </div>
             </div>
@@ -663,47 +689,21 @@
 
         <div id="pictogramCard" class="card hidden">
             <div class="card-header">
-                🎭 选择配图
+                🎭 配图预览
             </div>
             <div class="card-body">
-                <div class="selection-container">
-                    <div class="main-selection">
-                        <div class="selection-item" id="mainPictogram">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="最佳匹配配图">
-                            </div>
-                            <div class="selection-label best-match">最佳匹配</div>
-                        </div>
-                    </div>
-                    <div class="other-selections">
-                        <div class="selection-item" id="pictogramOption1">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="配图选项1">
-                            </div>
-                            <div class="selection-label">选项1</div>
-                        </div>
-                        <div class="selection-item" id="pictogramOption2">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="配图选项2">
-                            </div>
-                            <div class="selection-label">选项2</div>
-                        </div>
-                        <div class="selection-item" id="pictogramOption3">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="配图选项3">
-                            </div>
-                            <div class="selection-label">选项3</div>
-                        </div>
-                        <div class="selection-item" id="pictogramOption4">
-                            <div class="selection-image-container">
-                                <img class="selection-image" alt="配图选项4">
-                            </div>
-                            <div class="selection-label">选项4</div>
+                <div class="single-selection-container">
+                    <div class="single-selection-item" id="mainPictogram">
+                        <div class="selection-image-container">
+                            <img class="selection-image" alt="生成的配图">
                         </div>
                     </div>
                 </div>
-                <div class="text-center" style="margin-top: 30px;">
-                    <button class="btn btn-primary" id="selectPictogramBtn" onclick="generateFinalInfographic()" disabled>
+                <div class="text-center" style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+                    <button class="btn btn-secondary" id="regeneratePictogramBtn" onclick="regeneratePictogram()">
+                        🔄 重新生成
+                    </button>
+                    <button class="btn btn-primary" id="selectPictogramBtn" onclick="generateFinalInfographic()">
                         🎨 生成最终图表
                     </button>
                 </div>

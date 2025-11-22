@@ -1,44 +1,44 @@
 {
   "step": "title_generation",
   "status": "completed",
-  "progress": "绘制标题中...",
+  "progress": "生成标题中...",
   "completed": true,
   "style": {
     "colors": [
       [
-        45,
-        86,
+        227,
+        216,
+        131
+      ],
+      [
+        197,
+        200,
         200
       ],
       [
-        89,
-        80,
-        83
+        28,
+        144,
+        248
       ],
       [
-        236,
-        237,
-        242
+        37,
+        86,
+        169
       ],
       [
-        201,
-        125,
-        185
-      ],
-      [
-        232,
-        112,
-        29
+        18,
+        22,
+        24
       ]
     ],
     "bg_color": [
-      12,
-      27,
-      43
+      245,
+      243,
+      239
     ],
     "variation": [
       [
-        "d3-js/stacked circular bar chart/stacked_circular_bar_chart_03",
+        "d3-js/multiple pie chart/multiple_pie_chart_05",
         [
           "x",
           "y",
@@ -46,7 +46,7 @@
         ]
       ],
       [
-        "d3-js/circular stacked bar chart/circular_stacked_bar_plain_chart_01",
+        "d3-js/multiple pie chart/multiple_pie_chart_04",
         [
           "x",
           "y",
@@ -54,7 +54,7 @@
         ]
       ],
       [
-        "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_02",
+        "d3-js/multiple pie chart/multiple_pie_chart_02",
         [
           "x",
           "y",
@@ -62,7 +62,7 @@
         ]
       ],
       [
-        "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_01",
+        "d3-js/multiple pie chart/multiple_pie_chart_03",
         [
           "x",
           "y",
@@ -70,7 +70,7 @@
         ]
       ],
       [
-        "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_03",
+        "d3-js/dumbbell plot/dumbbell_plot_plain_chart_01",
         [
           "x",
           "y",
@@ -974,25 +974,10 @@
   ],
   "id": "test_id",
   "title_options": {
-    "title_1.png": {
-      "title_text": "Data Insights",
-      "title_prompt": "Create a simple title image about Data Insights"
-    },
     "title_0.png": {
-      "title_text": "Data Insights",
-      "title_prompt": "Create a simple title image about Data Insights"
-    },
-    "title_3.png": {
-      "title_text": "Data Insights",
-      "title_prompt": "Create a simple title image about Data Insights"
-    },
-    "title_4.png": {
-      "title_text": "Data Insights",
-      "title_prompt": "Create a simple title image about Data Insights"
-    },
-    "title_2.png": {
-      "title_text": "Data Insights",
-      "title_prompt": "Create a simple title image about Data Insights"
+      "title_text": "App Store Growth Over Time",
+      "image_path": null,
+      "success": false
     }
   },
   "pictogram_options": {
@@ -1011,5 +996,7 @@
     "pictogram_4.png": {
       "pictogram_prompt": "Create a simple pictogram image about Data Insights"
     }
-  }
+  },
+  "current_title_text": "App Store Growth Over Time",
+  "selected_reference": "infographics/App-Origin.png"
 }
