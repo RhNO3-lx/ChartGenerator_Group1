@@ -259,22 +259,28 @@ def get_extraction_templates():
 
 @app.route('/api/references')
 def get_references():
-    """获取参考图：主要的Origin图 + 4张来自other_infographics的随机图片"""
-    # 获取other_infographics目录中的所有图片
+    """获取参考图：随机选择5张图片，第一张作为主要推荐"""
     other_infographics_dir = 'infographics'
     random_images = []
-    
+
     if os.path.exists(other_infographics_dir):
         files = os.listdir(other_infographics_dir)
         image_files = [f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-        
-        # 随机选择4张图片
-        if len(image_files) >= 4:
-            random_images = random.sample(image_files, 4)
+
+        # 随机选择5张图片
+        if len(image_files) >= 5:
+            random_images = random.sample(image_files, 5)
         else:
-            random_images = image_files  # 如果少于4张，就全部使用
-    
-    return jsonify({'random_images': random_images})
+            random_images = image_files  # 如果少于5张，就全部使用
+
+    # 第一张作为主要推荐，其余4张作为备选
+    main_image = random_images[0] if random_images else None
+    other_images = random_images[1:5] if len(random_images) > 1 else []
+
+    return jsonify({
+        'main_image': main_image,
+        'random_images': other_images
+    })
 
 @app.route('/api/titles')
 def get_titles():

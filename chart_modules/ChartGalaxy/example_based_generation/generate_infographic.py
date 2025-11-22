@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 sys.path.append(str(Path(__file__).parent))
 
-API_KEY = "sk-ug32KbbvEDPucqnaB207A5EcEd6f47Dc887c14249a12Ff43"
+API_KEY = "sk-ho2TtXpXZCd50j5q3d4f29D8Cd6246B28212028a0aF69361" # from WangZheng
 BASE_URL = "https://aihubmix.com/v1"
 
 style_options = [
