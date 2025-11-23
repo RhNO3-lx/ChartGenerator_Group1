@@ -119,7 +119,7 @@
     "stacked_circular_bar_chart_03": 14
   },
   "vertical bar chart": {
-    "total_count": 51,
+    "total_count": 54,
     "vertical_bar_chart_07": 6,
     "vertical_bar_chart_17": 2,
     "vertical_bar_chart_17_01": 3,
@@ -135,7 +135,10 @@
     "vertical_bar_chart_15": 2,
     "vertical_bar_chart_24": 1,
     "vertical_bar_plain_chart_04": 1,
-    "vertical_bar_chart_01": 1
+    "vertical_bar_chart_01": 1,
+    "vertical_bar_chart_09": 1,
+    "vertical_bar_plain_chart_03": 1,
+    "vertical_bar_chart_10": 1
   },
   "semicircle donut chart": {
     "total_count": 17,
@@ -192,8 +195,8 @@
     "small_multiple_area_chart_01": 2
   },
   "horizontal bar chart": {
-    "total_count": 22,
-    "horizontal_bar_chart_1": 1,
+    "total_count": 28,
+    "horizontal_bar_chart_1": 2,
     "horizontal_bar_chart_33": 2,
     "horizontal_bar_chart_2": 2,
     "horizontal_bar_chart_5": 2,
@@ -204,7 +207,11 @@
     "horizontal_bar_plain_chart_06": 1,
     "horizontal_bar_chart_30": 2,
     "horizontal_bar_plain_chart_03": 1,
-    "horizontal_bar_chart_0": 1
+    "horizontal_bar_chart_0": 2,
+    "horizontal_bar_chart_28": 1,
+    "horizontal_bar_chart_10": 1,
+    "horizontal_bar_chart_0_weilai": 1,
+    "horizontal_bar_chart_4": 1
   },
   "grouped scatterplot": {
     "total_count": 39,
@@ -223,22 +230,23 @@
     "rose_plain_chart_01": 4
   },
   "donut chart": {
-    "total_count": 43,
-    "donut_chart_00": 5,
+    "total_count": 52,
+    "donut_chart_00": 6,
     "donut_chart_03_d3": 2,
     "donut_chart_00_hand": 4,
-    "donut_chart_04_hand": 6,
-    "donut_chart_02": 5,
+    "donut_chart_04_hand": 7,
+    "donut_chart_02": 6,
     "donut_chart_02_hand": 6,
-    "donut_chart_icons_01": 1,
+    "donut_chart_icons_01": 2,
     "donut_chart_08": 1,
     "donut_chart_07_d3": 2,
-    "donut_chart_05_d3": 2,
+    "donut_chart_05_d3": 3,
     "donut_chart_06_d3": 1,
     "donut_chart_03_d3_hand": 1,
     "donut_chart_04_d3": 5,
-    "donut_chart_09": 1,
-    "donut_chart_icons_03": 1
+    "donut_chart_09": 2,
+    "donut_chart_icons_03": 2,
+    "donut_chart_icons_02": 2
   },
   "range chart": {
     "total_count": 71,

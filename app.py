@@ -579,7 +579,8 @@ def get_references():
     datafile = selected_data.replace('processed_data/', '').replace('.json', '.csv') if selected_data else ''
 
     # 获取分页参数
-    page = generation_status.get('reference_page', 0)
+    page = 0
+    # page = generation_status.get('reference_page', 0)
     page_size = 5
 
     if datafile:

@@ -6,35 +6,35 @@
   "style": {
     "colors": [
       [
-        28,
+        253,
+        200,
+        177
+      ],
+      [
+        250,
+        166,
+        129
+      ],
+      [
+        107,
+        12,
+        7
+      ],
+      [
+        241,
+        117,
+        79
+      ],
+      [
+        242,
         57,
-        97
-      ],
-      [
-        247,
-        233,
-        213
-      ],
-      [
-        222,
-        235,
-        240
-      ],
-      [
-        149,
-        165,
-        179
-      ],
-      [
-        169,
-        76,
-        58
+        22
       ]
     ],
     "bg_color": [
-      50,
-      114,
-      183
+      255,
+      242,
+      219
     ]
   },
   "selected_data": "processed_data/Green.json",
@@ -1473,7 +1473,7 @@
   "id": "Green",
   "chart_type_page": 0,
   "variation_page": 0,
-  "selected_chart_type": "vertical bar chart",
+  "selected_chart_type": "horizontal bar chart",
   "available_chart_types": [
     {
       "type": "horizontal bar chart",
@@ -1598,185 +1598,201 @@
   ],
   "chart_type_previews": {
     "horizontal bar chart": {
-      "variation_name": "horizontal_bar_chart_5_hand",
-      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_5_hand",
+      "variation_name": "horizontal_bar_chart_10",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_10",
       "output_file": "charttype_horizontal_bar_chart.svg"
     },
     "vertical bar chart": {
-      "variation_name": "vertical_bar_chart_08_2",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_08_2",
+      "variation_name": "vertical_bar_chart_10",
+      "template": "d3-js/vertical bar chart/vertical_bar_chart_10",
       "output_file": "charttype_vertical_bar_chart.svg"
     },
     "donut chart": {
-      "variation_name": "donut_chart_icons_03",
-      "template": "d3-js/donut chart/donut_chart_icons_03",
+      "variation_name": "donut_chart_icons_02",
+      "template": "d3-js/donut chart/donut_chart_icons_02",
       "output_file": "charttype_donut_chart.svg"
     }
   },
   "available_variations": [
     {
-      "name": "vertical_bar_chart_08_2",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_08_2",
+      "name": "horizontal_bar_chart_0_weilai",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_0_weilai",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_07",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_07",
+      "name": "horizontal_bar_chart_0",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_0",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_01",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_01",
+      "name": "horizontal_bar_chart_4",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_4",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_09_2",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_09_2",
+      "name": "horizontal_bar_chart_6",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_6",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_07_2",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_07_2",
+      "name": "horizontal_bar_chart_7",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_7",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_08",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_08",
+      "name": "horizontal_bar_chart_8",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_8",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_17_01",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_17_01",
+      "name": "horizontal_bar_chart_29",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_29",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_18_01",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_18_01",
+      "name": "horizontal_bar_chart_2",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_2",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_04",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_04",
+      "name": "horizontal_bar_chart_5_hand",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_5_hand",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_17",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_17",
+      "name": "horizontal_bar_chart_5",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_5",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_18",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_18",
+      "name": "horizontal_bar_chart_2_hand",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_2_hand",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_24",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_24",
+      "name": "horizontal_bar_chart_3",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_3",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_05",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_05",
+      "name": "horizontal_bar_chart_4_hand",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_4_hand",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_23",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_23",
+      "name": "horizontal_bar_chart_28",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_28",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_06",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_06",
+      "name": "horizontal_bar_chart_1",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_1",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_20",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_20",
+      "name": "horizontal_bar_chart_33",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_33",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_16",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_16",
+      "name": "horizontal_bar_chart_30",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_30",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_15",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_15",
+      "name": "horizontal_bar_chart_12",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_12",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_10",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_10",
+      "name": "horizontal_bar_chart_10",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_10",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_09",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_09",
+      "name": "horizontal_bar_chart_01",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_01",
       "fields": [
         "x",
         "y"
       ]
     },
     {
-      "name": "vertical_bar_chart_19_01",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_19_01",
+      "name": "horizontal_bar_chart_9",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_9",
+      "fields": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "horizontal_bar_chart_19",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_19",
+      "fields": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "horizontal_bar_chart_18",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_18",
       "fields": [
         "x",
         "y"
@@ -1785,15 +1801,15 @@
   ],
   "ai_direct_image": "buffer/20251123044738_9197/ai_direct_generated.jpg",
   "final_image_path": "buffer/20251123044738_9197/ai_direct_generated.jpg",
-  "selected_reference": "infographics/Bird-Origin.png",
+  "selected_reference": "infographics/687b3947e993e6b28e70460a4d72ac6067b683b4471307bb5edbce559ab29bbb.png",
   "title_options": {
     "title_0.png": {
-      "title_text": "Urban Tree Canopy Cover by Neighborhood",
+      "title_text": "Tree Canopy Cover by Neighborhood Comparison",
       "image_path": "buffer/Green/title_0.png",
       "success": true
     },
     "title_1.png": {
-      "title_text": "Urban Tree Canopy Cover by Neighborhood",
+      "title_text": "Tree Canopy Cover by Neighborhood Comparison",
       "image_path": "buffer/Green/title_1.png",
       "success": true
     },
@@ -1803,23 +1819,23 @@
       "success": true
     }
   },
-  "current_title_text": "Urban Tree Canopy Cover by Neighborhood",
+  "current_title_text": "Tree Canopy Cover by Neighborhood Comparison",
   "pictogram_options": {
     "pictogram_0.png": {
-      "pictogram_prompt": "# Task\nGenerate a visual illustration (pictogram) for an infographic with the title: \"Urban Tree Canopy Cover by Neighborhood\"\n\n# Requirements\n1. **Content**: Create visual elements related to the entities and concepts mentioned in the title\n2. **Style**: Simple, clean vector graphics using colors: [[28, 57, 97], [247, 233, 213], [222, 235, 240], [149, 165, 179], [169, 76, 58]]\n3. **Background**: Completely transparent (alpha channel)\n4. **CRITICAL - NO TEXT**: Absolutely no text, words, letters, numbers, or any written content. Pure visual graphics only.\n\n# Output\nDirectly generate an image",
+      "pictogram_prompt": "Cached",
       "image_path": "buffer/Green/pictogram_0.png",
       "success": true
     },
     "pictogram_1.png": {
-      "pictogram_prompt": "# Task\nGenerate a visual illustration (pictogram) for an infographic with the title: \"Urban Tree Canopy Cover by Neighborhood\"\n\n# Requirements\n1. **Content**: Create visual elements related to the entities and concepts mentioned in the title\n2. **Style**: Simple, clean vector graphics using colors: [[28, 57, 97], [247, 233, 213], [222, 235, 240], [149, 165, 179], [169, 76, 58]]\n3. **Background**: Completely transparent (alpha channel)\n4. **CRITICAL - NO TEXT**: Absolutely no text, words, letters, numbers, or any written content. Pure visual graphics only.\n\n# Output\nDirectly generate an image",
+      "pictogram_prompt": "Cached",
       "image_path": "buffer/Green/pictogram_1.png",
       "success": true
     },
     "pictogram_2.png": {
-      "pictogram_prompt": "# Task\nGenerate a visual illustration (pictogram) for an infographic with the title: \"Urban Tree Canopy Cover by Neighborhood\"\n\n# Requirements\n1. **Content**: Create visual elements related to the entities and concepts mentioned in the title\n2. **Style**: Simple, clean vector graphics using colors: [[28, 57, 97], [247, 233, 213], [222, 235, 240], [149, 165, 179], [169, 76, 58]]\n3. **Background**: Completely transparent (alpha channel)\n4. **CRITICAL - NO TEXT**: Absolutely no text, words, letters, numbers, or any written content. Pure visual graphics only.\n\n# Output\nDirectly generate an image",
+      "pictogram_prompt": "Cached",
       "image_path": "buffer/Green/pictogram_2.png",
       "success": true
     }
   },
-  "reference_page": 8
+  "reference_page": 0
 }
