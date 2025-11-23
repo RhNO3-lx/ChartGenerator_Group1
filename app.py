@@ -30,6 +30,14 @@ from chart_modules.ChartPipeline.modules.infographics_generator.template_utils i
 app = Flask(__name__)
 CORS(app)
 
+# 加载parsed_variations.json
+PARSED_VARIATIONS = []
+try:
+    with open('parsed_variations.json', 'r', encoding='utf-8') as f:
+        PARSED_VARIATIONS = json.load(f)
+except Exception as e:
+    print(f"Warning: Could not load parsed_variations.json: {e}")
+
 # 存储生成状态
 generation_status = {
     'step': 'idle',
@@ -341,29 +349,39 @@ def get_status():
 
 @app.route('/api/chart_types')
 def get_chart_types():
-    """获取去重后的 chart type 列表，每次返回3个"""
+    """获取去重后的 chart type 列表，每次返回3个，按照parsed_variations.json的顺序"""
     global generation_status
     load_generation_status()
 
-    # 从 extraction_templates 中提取 chart type 并去重
+    # 从 extraction_templates 中提取可用的 chart type
     templates = generation_status.get('extraction_templates', [])
-    chart_types = []
-    seen_types = set()
+    available_types = set()
 
     for template in templates:
         # 模板格式: "d3-js/grouped scatterplot/grouped_scatterplot_plain_chart_01"
         parts = template[0].split('/')
         if len(parts) >= 2:
             chart_type = parts[1]  # 提取 chart type，如 "grouped scatterplot"
-            if chart_type not in seen_types:
-                seen_types.add(chart_type)
-                chart_types.append({
-                    'type': chart_type,
-                    'template': template[0]  # 保存一个代表性模板
-                })
+            available_types.add(chart_type)
 
-    # 打乱 chart types 的顺序
-    random.shuffle(chart_types)
+    # 按照 parsed_variations.json 的顺序筛选和排序
+    chart_types = []
+    for parsed_item in PARSED_VARIATIONS:
+        chart_type_name = parsed_item['name']
+        # 只保留在 extraction_templates 中出现的 chart type
+        if chart_type_name in available_types:
+            # 找一个代表性模板
+            representative_template = None
+            for template in templates:
+                parts = template[0].split('/')
+                if len(parts) >= 2 and parts[1] == chart_type_name:
+                    representative_template = template[0]
+                    break
+
+            chart_types.append({
+                'type': chart_type_name,
+                'template': representative_template
+            })
 
     # 保存到 generation_status
     generation_status['available_chart_types'] = chart_types
@@ -431,16 +449,23 @@ def get_next_chart_types():
 
 @app.route('/api/chart_types/select/<chart_type>')
 def select_chart_type(chart_type):
-    """选择一个 chart type，并生成对应的 variations"""
+    """选择一个 chart type，并生成对应的 variations，按照parsed_variations.json的顺序"""
     global generation_status
     load_generation_status()
 
     generation_status['selected_chart_type'] = chart_type
     generation_status['variation_page'] = 0  # 重置 variation 分页
 
-    # 筛选该 chart type 下的所有 variations
+    # 从 parsed_variations.json 中获取该 chart type 的 variation 顺序
+    parsed_variations_for_type = []
+    for parsed_item in PARSED_VARIATIONS:
+        if parsed_item['name'] == chart_type:
+            parsed_variations_for_type = parsed_item['variations']
+            break
+
+    # 筛选该 chart type 下的所有可用 variations
     templates = generation_status.get('extraction_templates', [])
-    variations = []
+    available_variation_templates = {}  # variation_name -> template_info
 
     for template in templates:
         parts = template[0].split('/')
@@ -453,11 +478,17 @@ def select_chart_type(chart_type):
                 print(f"[过滤] 跳过被禁用的样式: {variation_name}")
                 continue
 
-            variations.append({
+            available_variation_templates[variation_name] = {
                 'name': variation_name,
                 'template': template[0],
                 'fields': template[1] if len(template) > 1 else []
-            })
+            }
+
+    # 按照 parsed_variations.json 的顺序排序
+    variations = []
+    for variation_name in parsed_variations_for_type:
+        if variation_name in available_variation_templates:
+            variations.append(available_variation_templates[variation_name])
 
     generation_status['available_variations'] = variations
     save_generation_status()
@@ -892,4 +923,4 @@ if __name__ == '__main__':
     free_port = find_free_port()
     print(f"Starting server on port {free_port}")
    
-    app.run(debug=True, host='0.0.0.0', port=5177, use_reloader=False)
+    app.run(debug=True, host='0.0.0.0', port=5176, use_reloader=False)

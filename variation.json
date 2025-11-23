@@ -4,13 +4,13 @@
     "small_multiple_area_plain_chart_01": 40
   },
   "horizontal group bar chart": {
-    "total_count": 292,
-    "horizontal_group_bar_chart_03": 110,
+    "total_count": 300,
+    "horizontal_group_bar_chart_03": 114,
     "horizontal_group_bar_chart_13": 39,
     "horizontal_group_bar_chart_06": 31,
-    "horizontal_group_bar_chart_03_hand": 24,
+    "horizontal_group_bar_chart_03_hand": 27,
     "horizontal_group_bar_chart_16": 62,
-    "horizontal_group_bar_plain_chart_01": 18,
+    "horizontal_group_bar_plain_chart_01": 19,
     "horizontal_group_bar_plain_chart_02": 8
   },
   "group dot bar chart": {
@@ -91,15 +91,15 @@
     "dumbbell_plot_plain_chart_02": 4
   },
   "vertical group bar chart": {
-    "total_count": 53,
-    "vertical_group_bar_chart_5": 18,
-    "vertical_group_bar_chart_13": 21,
+    "total_count": 57,
+    "vertical_group_bar_chart_5": 19,
+    "vertical_group_bar_chart_13": 24,
     "vertical_group_bar_plain_chart_01": 14
   },
   "horizontal diverging bar chart": {
-    "total_count": 31,
-    "horizontal_diverging_bar_chart_11": 10,
-    "horizontal_diverging_bar_chart_12": 5,
+    "total_count": 33,
+    "horizontal_diverging_bar_chart_11": 11,
+    "horizontal_diverging_bar_chart_12": 6,
     "horizontal_diverging_bar_chart_05": 7,
     "horizontal_diverging_bar_chart_07": 9
   },
@@ -119,20 +119,23 @@
     "stacked_circular_bar_chart_03": 14
   },
   "vertical bar chart": {
-    "total_count": 36,
-    "vertical_bar_chart_07": 5,
+    "total_count": 51,
+    "vertical_bar_chart_07": 6,
     "vertical_bar_chart_17": 2,
-    "vertical_bar_chart_17_01": 1,
+    "vertical_bar_chart_17_01": 3,
     "vertical_bar_chart_18_01": 1,
     "vertical_bar_chart_18": 1,
     "vertical_bar_chart_20": 4,
-    "vertical_bar_chart_07_2": 5,
-    "vertical_bar_chart_09_2": 4,
-    "vertical_bar_chart_08_2": 9,
+    "vertical_bar_chart_07_2": 8,
+    "vertical_bar_chart_09_2": 7,
+    "vertical_bar_chart_08_2": 11,
     "vertical_bar_plain_chart_02": 1,
     "vertical_bar_plain_chart_01": 1,
     "vertical_bar_chart_08": 1,
-    "vertical_bar_chart_15": 1
+    "vertical_bar_chart_15": 2,
+    "vertical_bar_chart_24": 1,
+    "vertical_bar_plain_chart_04": 1,
+    "vertical_bar_chart_01": 1
   },
   "semicircle donut chart": {
     "total_count": 17,
@@ -189,18 +192,19 @@
     "small_multiple_area_chart_01": 2
   },
   "horizontal bar chart": {
-    "total_count": 18,
+    "total_count": 22,
     "horizontal_bar_chart_1": 1,
     "horizontal_bar_chart_33": 2,
     "horizontal_bar_chart_2": 2,
     "horizontal_bar_chart_5": 2,
-    "horizontal_bar_chart_2_hand": 2,
+    "horizontal_bar_chart_2_hand": 3,
     "horizontal_bar_chart_29": 2,
-    "horizontal_bar_chart_8": 2,
-    "horizontal_bar_chart_5_hand": 1,
+    "horizontal_bar_chart_8": 3,
+    "horizontal_bar_chart_5_hand": 2,
     "horizontal_bar_plain_chart_06": 1,
     "horizontal_bar_chart_30": 2,
-    "horizontal_bar_plain_chart_03": 1
+    "horizontal_bar_plain_chart_03": 1,
+    "horizontal_bar_chart_0": 1
   },
   "grouped scatterplot": {
     "total_count": 39,
@@ -219,10 +223,10 @@
     "rose_plain_chart_01": 4
   },
   "donut chart": {
-    "total_count": 39,
-    "donut_chart_00": 3,
+    "total_count": 43,
+    "donut_chart_00": 5,
     "donut_chart_03_d3": 2,
-    "donut_chart_00_hand": 3,
+    "donut_chart_00_hand": 4,
     "donut_chart_04_hand": 6,
     "donut_chart_02": 5,
     "donut_chart_02_hand": 6,
@@ -233,7 +237,8 @@
     "donut_chart_06_d3": 1,
     "donut_chart_03_d3_hand": 1,
     "donut_chart_04_d3": 5,
-    "donut_chart_09": 1
+    "donut_chart_09": 1,
+    "donut_chart_icons_03": 1
   },
   "range chart": {
     "total_count": 71,
@@ -259,15 +264,15 @@
     "vertical_dot_bar_plain_chart_01": 5
   },
   "proportional area chart (triangle)": {
-    "total_count": 11,
+    "total_count": 12,
     "proportional_area_chart_triangle_08": 5,
-    "proportional_area_chart_triangle_05": 2,
+    "proportional_area_chart_triangle_05": 3,
     "proportional_area_chart_triangle_09": 3,
     "proportional_area_chart_triangle_04": 1
   },
   "proportional area chart (circle)": {
-    "total_count": 3,
-    "proportional_area_chart_circle_11": 1,
+    "total_count": 4,
+    "proportional_area_chart_circle_11": 2,
     "proportional_area_chart_circle_12": 1,
     "proportional_area_chart_circle_06": 1
   },
@@ -301,8 +306,8 @@
     "semicircle_pie_plain_chart_01": 1
   },
   "proportional area chart (square)": {
-    "total_count": 3,
-    "proportional_area_chart_square_08": 1,
+    "total_count": 4,
+    "proportional_area_chart_square_08": 2,
     "proportional_area_chart_square_01": 1,
     "proportional_area_chart_square_04": 1
   },
