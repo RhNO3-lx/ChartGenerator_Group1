@@ -9,6 +9,7 @@ from pathlib import Path
 import cairosvg
 from PIL import Image
 from io import BytesIO
+import numpy as np
 
 # API 配置
 API_KEY = "sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360"
@@ -45,6 +46,84 @@ def svg_to_png(svg_content: str, output_path: str, background_color: str = None)
         print(f"SVG 转 PNG 失败: {e}")
         return False
 
+
+def auto_crop_image(image_path: str, background_color: str = '#ffffff', padding: int = 50) -> str:
+    """
+    自动裁剪图片，去除背景色并保留内容区域
+    
+    Args:
+        image_path: 输入图片路径
+        background_color: 背景颜色（hex 格式）
+        padding: 内容周围的边距（像素）
+    
+    Returns:
+        str: 裁剪后的图片路径
+    """
+    try:
+        # 打开图片
+        img = Image.open(image_path)
+        img_array = np.array(img)
+        
+        # 解析背景颜色
+        bg_color = background_color.lstrip('#')
+        bg_r = int(bg_color[0:2], 16)
+        bg_g = int(bg_color[2:4], 16)
+        bg_b = int(bg_color[4:6], 16)
+        
+        # 创建 mask：找出非背景色的像素
+        # 容忍度：允许 RGB 值有 10 的差异
+        tolerance = 10
+        if img.mode == 'RGBA':
+            # 对于 RGBA 图片，检查 RGB 通道
+            mask = (
+                (np.abs(img_array[:, :, 0].astype(int) - bg_r) > tolerance) |
+                (np.abs(img_array[:, :, 1].astype(int) - bg_g) > tolerance) |
+                (np.abs(img_array[:, :, 2].astype(int) - bg_b) > tolerance)
+            )
+        else:
+            # 对于 RGB 图片
+            mask = (
+                (np.abs(img_array[:, :, 0].astype(int) - bg_r) > tolerance) |
+                (np.abs(img_array[:, :, 1].astype(int) - bg_g) > tolerance) |
+                (np.abs(img_array[:, :, 2].astype(int) - bg_b) > tolerance)
+            )
+        
+        # 找到非背景色区域的边界
+        rows = np.any(mask, axis=1)
+        cols = np.any(mask, axis=0)
+        
+        if not np.any(rows) or not np.any(cols):
+            print("Warning: No content found, returning original image")
+            return image_path
+        
+        y_min, y_max = np.where(rows)[0][[0, -1]]
+        x_min, x_max = np.where(cols)[0][[0, -1]]
+        
+        # 添加 padding，但不超出图片边界
+        height, width = img_array.shape[:2]
+        y_min = max(0, y_min - padding)
+        y_max = min(height, y_max + padding + 1)
+        x_min = max(0, x_min - padding)
+        x_max = min(width, x_max + padding + 1)
+        
+        print(f"Auto-crop: Original size {width}x{height}, Crop to ({x_min},{y_min}) - ({x_max},{y_max})")
+        print(f"Content size: {x_max - x_min}x{y_max - y_min}")
+        
+        # 裁剪图片
+        cropped_img = img.crop((x_min, y_min, x_max, y_max))
+        
+        # 保存裁剪后的图片
+        output_path = image_path.replace('.png', '_cropped.png')
+        cropped_img.save(output_path, 'PNG')
+        
+        print(f"Saved cropped image to: {output_path}")
+        return output_path
+        
+    except Exception as e:
+        print(f"Auto-crop failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return image_path  # 失败时返回原图
 
 def image_to_base64(image_path: str) -> str:
     """
@@ -160,7 +239,7 @@ Generate a high-quality infographic that looks like it was created with the same
             max_tokens=8192,
             temperature=0.7
         )
-
+        print(response)
         if (
             hasattr(response.choices[0].message, "multi_mod_content")
             and response.choices[0].message.multi_mod_content is not None
@@ -207,14 +286,15 @@ Generate a high-quality infographic that looks like it was created with the same
         }
 
 
-def process_final_export(png_base64: str, reference_image_path: str, session_id: str) -> dict:
+def process_final_export(png_base64: str, reference_image_path: str, session_id: str, background_color: str = '#ffffff') -> dict:
     """
-    处理最终导出：接收 PNG base64 -> Gemini 风格化
+    处理最终导出：接收 PNG base64 -> 自动裁剪 -> Gemini 风格化
 
     Args:
         png_base64: 前端导出的 PNG 图片（base64 编码，带 data URI 前缀）
         reference_image_path: 用户选择的参考信息图表路径
         session_id: 当前会话 ID
+        background_color: 背景颜色，用于自动裁剪
 
     Returns:
         dict: 包含最终生成结果的字典
@@ -239,11 +319,20 @@ def process_final_export(png_base64: str, reference_image_path: str, session_id:
 
         print(f"保存中间 PNG 成功: {intermediate_png_path}")
 
-        # 2. 使用 Gemini 进行风格化重生成
+        # 2. 自动裁剪图片（去除背景，保留内容）
+        cropped_image_path = auto_crop_image(
+            image_path=intermediate_png_path,
+            background_color=background_color,
+            padding=50  # 50px padding
+        )
+        
+        print(f"自动裁剪完成: {cropped_image_path}")
+
+        # 3. 使用 Gemini 进行风格化重生成
         final_png_path = f"buffer/{session_id}/export_final.png"
         result = refine_with_gemini(
             reference_image_path=reference_image_path,
-            current_image_path=intermediate_png_path,
+            current_image_path=cropped_image_path,
             output_path=final_png_path
         )
 

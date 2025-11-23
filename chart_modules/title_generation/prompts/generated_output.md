@@ -1,5 +1,8 @@
-Generate a text image with the content of "App Store Growth: Google vs iOS (2009-2013)". Create a text image with the title "App Store Growth: Google vs iOS (2009-2013)" divided into three lines. The first line should read "App Store Growth" in a large, bold font to emphasize its significance. The second line should have "Google vs iOS" in a slightly smaller, italicized font to indicate comparison without overwhelming the main title. The third line should contain the years "(2009-2013)" in a smaller, regular font, providing context.
+Generate a text image with the content of "Average Commute Times by Transportation Mode". Generate an image with the text layout split into two lines: 
 
-Highlight the key text "App Store Growth" by using an enlarged font size and a vibrant blue color to make it stand out from the rest of the title. In addition, consider replacing the letter "o" in "Google" with a small, simplified graphic of the Google Play store icon, giving a unique touch to the representation of the platform.
+1. The first line reads "Average Commute Times" with an emphasis on "Average" and "Commute" by enlarging the font size and using a vibrant blue color. 
+2. The second line reads "by Transportation Mode" in a more subtle, smaller font size, maintaining a dark gray color for contrast.
 
-Select a modern, sans-serif font style for clarity and approachability. Apply a subtle shadow effect to the text to create depth, ensuring that the title is visually appealing and easy to read. The overall composition should be centered, with ample spacing between the lines for legibility while maintaining a professional and engaging look.
+Enhance the design by replacing the letter "o" in "Transportation" with an icon of a small train, positioned centrally to maintain balance and draw attention.
+
+For font style, use a modern sans-serif typeface that conveys clarity and contemporary appeal. Apply a subtle shadow effect to create depth in the text, making it visually engaging without being overwhelming.

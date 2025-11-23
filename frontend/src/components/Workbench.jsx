@@ -788,16 +788,20 @@ Generate a high-quality infographic that looks like it was created with the same
       setLoadingText('正在使用 AI 精修信息图表...');
       
       try {
-          // Export canvas to PNG base64
+          // Export full canvas to PNG base64 (2x resolution)
           const pngDataURL = canvas.toDataURL({
               format: 'png',
               quality: 1,
-              multiplier: 2  // 2x resolution
+              multiplier: 2
           });
           
-          // Send to backend for refinement
+          // Get background color for backend processing
+          const backgroundColor = canvas.backgroundColor || '#ffffff';
+          
+          // Send to backend for refinement with auto-cropping
           const response = await axios.post('/api/export_final', {
-              png_base64: pngDataURL
+              png_base64: pngDataURL,
+              background_color: backgroundColor
           });
           
           if (response.data.status === 'started') {

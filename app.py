@@ -751,6 +751,7 @@ def export_final():
     try:
         data = request.json
         png_base64 = data.get('png_base64')
+        background_color = data.get('background_color', '#ffffff')
 
         if not png_base64:
             return jsonify({'error': '缺少 PNG 数据'}), 400
@@ -778,7 +779,8 @@ def export_final():
                 result = process_final_export(
                     png_base64=png_base64,
                     reference_image_path=reference_image_path,
-                    session_id=session_id
+                    session_id=session_id,
+                    background_color=background_color
                 )
 
                 if result['success']:
@@ -968,8 +970,8 @@ def get_files():
 
 
 if __name__ == '__main__':
-    # 自动寻找可用端口
-    free_port = find_free_port()
-    print(f"Starting server on port {free_port}")
+    # 使用固定端口
+    port = 5177
+    print(f"Starting server on port {port}")
    
-    app.run(debug=True, host='0.0.0.0', port=5176, use_reloader=False)
+    app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
