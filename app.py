@@ -53,6 +53,9 @@ generation_status = {
     'id': ''
 }
 
+# 分页状态（不需要持久化）
+reference_page = 0
+
 CACHE_FILE = "generation_status_cache.json"
 
 def load_generation_status():
@@ -116,16 +119,26 @@ def generate_chart():
     try:
         # 处理标题路径
         if not title or title == '':
-            # 如果没有提供标题，使用默认的 title_0.png
-            title = f"buffer/{generation_status['id']}/title_0.png"
+            # 如果没有提供标题，尝试从 generation_status 获取第一个
+            if 'title_options' in generation_status and generation_status['title_options']:
+                 # title_options keys are filenames like "title_0_hash.png"
+                 first_title = sorted(list(generation_status['title_options'].keys()))[0]
+                 title = f"buffer/{generation_status['id']}/{first_title}"
+            else:
+                 # Fallback
+                 title = f"buffer/{generation_status['id']}/title_0.png"
         elif "origin_images" not in title:
             # 如果不是 origin_images，添加 buffer 路径
             title = f"buffer/{generation_status['id']}/{title}"
 
         # 处理配图路径
         if not pictogram or pictogram == '':
-            # 如果没有提供配图，使用默认的 pictogram_0.png
-            pictogram = f"buffer/{generation_status['id']}/pictogram_0.png"
+            # 如果没有提供配图，尝试从 generation_status 获取第一个
+            if 'pictogram_options' in generation_status and generation_status['pictogram_options']:
+                 first_pictogram = sorted(list(generation_status['pictogram_options'].keys()))[0]
+                 pictogram = f"buffer/{generation_status['id']}/{first_pictogram}"
+            else:
+                 pictogram = f"buffer/{generation_status['id']}/pictogram_0.png"
         elif "origin_images" not in pictogram:
             # 如果不是 origin_images，添加 buffer 路径
             pictogram = f"buffer/{generation_status['id']}/{pictogram}"
@@ -235,7 +248,7 @@ def get_data(datafile):
 @app.route('/api/start_find_reference/<datafile>')
 def start_find_reference(datafile):
     # 寻找适配的variation
-    global generation_status
+    global generation_status, reference_page
     load_generation_status()
 
     generation_status["selected_data"] = f'processed_data/{datafile.replace("csv","json")}'
@@ -252,6 +265,9 @@ def start_find_reference(datafile):
     generation_status['chart_type_page'] = 0
     generation_status['variation_page'] = 0
     generation_status['selected_chart_type'] = ''
+
+    # 重置 reference 分页（内存变量）
+    reference_page = 0
 
     # 启动布局抽取线程
     thread = Thread(target = threaded_task, args=(conduct_reference_finding, datafile, generation_status,))
@@ -346,6 +362,8 @@ def regenerate_pictogram(title):
 
 @app.route('/api/status')
 def get_status():
+    # Do NOT load from file here, as it might overwrite in-memory progress updates from running threads
+    # load_generation_status() 
     return jsonify(generation_status)
 
 @app.route('/api/chart_types')
@@ -354,83 +372,102 @@ def get_chart_types():
     global generation_status
     load_generation_status()
 
-    # 从 extraction_templates 中提取可用的 chart type
-    templates = generation_status.get('extraction_templates', [])
-    available_types = set()
+    # 如果缓存中已有 available_chart_types，直接使用
+    if generation_status.get('available_chart_types'):
+        chart_types = generation_status['available_chart_types']
+    else:
+        # 从 extraction_templates 中提取可用的 chart type
+        templates = generation_status.get('extraction_templates', [])
+        
+        # 1. 收集所有可用的 variation 名称
+        available_variations = set()
+        for template in templates:
+            # 模板格式: "d3-js/grouped scatterplot/grouped_scatterplot_plain_chart_01"
+            parts = template[0].split('/')
+            if len(parts) >= 3:
+                variation_name = parts[2]
+                available_variations.add(variation_name)
 
-    for template in templates:
-        # 模板格式: "d3-js/grouped scatterplot/grouped_scatterplot_plain_chart_01"
-        parts = template[0].split('/')
-        if len(parts) >= 2:
-            chart_type = parts[1]  # 提取 chart type，如 "grouped scatterplot"
-            available_types.add(chart_type)
-
-    # 按照 parsed_variations.json 的顺序筛选和排序
-    chart_types = []
-    
-    # 获取所有示意图文件
-    chart_type_images = {}
-    static_chart_types_dir = os.path.join(app.root_path, 'static', 'chart_types')
-    if os.path.exists(static_chart_types_dir):
-        files = os.listdir(static_chart_types_dir)
-        for f in files:
-            if f.lower().endswith('.png'):
-                # Key is lowercase filename without extension
-                key = f.lower().replace('.png', '')
-                chart_type_images[key] = f
-
-    for parsed_item in PARSED_VARIATIONS:
-        chart_type_name = parsed_item['name']
-        # 只保留在 extraction_templates 中出现的 chart type
-        if chart_type_name in available_types:
-            # 找一个代表性模板
-            representative_template = None
-            for template in templates:
-                parts = template[0].split('/')
-                if len(parts) >= 2 and parts[1] == chart_type_name:
-                    representative_template = template[0]
+        # 2. 根据 PARSED_VARIATIONS 确定可用的 chart type
+        available_types = set()
+        for parsed_item in PARSED_VARIATIONS:
+            chart_type_name = parsed_item['name']
+            variations = parsed_item.get('variations', [])
+            for v in variations:
+                if v in available_variations:
+                    available_types.add(chart_type_name)
                     break
-            
-            # Find matching image
-            image_filename = None
-            search_name = chart_type_name.lower()
-            
-            # 1. Try exact match (lowercase)
-            if search_name in chart_type_images:
-                image_filename = chart_type_images[search_name]
-            else:
-                # 2. Try fuzzy match
-                matches = difflib.get_close_matches(search_name, chart_type_images.keys(), n=1, cutoff=0.8)
-                if matches:
-                    image_filename = chart_type_images[matches[0]]
+
+        # 按照 parsed_variations.json 的顺序筛选和排序
+        chart_types = []
+        
+        # 获取所有示意图文件
+        chart_type_images = {}
+        static_chart_types_dir = os.path.join(app.root_path, 'static', 'chart_types')
+        if os.path.exists(static_chart_types_dir):
+            files = os.listdir(static_chart_types_dir)
+            for f in files:
+                if f.lower().endswith('.png'):
+                    # Key is lowercase filename without extension
+                    key = f.lower().replace('.png', '')
+                    chart_type_images[key] = f
+
+        for parsed_item in PARSED_VARIATIONS:
+            chart_type_name = parsed_item['name']
+            # 只保留在 extraction_templates 中出现的 chart type
+            if chart_type_name in available_types:
+                # 找一个代表性模板
+                representative_template = None
+                type_variations = set(parsed_item.get('variations', []))
                 
-                # 3. If not found and contains "multiple", try removing "multiple"
-                if not image_filename and 'multiple' in search_name:
-                    # Remove 'multiple' and 'small' (often appear together) and extra spaces
-                    stripped_name = search_name.replace('multiple', '').replace('small', '').strip()
-                    # Clean up double spaces if any
-                    stripped_name = ' '.join(stripped_name.split())
+                for template in templates:
+                    parts = template[0].split('/')
+                    if len(parts) >= 3:
+                        variation_name = parts[2]
+                        if variation_name in type_variations:
+                            representative_template = template[0]
+                            break
+                
+                # Find matching image
+                image_filename = None
+                search_name = chart_type_name.lower()
+                
+                # 1. Try exact match (lowercase)
+                if search_name in chart_type_images:
+                    image_filename = chart_type_images[search_name]
+                else:
+                    # 2. Try fuzzy match
+                    matches = difflib.get_close_matches(search_name, chart_type_images.keys(), n=1, cutoff=0.8)
+                    if matches:
+                        image_filename = chart_type_images[matches[0]]
                     
-                    # Try exact match with stripped name
-                    if stripped_name in chart_type_images:
-                        image_filename = chart_type_images[stripped_name]
-                    else:
-                        # Try fuzzy match with stripped name
-                        matches = difflib.get_close_matches(stripped_name, chart_type_images.keys(), n=1, cutoff=0.8)
-                        if matches:
-                            image_filename = chart_type_images[matches[0]]
-            
-            image_url = f"/static/chart_types/{image_filename}" if image_filename else None
+                    # 3. If not found and contains "multiple", try removing "multiple"
+                    if not image_filename and 'multiple' in search_name:
+                        # Remove 'multiple' and 'small' (often appear together) and extra spaces
+                        stripped_name = search_name.replace('multiple', '').replace('small', '').strip()
+                        # Clean up double spaces if any
+                        stripped_name = ' '.join(stripped_name.split())
+                        
+                        # Try exact match with stripped name
+                        if stripped_name in chart_type_images:
+                            image_filename = chart_type_images[stripped_name]
+                        else:
+                            # Try fuzzy match with stripped name
+                            matches = difflib.get_close_matches(stripped_name, chart_type_images.keys(), n=1, cutoff=0.8)
+                            if matches:
+                                image_filename = chart_type_images[matches[0]]
+                
+                image_url = f"/static/chart_types/{image_filename}" if image_filename else None
 
-            chart_types.append({
-                'type': chart_type_name,
-                'template': representative_template,
-                'image_url': image_url
-            })
+                chart_types.append({
+                    'type': chart_type_name,
+                    'template': representative_template,
+                    'image_url': image_url
+                })
 
-    # 保存到 generation_status
-    generation_status['available_chart_types'] = chart_types
-    save_generation_status()  # 保存到缓存文件
+        # 保存到 generation_status
+        generation_status['available_chart_types'] = chart_types
+        save_generation_status()  # 保存到缓存文件
 
     # 分页获取，每页3个
     page = generation_status.get('chart_type_page', 0)
@@ -620,7 +657,7 @@ def get_extraction_templates():
 @app.route('/api/references')
 def get_references():
     """获取参考图：基于主题相似性排序，支持分页（首次返回5张，可加载更多）"""
-    global generation_status
+    global generation_status, reference_page
     load_generation_status()
 
     # 获取当前用户的数据文件
@@ -628,7 +665,7 @@ def get_references():
     datafile = selected_data.replace('processed_data/', '').replace('.json', '.csv') if selected_data else ''
 
     # 获取分页参数
-    page = generation_status.get('reference_page', 0)
+    page = reference_page
     page_size = 3
 
     if datafile:
@@ -667,7 +704,7 @@ def get_references():
 @app.route('/api/references/next')
 def get_next_references():
     """获取下一批参考图（加载更多功能）"""
-    global generation_status
+    global generation_status, reference_page
     load_generation_status()
 
     # 获取当前数据文件
@@ -678,15 +715,14 @@ def get_next_references():
         sorted_images = get_sorted_infographics_by_theme(datafile)
     else:
         return jsonify({'status': 'error', 'message': 'No data file selected'}), 400
-    
-    page = generation_status.get('reference_page', 0)
+
+    page = reference_page
     page_size = 3
     total_pages = (len(sorted_images) + page_size - 1) // page_size
 
     # 加载下一页（不循环）
     if (page + 1) < total_pages:
-        generation_status['reference_page'] = page + 1
-        save_generation_status()
+        reference_page = page + 1
 
     return get_references()
 

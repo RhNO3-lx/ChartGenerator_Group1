@@ -94,14 +94,15 @@ def get_title(title,
             prompt_times = 2,
             image_times = 4,
             image_res = "RESOLUTION_1536_640",#"RESOLUTION_1408_576",
-            save_path = 'images/title/generated_image.png'):
+            save_path = 'images/title/generated_image.png',
+            style_description = None):
     succ = 0
     save_path_list = []
     for i in range(prompt_times):
         if succ == 1:
             break
         print("Prompt times: ", i)
-        get_prompt(title, bg_hex)
+        get_prompt(title, bg_hex, style_description=style_description)
         print("Prompt generated.")
         for j in range(image_times):
             print("Image times: ", j)

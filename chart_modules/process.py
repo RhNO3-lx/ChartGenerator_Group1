@@ -6,6 +6,7 @@ from threading import Thread
 import traceback
 from pathlib import Path
 import sys
+import hashlib
 project_root = Path(__file__).parent
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 print("sys.path:",sys.path)
@@ -16,6 +17,7 @@ from chart_modules.reference_recognize.extract_chart_type import extract_chart_t
 from chart_modules.reference_recognize.extract_main_color import extract_main_color
 from chart_modules.generate_variation import generate_variation
 from chart_modules.ChartPipeline.modules.infographics_generator.template_utils import block_list
+from chart_modules.reference_describe import get_reference_descriptions
 
 # 默认颜色配置（在选择参考图之前使用）
 DEFAULT_COLORS = [
@@ -68,6 +70,20 @@ def conduct_layout_extraction(reference, datafile, generation_status):
         generation_status['style']["colors"], generation_status['style']["bg_color"] = extract_main_color(reference)
         print("提取的颜色: %s %s", generation_status['style']["colors"], generation_status['style']["bg_color"])
 
+        # Step 2: 生成参考图的标题和pictogram描述
+        generation_status['progress'] = '分析参考图风格...'
+        try:
+            descriptions = get_reference_descriptions(reference, use_cache=True)
+            if descriptions:
+                generation_status['reference_descriptions'] = descriptions
+                print(f"已生成参考图描述")
+            else:
+                generation_status['reference_descriptions'] = None
+                print(f"未能生成参考图描述")
+        except Exception as desc_error:
+            print(f"生成参考图描述时出错: {desc_error}")
+            generation_status['reference_descriptions'] = None
+
         # 现在不需要在这里生成 chart 预览，因为用户已经选择了 chart type 和 variation
         # 只需要保存颜色信息供后续使用
 
@@ -87,8 +103,8 @@ def conduct_title_generation(datafile, generation_status, use_cache=True):
     generation_status['completed'] = False
 
     try:
-        # 生成3张标题图片
-        generation_status['progress'] = '生成标题中...'
+        # 生成3张标题图片（并行）
+        generation_status['progress'] = '并行生成标题中...'
         generator = InfographicImageGenerator()
         generator.output_dir = f"buffer/{generation_status['id']}"
 
@@ -100,31 +116,56 @@ def conduct_title_generation(datafile, generation_status, use_cache=True):
         else:
             bg_hex = "#f5f3ef"  # 默认浅灰色
 
-        # 生成3个标题选项
-        title_options = {}
-        for i in range(3):
-            output_filename = f"buffer/{generation_status['id']}/title_{i}.png"
-            generation_status['progress'] = f'生成标题 {i+1}/3...'
+        # 获取参考图的标题描述
+        reference_descriptions = generation_status.get('reference_descriptions', {})
+        title_style_description = reference_descriptions.get('title_description') if reference_descriptions else None
 
+        # Generate hash for description
+        desc_hash = ""
+        if title_style_description:
+             desc_hash = "_" + hashlib.md5(title_style_description.encode('utf-8')).hexdigest()[:8]
+
+        # 并行生成3个标题选项
+        title_options = {}
+        results = [None, None, None]
+        threads = []
+
+        def generate_title_task(index, output_filename):
             result = generator.generate_single_title(
                 csv_path=os.path.join('processed_data', datafile),
                 bg_color=bg_hex,
                 output_filename=output_filename,
-                use_cache=use_cache
+                use_cache=use_cache,
+                style_description=title_style_description
             )
+            results[index] = result
+            print(f"Generated title {index}: {result['title_text']}")
 
-            title_options[f'title_{i}.png'] = {
-                'title_text': result['title_text'],
-                'image_path': result['image_path'],
-                'success': result['success']
-            }
+        for i in range(3):
+            output_filename = f"buffer/{generation_status['id']}/title_{i}{desc_hash}.png"
+            thread = Thread(target=generate_title_task, args=(i, output_filename))
+            thread.start()
+            threads.append(thread)
 
-            print(f"Generated title {i}: {result['title_text']}")
+        # 等待所有线程完成
+        for thread in threads:
+            thread.join()
+
+        # 收集结果
+        for i in range(3):
+            if results[i]:
+                title_options[f'title_{i}{desc_hash}.png'] = {
+                    'title_text': results[i]['title_text'],
+                    'image_path': results[i]['image_path'],
+                    'success': results[i]['success']
+                }
 
         # 存储所有标题选项
         generation_status['title_options'] = title_options
         # 默认使用第一个标题
-        generation_status['current_title_text'] = title_options['title_0.png']['title_text']
+        first_key = f'title_0{desc_hash}.png'
+        if first_key in title_options:
+            generation_status['current_title_text'] = title_options[first_key]['title_text']
 
         generation_status['status'] = 'completed'
         generation_status['completed'] = True
@@ -138,11 +179,11 @@ def conduct_title_generation(datafile, generation_status, use_cache=True):
 def conduct_pictogram_generation(title, generation_status, use_cache=True):
     generation_status['step'] = 'pictogram_generation'
     generation_status['status'] = 'processing'
-    generation_status['progress'] = '生成配图中...'
+    generation_status['progress'] = '并行生成配图中...'
     generation_status['completed'] = False
 
     try:
-        # 生成3张配图
+        # 生成3张配图（并行）
         generator = InfographicImageGenerator()
         generator.output_dir = f"buffer/{generation_status['id']}"
 
@@ -151,26 +192,49 @@ def conduct_pictogram_generation(title, generation_status, use_cache=True):
         if not title_text and title in generation_status.get('title_options', {}):
             title_text = generation_status['title_options'][title].get('title_text', '')
 
-        # 生成3个配图选项
-        pictogram_options = {}
-        for i in range(3):
-            output_filename = f"buffer/{generation_status['id']}/pictogram_{i}.png"
-            generation_status['progress'] = f'生成配图 {i+1}/3...'
+        # 获取参考图的pictogram描述
+        reference_descriptions = generation_status.get('reference_descriptions', {})
+        pictogram_style_description = reference_descriptions.get('pictogram_description') if reference_descriptions else None
 
+        # Generate hash for description
+        desc_hash = ""
+        if pictogram_style_description:
+             desc_hash = "_" + hashlib.md5(pictogram_style_description.encode('utf-8')).hexdigest()[:8]
+
+        # 并行生成3个配图选项
+        pictogram_options = {}
+        results = [None, None, None]
+        threads = []
+
+        def generate_pictogram_task(index, output_filename):
             result = generator.generate_single_pictogram(
                 title_text=title_text,
                 colors=generation_status['style']['colors'],
                 output_filename=output_filename,
-                use_cache=use_cache
+                use_cache=use_cache,
+                style_description=pictogram_style_description
             )
+            results[index] = result
+            print(f"Generated pictogram {index} for: {title_text}")
 
-            pictogram_options[f'pictogram_{i}.png'] = {
-                'pictogram_prompt': result['pictogram_prompt'],
-                'image_path': result['image_path'],
-                'success': result['success']
-            }
+        for i in range(3):
+            output_filename = f"buffer/{generation_status['id']}/pictogram_{i}{desc_hash}.png"
+            thread = Thread(target=generate_pictogram_task, args=(i, output_filename))
+            thread.start()
+            threads.append(thread)
 
-            print(f"Generated pictogram {i} for: {title_text}")
+        # 等待所有线程完成
+        for thread in threads:
+            thread.join()
+
+        # 收集结果
+        for i in range(3):
+            if results[i]:
+                pictogram_options[f'pictogram_{i}{desc_hash}.png'] = {
+                    'pictogram_prompt': results[i]['pictogram_prompt'],
+                    'image_path': results[i]['image_path'],
+                    'success': results[i]['success']
+                }
 
         # 存储所有配图选项
         generation_status['pictogram_options'] = pictogram_options
@@ -279,7 +343,7 @@ def conduct_chart_type_preview_generation(chart_types_to_generate, generation_st
 
 
 def conduct_variation_preview_generation(variations_to_generate, generation_status):
-    """为每个 variation 生成预览图"""
+    """为每个 variation 生成预览图，如果文件已存在则跳过"""
     generation_status['step'] = 'variation_preview'
     generation_status['status'] = 'processing'
     generation_status['progress'] = '生成图表样式预览...'
@@ -293,6 +357,14 @@ def conduct_variation_preview_generation(variations_to_generate, generation_stat
             variation_name = variation_info['name']
             template_fields = variation_info.get('fields', [])
 
+            # 检查预览图是否已存在（同时检查 SVG 和 PNG）
+            output_svg = f"buffer/{generation_status['id']}/variation_{variation_name}.svg"
+            output_png = f"buffer/{generation_status['id']}/variation_{variation_name}.png"
+
+            if os.path.exists(output_svg) and os.path.exists(output_png):
+                print(f"[缓存命中] variation 预览图已存在，跳过生成: {variation_name}")
+                continue
+
             print(f"Generating variation preview: {variation_name}")
             print(f"[DEBUG]   template_path: {template_path}")
             print(f"[DEBUG]   template_fields: {template_fields}")
@@ -300,7 +372,7 @@ def conduct_variation_preview_generation(variations_to_generate, generation_stat
             # 生成预览图 - 传入完整的 template 信息 [path, fields]
             thread = Thread(target=generate_variation, kwargs={
                 'input': generation_status["selected_data"],
-                'output': f"buffer/{generation_status['id']}/variation_{variation_name}.svg",
+                'output': output_svg,
                 'chart_template': [template_path, template_fields],
                 'main_colors': DEFAULT_COLORS,
                 'bg_color': DEFAULT_BG_COLOR,
