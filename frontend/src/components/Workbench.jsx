@@ -29,12 +29,35 @@ function Workbench() {
 
   // --- State: Edit Panel ---
   const [showEditPanel, setShowEditPanel] = useState(false);
+  const [bgColor, setBgColor] = useState('#ffffff');
   const [editConfig, setEditConfig] = useState({
     colorScheme: 'default',
     textSize: 'medium',
     textStyle: 'normal',
-    prompt: ''
+    prompt: `You are given two images:
+
+1. **Reference Image**: An infographic with a specific visual style (colors, layout, typography, design elements)
+2. **Current Image**: A newly generated infographic that needs to be refined
+
+Your task is to refine the Current Image by applying the visual style from the Reference Image, while preserving all the data, content, and information from the Current Image.
+
+Specifically:
+- Match the color palette from the Reference Image
+- Apply similar design aesthetics (shapes, icons, decorative elements)
+- Use similar typography style if applicable
+- Preserve the layout structure of the Current Image
+- Fix visual defects (blurry text, distorted shapes)
+- Ensure stability and consistency of **title, chart, pictogram**
+- Keep the core content of **title, chart, pictogram** from the Current Image unchanged
+
+Generate a high-quality infographic that looks like it was created with the same design system as the Reference Image.`
   });
+  
+  // --- State: Refine ---
+  const [isRefining, setIsRefining] = useState(false);
+  const [refinedImages, setRefinedImages] = useState([]); // Array of refined image URLs
+  const [showRefinedModal, setShowRefinedModal] = useState(false);
+  const [selectedRefinedImage, setSelectedRefinedImage] = useState(null);
 
   // --- State: References & Assets ---
   const [references, setReferences] = useState([]);
@@ -43,6 +66,13 @@ function Workbench() {
   const [selectedPictograms, setSelectedPictograms] = useState([]);
   const [titleOptions, setTitleOptions] = useState([]);
   const [pictogramOptions, setPictogramOptions] = useState([]);
+  
+  // --- State: Preserve Element Positions ---
+  const [savedPositions, setSavedPositions] = useState({
+    chart: null,
+    title: null,
+    pictograms: []
+  });
 
   // --- Initialization ---
   useEffect(() => {
@@ -52,22 +82,35 @@ function Workbench() {
       .catch(err => console.error(err));
 
     // Initialize Canvas
+    const container = document.querySelector('.canvas-wrapper');
+    const canvasWidth = container ? container.clientWidth - 80 : 800;
+    const canvasHeight = container ? container.clientHeight - 80 : 600;
+    
+    const initialBgColor = '#ffffff';
     const c = new fabric.Canvas('workbenchCanvas', {
-      width: 800,
-      height: 600,
-      backgroundColor: '#ffffff',
+      width: canvasWidth,
+      height: canvasHeight,
+      backgroundColor: initialBgColor,
       selection: true,
       preserveObjectStacking: true
     });
     setCanvas(c);
+    setBgColor(initialBgColor);
+    
+    // Set canvas wrapper background color
+    if (container) {
+        container.style.backgroundColor = initialBgColor;
+    }
 
-    // Resize canvas on window resize (optional, simple implementation)
+    // Resize canvas on window resize
     const resizeCanvas = () => {
-        const container = document.querySelector('.main-preview');
-        if (container) {
-            // c.setWidth(container.clientWidth);
-            // c.setHeight(container.clientHeight);
-            // c.renderAll();
+        const container = document.querySelector('.canvas-wrapper');
+        if (container && c) {
+            const newWidth = container.clientWidth - 80;
+            const newHeight = container.clientHeight - 80;
+            c.setWidth(newWidth);
+            c.setHeight(newHeight);
+            c.renderAll();
         }
     };
     window.addEventListener('resize', resizeCanvas);
@@ -382,16 +425,62 @@ function Workbench() {
   useEffect(() => {
       if (selectedVariation && (titleImage || selectedPictograms.length > 0)) {
           // Use direct URL for chart to avoid re-generation, and overlay assets in frontend
-          loadChartToCanvas(selectedVariation, `/currentfilepath/variation_${selectedVariation}.png`);
+          // Pass true to indicate we should preserve positions
+          loadChartToCanvas(selectedVariation, `/currentfilepath/variation_${selectedVariation}.png`, true);
       }
   }, [titleImage, selectedPictograms]);
 
-  const loadChartToCanvas = async (variationName, directUrl = null) => {
+  const loadChartToCanvas = async (variationName, directUrl = null, preservePositions = false) => {
       if (!canvas || !selectedFile) return;
       setLoading(true);
       setLoadingText('Updating canvas...');
       
       try {
+          // Save current positions before clearing canvas
+          let currentPositions = { chart: null, title: null, pictograms: [] };
+          
+          if (preservePositions && canvas.getObjects().length > 0) {
+              const objects = canvas.getObjects();
+              // Assume: first object is chart, second is title, rest are pictograms
+              if (objects[0]) {
+                  currentPositions.chart = {
+                      left: objects[0].left,
+                      top: objects[0].top,
+                      scaleX: objects[0].scaleX,
+                      scaleY: objects[0].scaleY,
+                      angle: objects[0].angle,
+                      originX: objects[0].originX,
+                      originY: objects[0].originY
+                  };
+              }
+              if (objects[1]) {
+                  currentPositions.title = {
+                      left: objects[1].left,
+                      top: objects[1].top,
+                      scaleX: objects[1].scaleX,
+                      scaleY: objects[1].scaleY,
+                      angle: objects[1].angle,
+                      originX: objects[1].originX,
+                      originY: objects[1].originY
+                  };
+              }
+              for (let i = 2; i < objects.length; i++) {
+                  currentPositions.pictograms.push({
+                      left: objects[i].left,
+                      top: objects[i].top,
+                      scaleX: objects[i].scaleX,
+                      scaleY: objects[i].scaleY,
+                      angle: objects[i].angle,
+                      originX: objects[i].originX,
+                      originY: objects[i].originY
+                  });
+              }
+              setSavedPositions(currentPositions);
+          } else if (savedPositions.chart || savedPositions.title || savedPositions.pictograms.length > 0) {
+              // Use previously saved positions
+              currentPositions = savedPositions;
+          }
+          
           let imageUrl = '';
           let bgColor = '#ffffff';
           let layout = null;
@@ -420,24 +509,35 @@ function Workbench() {
           }
           
           canvas.clear();
-          if (bgColor) {
-            canvas.setBackgroundColor(bgColor, canvas.renderAll.bind(canvas));
+          // Use background color from response or keep current canvas background
+          let canvasBgColor = bgColor || canvas.backgroundColor || '#ffffff';
+          if (canvasBgColor) {
+            canvas.setBackgroundColor(canvasBgColor, canvas.renderAll.bind(canvas));
+            setBgColor(canvasBgColor);
+            
+            // Also apply to canvas wrapper
+            const canvasWrapper = document.querySelector('.canvas-wrapper');
+            if (canvasWrapper) {
+                canvasWrapper.style.backgroundColor = canvasBgColor;
+            }
           }
 
           const addImage = (url, options) => {
               return new Promise((resolve) => {
                   fabric.Image.fromURL(url, (img) => {
                       if (img) {
-                          // Calculate scale to fit within maxWidth/maxHeight if provided
-                          if (options.maxWidth && options.maxHeight) {
+                          // If we have explicit scale values (from saved positions), use them
+                          const hasExplicitScale = options.scaleX !== undefined && options.scaleY !== undefined;
+                          
+                          // Calculate scale to fit within maxWidth/maxHeight if provided and no explicit scale
+                          if (!hasExplicitScale && options.maxWidth && options.maxHeight) {
                               const scale = Math.min(
                                   options.maxWidth / img.width,
                                   options.maxHeight / img.height,
-                                  1 // Don't scale up beyond original size? Or maybe allow it?
-                                  // main.html logic: Math.min(maxWidth / img.width, maxHeight / img.height, 1)
+                                  1 // Don't scale up beyond original size
                               );
                               img.scale(scale);
-                          } else if (options.scaleX && options.scaleY) {
+                          } else if (hasExplicitScale) {
                               img.scaleX = options.scaleX;
                               img.scaleY = options.scaleY;
                           }
@@ -455,29 +555,21 @@ function Workbench() {
           // Determine layout options
           let chartOptions, titleOptions, imageOptions;
 
-          if (layout && layout.chart && layout.title && layout.image) {
+          // Check if we should use saved positions
+          if (preservePositions && currentPositions.chart) {
+              // Use saved positions for chart
+              chartOptions = {
+                  ...currentPositions.chart,
+                  maxWidth: canvas.width * 0.8,
+                  maxHeight: canvas.height * 0.8
+              };
+          } else if (layout && layout.chart && layout.title && layout.image) {
               // Use layout from backend
               chartOptions = {
                   left: layout.chart.x * canvas.width,
                   top: layout.chart.y * canvas.height,
                   maxWidth: layout.chart.width * canvas.width,
                   maxHeight: layout.chart.height * canvas.height,
-                  originX: 'left',
-                  originY: 'top'
-              };
-              titleOptions = {
-                  left: layout.title.x * canvas.width,
-                  top: layout.title.y * canvas.height,
-                  maxWidth: layout.title.width * canvas.width,
-                  maxHeight: layout.title.height * canvas.height,
-                  originX: 'left',
-                  originY: 'top'
-              };
-              imageOptions = {
-                  left: layout.image.x * canvas.width,
-                  top: layout.image.y * canvas.height,
-                  maxWidth: layout.image.width * canvas.width,
-                  maxHeight: layout.image.height * canvas.height,
                   originX: 'left',
                   originY: 'top'
               };
@@ -491,6 +583,21 @@ function Workbench() {
                   maxWidth: canvas.width * 0.8,
                   maxHeight: canvas.height * 0.8
               };
+          }
+
+          // Title options
+          if (preservePositions && currentPositions.title) {
+              titleOptions = currentPositions.title;
+          } else if (layout && layout.chart && layout.title && layout.image) {
+              titleOptions = {
+                  left: layout.title.x * canvas.width,
+                  top: layout.title.y * canvas.height,
+                  maxWidth: layout.title.width * canvas.width,
+                  maxHeight: layout.title.height * canvas.height,
+                  originX: 'left',
+                  originY: 'top'
+              };
+          } else {
               titleOptions = {
                   left: canvas.width / 2,
                   top: 50,
@@ -499,6 +606,19 @@ function Workbench() {
                   scaleX: 0.5,
                   scaleY: 0.5
               };
+          }
+
+          // Image/Pictogram options
+          if (layout && layout.chart && layout.title && layout.image) {
+              imageOptions = {
+                  left: layout.image.x * canvas.width,
+                  top: layout.image.y * canvas.height,
+                  maxWidth: layout.image.width * canvas.width,
+                  maxHeight: layout.image.height * canvas.height,
+                  originX: 'left',
+                  originY: 'top'
+              };
+          } else {
               imageOptions = {
                   left: 100,
                   top: 100,
@@ -527,12 +647,20 @@ function Workbench() {
                   const pName = selectedPictograms[i];
                   const picUrl = `/currentfilepath/${pName}?t=${Date.now()}`;
                   // Clone options and add offset
-                  const currentOptions = { ...imageOptions };
-                  // Add slight offset for multiple images so they don't stack perfectly
-                  if (i > 0) {
-                      currentOptions.left = (currentOptions.left || 0) + i * 20;
-                      currentOptions.top = (currentOptions.top || 0) + i * 20;
+                  let currentOptions;
+                  
+                  // Use saved position if available
+                  if (preservePositions && currentPositions.pictograms[i]) {
+                      currentOptions = currentPositions.pictograms[i];
+                  } else {
+                      currentOptions = { ...imageOptions };
+                      // Add slight offset for multiple images so they don't stack perfectly
+                      if (i > 0) {
+                          currentOptions.left = (currentOptions.left || 0) + i * 20;
+                          currentOptions.top = (currentOptions.top || 0) + i * 20;
+                      }
                   }
+                  
                   await addImage(picUrl, currentOptions);
               }
           }
@@ -544,6 +672,113 @@ function Workbench() {
       } finally {
           setLoading(false);
       }
+  };
+
+  // --- Background Color Management ---
+  const handleBgColorChange = (color) => {
+      if (!canvas) return;
+      setBgColor(color);
+      canvas.setBackgroundColor(color, canvas.renderAll.bind(canvas));
+      
+      // Also apply to canvas wrapper
+      const canvasWrapper = document.querySelector('.canvas-wrapper');
+      if (canvasWrapper) {
+          canvasWrapper.style.backgroundColor = color;
+      }
+  };
+
+  // --- Refine Functionality ---
+  const handleRefine = async () => {
+      if (!canvas) {
+          alert('Canvas not initialized');
+          return;
+      }
+      
+      setIsRefining(true);
+      setLoading(true);
+      setLoadingText('正在使用 AI 精修信息图表...');
+      
+      try {
+          // Export canvas to PNG base64
+          const pngDataURL = canvas.toDataURL({
+              format: 'png',
+              quality: 1,
+              multiplier: 2  // 2x resolution
+          });
+          
+          // Send to backend for refinement
+          const response = await axios.post('/api/export_final', {
+              png_base64: pngDataURL
+          });
+          
+          if (response.data.status === 'started') {
+              // Poll for completion
+              await pollRefinementStatus();
+          } else {
+              throw new Error(response.data.error || '生成失败');
+          }
+          
+      } catch (error) {
+          console.error('Refine failed:', error);
+          alert('精修失败: ' + error.message);
+      } finally {
+          setIsRefining(false);
+          setLoading(false);
+      }
+  };
+  
+  const pollRefinementStatus = async () => {
+      const maxAttempts = 120; // Max 2 minutes
+      let attempts = 0;
+      
+      while (attempts < maxAttempts) {
+          try {
+              const response = await axios.get('/api/status');
+              const status = response.data;
+              
+              // Update loading text with progress
+              if (status.progress) {
+                  setLoadingText(status.progress);
+              }
+              
+              if (status.step === 'final_export' && status.completed) {
+                  if (status.status === 'completed') {
+                      // Success! Add refined image to the list
+                      const refinedUrl = `/api/download_final?t=${Date.now()}`;
+                      setRefinedImages(prev => [...prev, {
+                          url: refinedUrl,
+                          timestamp: Date.now()
+                      }]);
+                      // Keep edit panel open to show the result
+                      return;
+                  } else if (status.status === 'error') {
+                      throw new Error(status.progress || '精修失败');
+                  }
+              }
+              
+          } catch (error) {
+              console.error('Status check failed:', error);
+          }
+          
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          attempts++;
+      }
+      
+      throw new Error('精修超时，请重试');
+  };
+  
+  const downloadRefinedImage = (imageUrl) => {
+      const link = document.createElement('a');
+      link.href = imageUrl || '/api/download_final';
+      link.download = `infographic_refined_${Date.now()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  };
+  
+  const handleImageClick = (image) => {
+      setSelectedRefinedImage(image);
+      setShowRefinedModal(true);
   };
 
   // --- Pagination Helpers ---
@@ -817,43 +1052,156 @@ function Workbench() {
         {showEditPanel && (
             <div className="edit-panel">
                 <div className="edit-panel-header">
-                    <span>Edit Configuration</span>
-                    <button className="close-btn" onClick={() => setShowEditPanel(false)}>×</button>
+                    <span>✏️ 编辑与精修</span>
+                    <button className="close-btn" onClick={() => { setShowEditPanel(false); }}>×</button>
                 </div>
-                <div className="edit-row">
-                    <label>Color</label>
-                    <div className="color-options">
-                        {/* Mock D3 Schemes */}
-                        {['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'].map(c => (
-                            <div key={c} className="color-swatch" style={{backgroundColor: c}} />
-                        ))}
-                        <a href="#" className="d3-link">d3 Scheme</a>
+                
+                <div className="edit-panel-content">
+                {/* Left Column: Controls */}
+                <div className="edit-controls-column">
+                <div className="edit-controls-row">
+                    <div className="edit-row">
+                        <label>背景颜色</label>
+                        <div className="color-options" style={{marginBottom: '10px'}}>
+                            {/* Common background colors */}
+                            {['#ffffff', '#f5f3ef', '#f0f0f0', '#e8f4f8', '#fff9e6', '#f0fff0', '#fff0f5', '#f5f5dc'].map(c => (
+                                <div 
+                                    key={c} 
+                                    className="color-swatch" 
+                                    style={{
+                                        backgroundColor: c,
+                                        border: bgColor === c ? '3px solid #667eea' : '1px solid #ddd',
+                                        boxShadow: bgColor === c ? '0 0 0 2px rgba(102, 126, 234, 0.2)' : 'none'
+                                    }}
+                                    onClick={() => handleBgColorChange(c)}
+                                    title={c}
+                                />
+                            ))}
+                        </div>
+                        <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                            <input 
+                                type="color" 
+                                value={bgColor} 
+                                onChange={(e) => handleBgColorChange(e.target.value)}
+                                style={{
+                                    width: '50px',
+                                    height: '36px',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    padding: '2px'
+                                }}
+                            />
+                            <input 
+                                type="text" 
+                                value={bgColor} 
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (/^#[0-9A-Fa-f]{0,6}$/.test(value)) {
+                                        setBgColor(value);
+                                        if (value.length === 7) {
+                                            handleBgColorChange(value);
+                                        }
+                                    }
+                                }}
+                                placeholder="#ffffff"
+                                style={{
+                                    flex: 1,
+                                    padding: '8px 12px',
+                                    border: '1px solid var(--border-color)',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    fontFamily: 'monospace'
+                                }}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="edit-row">
+                        <label>精修提示词 (Prompt)</label>
+                        <textarea 
+                            className="prompt-input" 
+                            placeholder="Enter prompt for refinement..."
+                            value={editConfig.prompt}
+                            onChange={(e) => setEditConfig({...editConfig, prompt: e.target.value})}
+                        />
                     </div>
                 </div>
+                
                 <div className="edit-row">
-                    <label>Text</label>
-                    <div className="text-controls">
-                        <select defaultValue="Medium">
-                            <option>Small</option>
-                            <option>Medium</option>
-                            <option>Large</option>
-                        </select>
-                        <select defaultValue="Normal">
-                            <option>Normal</option>
-                            <option>Bold</option>
-                            <option>Italic</option>
-                        </select>
-                        <input type="color" title="Text Color" style={{marginLeft: '5px', height: '24px', width: '24px', border: 'none', padding: 0, cursor: 'pointer'}} />
-                    </div>
+                    <button 
+                        className="refine-btn"
+                        onClick={handleRefine}
+                        disabled={isRefining}
+                        style={{
+                            width: '100%',
+                            padding: '14px 24px',
+                            background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '10px',
+                            fontWeight: '600',
+                            fontSize: '1rem',
+                            cursor: isRefining ? 'not-allowed' : 'pointer',
+                            opacity: isRefining ? 0.6 : 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '10px',
+                            transition: 'all 0.2s',
+                            boxShadow: '0 4px 12px rgba(72, 187, 120, 0.3)'
+                        }}
+                    >
+                        <span style={{fontSize: '18px'}}>✨</span>
+                        <span>{isRefining ? '正在精修...' : 'AI 精修'}</span>
+                    </button>
                 </div>
-                <div className="edit-row">
-                    <label>Prompt</label>
-                    <textarea 
-                        className="prompt-input" 
-                        placeholder="Enter prompt for refinement..."
-                        value={editConfig.prompt}
-                        onChange={(e) => setEditConfig({...editConfig, prompt: e.target.value})}
-                    />
+                </div>
+                
+                {/* Right Column: Refined Images Gallery */}
+                <div className="refined-gallery-column">
+                    <div className="refined-gallery-header">
+                        <span className="refined-gallery-title">✨ 精修历史</span>
+                        <span style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>
+                            {refinedImages.length} 张图片
+                        </span>
+                    </div>
+                    
+                    {refinedImages.length > 0 ? (
+                        <div className="refined-gallery-grid">
+                            {refinedImages.map((image, index) => (
+                                <div 
+                                    key={image.timestamp}
+                                    className="refined-gallery-item"
+                                    onClick={() => handleImageClick(image)}
+                                    title={`点击查看大图 - ${new Date(image.timestamp).toLocaleTimeString()}`}
+                                >
+                                    <img src={image.url} alt={`Refined ${index + 1}`} />
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '4px',
+                                        right: '4px',
+                                        background: 'rgba(0,0,0,0.7)',
+                                        color: 'white',
+                                        padding: '2px 6px',
+                                        borderRadius: '4px',
+                                        fontSize: '10px'
+                                    }}>
+                                        #{refinedImages.length - index}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="refined-gallery-empty">
+                            <div className="refined-gallery-empty-icon">🎨</div>
+                            <div className="refined-gallery-empty-text">
+                                还没有精修图片<br/>
+                                点击左侧的"AI 精修"按钮开始
+                            </div>
+                        </div>
+                    )}
+                </div>
                 </div>
             </div>
         )}
@@ -864,6 +1212,64 @@ function Workbench() {
         <div className="loading-overlay">
           <div className="loading-spinner"></div>
           <div className="loading-text">{loadingText}</div>
+        </div>
+      )}
+      
+      {/* Refined Image Zoom Modal */}
+      {showRefinedModal && selectedRefinedImage && (
+        <div className="refined-preview-modal" onClick={() => setShowRefinedModal(false)}>
+          <div className="refined-preview-content" onClick={(e) => e.stopPropagation()}>
+            <div className="refined-preview-header">
+              <h3 style={{margin: 0, display: 'flex', alignItems: 'center', gap: '10px'}}>
+                <span>✨</span>
+                <span>AI 精修版 - 放大查看</span>
+              </h3>
+              <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+                <button 
+                  onClick={() => downloadRefinedImage(selectedRefinedImage.url)}
+                  style={{
+                    padding: '8px 16px',
+                    background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>⬇️</span>
+                  <span>下载</span>
+                </button>
+                <button 
+                  className="close-btn" 
+                  onClick={() => setShowRefinedModal(false)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    color: '#666',
+                    padding: 0
+                  }}
+                >×</button>
+              </div>
+            </div>
+            <div className="refined-image-container" style={{marginTop: '20px', textAlign: 'center'}}>
+              <img 
+                src={selectedRefinedImage.url} 
+                alt="Refined" 
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '75vh',
+                  borderRadius: '8px',
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
+                }}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
