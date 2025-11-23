@@ -191,24 +191,30 @@ def refine_with_gemini(reference_image_path: str, current_image_path: str, outpu
         )
 
         # 构建提示词
-        prompt = """You are given two images:
+        prompt = """You are an expert infographic designer. You are given a chart/data visualization image.
+Your task is to transform this chart into a beautiful, professional infographic with the following requirements:
 
-1. **Reference Image**: An infographic with a specific visual style (colors, layout, typography, design elements)
-2. **Current Image**: A newly generated infographic that needs to be refined
+**Content Requirements:**
+- **DO NOT modify the data, numbers, labels, or any information** shown in the chart
+- Keep all chart values, axes, legends, and data points exactly as they appear
+- Preserve the chart type and structure
 
-Your task is to refine the Current Image by applying the visual style from the Reference Image, while preserving all the data, content, and information from the Current Image.
+**Visual Enhancement:**
+- Add a professional, eye-catching design with modern aesthetics
+- Use a harmonious color palette that enhances readability
+- Add appropriate decorative elements, icons, or illustrations
+- Create a clean, well-organized layout
+- Use professional typography for titles and labels
+- Add subtle backgrounds or patterns if appropriate
+- Ensure visual consistency throughout the design
 
-Specifically:
-- Match the color palette from the Reference Image
-- Apply similar design aesthetics (shapes, icons, decorative elements)
-- Use similar typography style if applicable
-- Preserve the layout structure of the Current Image
-- Fix visual defects (blurry text, distorted shapes)
-- Ensure stability and consistency of **title, chart, pictogram**
-- Keep the core content of **title, chart, pictogram** from the Current Image unchanged
+**Quality Standards:**
+- High resolution and clarity
+- No blurry text or distorted elements
+- Professional and polished appearance
+- Suitable for presentation or publication
 
-Generate a high-quality infographic that looks like it was created with the same design system as the Reference Image."""
-
+Generate a stunning infographic that transforms the raw chart into a visually appealing, professional design while keeping all the data intact."""
         # 调用 Gemini 模型
         response = client.chat.completions.create(
             model="gemini-3-pro-image-preview",
