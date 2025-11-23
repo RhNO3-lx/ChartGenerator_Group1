@@ -99,14 +99,21 @@ class InfographicImageGenerator:
             print(f"Failed to generate title text: {e}")
             return "Data Insights"
     
-    def generate_image_prompt(self, title: str, prompt_type: str, color=None) -> str:
-        """Generate image generation prompt"""
+    def generate_image_prompt(self, title: str, prompt_type: str, color=None, style_description: str = None) -> str:
+        """Generate image generation prompt
+
+        Args:
+            title: The title text
+            prompt_type: Either "title" or "pictogram"
+            color: Color palette to use
+            style_description: Optional style description from reference image
+        """
         try:
             if prompt_type == "title":
                 # Read title prompt file and use GPT-4.1 to generate professional image prompt
                 title_prompt_template = self.load_prompt_file("generate_title_image_prompt.md")
                 title_prompt = title_prompt_template.replace("{title}", title).replace("{color}", f"{color}")
-                
+
                 response = self.client.chat.completions.create(
                     model="gpt-image-1",
                     messages=[
@@ -115,18 +122,24 @@ class InfographicImageGenerator:
                     max_tokens=300,
                     temperature=0.7
                 )
-                
+
                 prompt = response.choices[0].message.content.strip()
                 print(f"Generated title image prompt: {prompt}...")
-                
+
             elif prompt_type == "pictogram":
                 # 直接使用简化的 prompt 模板生成图片
                 pictogram_prompt_template = self.load_prompt_file("generate_pictogram_prompt.md")
                 prompt = pictogram_prompt_template.replace("{title}", title).replace("{color}", f"{color}")
+
+                # 如果有参考图风格描述，添加到prompt中
+                if style_description:
+                    prompt += f"\n\n## Reference Style Guide\nPlease follow this visual style from the reference image:\n{style_description}"
+                    print(f"Added style description to pictogram prompt")
+
                 print(f"Pictogram prompt: {prompt}")
-            
+
             return prompt
-            
+
         except Exception as e:
             print(f"Failed to generate image prompt: {e}")
             return f"Create a simple {prompt_type} image about {title}"
@@ -259,7 +272,7 @@ class InfographicImageGenerator:
                 print(f"Error processing file {csv_file}: {e}")
                 continue
     
-    def generate_single_title(self, csv_path: str, bg_color: str, output_filename: str, use_cache: bool = True):
+    def generate_single_title(self, csv_path: str, bg_color: str, output_filename: str, use_cache: bool = True, style_description: str = None):
         """
         Generate a single title image using the title_generation module
 
@@ -268,6 +281,7 @@ class InfographicImageGenerator:
             bg_color: Background color hex code (e.g., "#ff6a00")
             output_filename: Path to save the generated title image
             use_cache: Whether to use cached results (False for regeneration)
+            style_description: Optional style description from reference image for guiding generation
 
         Returns:
             Dict with title text and image path
@@ -340,7 +354,8 @@ class InfographicImageGenerator:
                 bg_hex=bg_color,
                 save_path=output_filename,
                 prompt_times=1,
-                image_times=1
+                image_times=1,
+                style_description=style_description
             )
 
             success = result_path is not None and os.path.exists(output_filename)
@@ -370,7 +385,7 @@ class InfographicImageGenerator:
                 'success': False
             }
 
-    def generate_single_pictogram(self, title_text: str, colors, output_filename: str, use_cache: bool = True):
+    def generate_single_pictogram(self, title_text: str, colors, output_filename: str, use_cache: bool = True, style_description: str = None):
         """
         Generate a single pictogram image
 
@@ -379,6 +394,7 @@ class InfographicImageGenerator:
             colors: Color palette to use
             output_filename: Path to save the generated pictogram image
             use_cache: Whether to use cached results (False for regeneration)
+            style_description: Optional style description from reference image for guiding generation
 
         Returns:
             Dict with pictogram prompt and success status
@@ -418,8 +434,8 @@ class InfographicImageGenerator:
                     'success': False
                 }
 
-        # Generate pictogram prompt
-        pictogram_prompt = self.generate_image_prompt(title_text, "pictogram", colors)
+        # Generate pictogram prompt (with style description if available)
+        pictogram_prompt = self.generate_image_prompt(title_text, "pictogram", colors, style_description)
 
         # Generate the pictogram image directly to output path
         os.makedirs(os.path.dirname(output_filename), exist_ok=True)

@@ -1,40 +1,40 @@
 {
-  "step": "final_export",
-  "status": "processing",
-  "progress": "正在保存图片...",
-  "completed": false,
+  "step": "layout_extraction",
+  "status": "completed",
+  "progress": "分析参考图风格...",
+  "completed": true,
   "style": {
     "colors": [
       [
-        253,
-        200,
-        177
-      ],
-      [
-        250,
-        166,
-        129
-      ],
-      [
-        107,
-        12,
-        7
-      ],
-      [
-        241,
-        117,
-        79
-      ],
-      [
-        242,
         57,
-        22
+        86,
+        112
+      ],
+      [
+        129,
+        153,
+        165
+      ],
+      [
+        229,
+        169,
+        206
+      ],
+      [
+        71,
+        157,
+        132
+      ],
+      [
+        209,
+        226,
+        215
       ]
     ],
     "bg_color": [
-      255,
-      242,
-      219
+      31,
+      66,
+      96
     ]
   },
   "selected_data": "processed_data/Commute.json",
@@ -894,38 +894,23 @@
     },
     {
       "type": "vertical bar chart",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_09_2",
+      "template": "d3-js/vertical bar chart/vertical_bar_chart_07_2",
       "image_url": "/static/chart_types/Vertical Bar Chart.png"
     },
     {
-      "type": "donut chart",
-      "template": "d3-js/donut chart/donut_chart_00",
-      "image_url": "/static/chart_types/Donut Chart.png"
-    },
-    {
       "type": "proportional area chart (circle)",
-      "template": "d3-js/proportional area chart (circle)/proportional_area_chart_circle_06",
+      "template": "d3-js/proportional area chart (circle)/proportional_area_chart_circle_12",
       "image_url": "/static/chart_types/Proportional Area Chart.png"
     },
     {
       "type": "proportional area chart (square)",
-      "template": "d3-js/proportional area chart (square)/proportional_area_chart_square_07",
+      "template": "d3-js/proportional area chart (square)/proportional_area_chart_square_09",
       "image_url": "/static/chart_types/Proportional Area Chart.png"
     },
     {
       "type": "proportional area chart (triangle)",
-      "template": "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_08",
+      "template": "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_05",
       "image_url": "/static/chart_types/Proportional Area Chart.png"
-    },
-    {
-      "type": "pie chart",
-      "template": "d3-js/pie chart/pie_chart_00",
-      "image_url": "/static/chart_types/Pie Chart.png"
-    },
-    {
-      "type": "treemap",
-      "template": "d3-js/treemap/treemap_plain_chart_01",
-      "image_url": "/static/chart_types/Treemap.png"
     },
     {
       "type": "circular bar chart",
@@ -933,118 +918,26 @@
       "image_url": "/static/chart_types/Circular Bar Chart.png"
     },
     {
-      "type": "multiple gauge chart",
-      "template": "d3-js/multiple gauge chart/multiple_gauge_chart_03",
-      "image_url": "/static/chart_types/Multiple Gauge Charts.png"
-    },
-    {
       "type": "lollipop chart",
       "template": "d3-js/lollipop chart/horizontal_lollipop_chart_02",
       "image_url": "/static/chart_types/Lollipop Chart.png"
     },
     {
-      "type": "semicircle donut chart",
-      "template": "d3-js/semicircle donut chart/semicircle_donut_chart_00",
-      "image_url": "/static/chart_types/Semicircle Donut Chart.png"
-    },
-    {
-      "type": "pyramid diagram",
-      "template": "d3-js/pyramid diagram/pyramid_diagram_01",
-      "image_url": null
-    },
-    {
-      "type": "vertical waffle chart",
-      "template": "d3-js/vertical waffle chart/vertical_waffle_chart_02",
-      "image_url": "/static/chart_types/Vertical Bar Chart.png"
-    },
-    {
       "type": "radial bar chart",
-      "template": "d3-js/radial bar chart/radial_bar_plain_chart_01",
+      "template": "d3-js/radial bar chart/radial_bar_chart_05",
       "image_url": "/static/chart_types/Radial Bar Chart.png"
     },
     {
-      "type": "rose chart",
-      "template": "d3-js/rose chart/rose_plain_chart_01",
-      "image_url": "/static/chart_types/Rose Chart.png"
-    },
-    {
-      "type": "pyramid chart",
-      "template": "d3-js/pyramid chart/pyramid_chart_01",
-      "image_url": "/static/chart_types/Pyramid Chart.png"
-    },
-    {
-      "type": "voronoi treemap(circle)",
-      "template": "d3-js/voronoi treemap(circle)/voronoi_treemap_circle_01_dark",
-      "image_url": null
-    },
-    {
-      "type": "voronoi treemap(rectangle)",
-      "template": "d3-js/voronoi treemap(rectangle)/voronoi_treemap_rectangle_01",
-      "image_url": null
-    },
-    {
-      "type": "proportional area chart",
-      "template": "d3-js/proportional area chart/proportional_area_plain_chart_03",
-      "image_url": "/static/chart_types/Proportional Area Chart.png"
-    },
-    {
       "type": "horizontal dot bar chart",
-      "template": "d3-js/horizontal dot bar chart/horizontal_dot_bar_chart_01",
+      "template": "d3-js/horizontal dot bar chart/horizontal_dot_bar_chart_02",
       "image_url": "/static/chart_types/Horizontal Dot Bar Chart.png"
     },
     {
-      "type": "radar line chart",
-      "template": "d3-js/radar line chart/radar_line_chart_03",
-      "image_url": "/static/chart_types/Radar Line Chart.png"
-    },
-    {
-      "type": "radar spline chart",
-      "template": "d3-js/radar spline chart/radar_spline_chart_03",
-      "image_url": "/static/chart_types/Radar Spline Chart.png"
-    },
-    {
-      "type": "horizontal waffle chart",
-      "template": "d3-js/horizontal waffle chart/horizontal_waffle_chart_02",
-      "image_url": "/static/chart_types/Horizontal Bar Chart.png"
-    },
-    {
       "type": "proportional area chart (pentagram)",
-      "template": "d3-js/proportional area chart (pentagram)/proportional_area_chart_pentagram_01",
+      "template": "d3-js/proportional area chart (pentagram)/proportional_area_chart_pentagram_02",
       "image_url": null
-    },
-    {
-      "type": "triangle bar chart",
-      "template": "d3-js/triangle bar chart/triangle_bar_chart_01",
-      "image_url": "/static/chart_types/Range Area Chart.png"
-    },
-    {
-      "type": "semicircle pie chart",
-      "template": "d3-js/semicircle pie chart/semicircle_pie_plain_chart_01",
-      "image_url": "/static/chart_types/Semicircle Pie Chart.png"
-    },
-    {
-      "type": "funnel chart",
-      "template": "d3-js/funnel chart/funnel_chart_01",
-      "image_url": "/static/chart_types/Funnel Chart.png"
     }
   ],
-  "chart_type_previews": {
-    "horizontal group bar chart": {
-      "variation_name": "horizontal_group_bar_chart_16",
-      "template": "d3-js/horizontal group bar chart/horizontal_group_bar_chart_16",
-      "output_file": "charttype_horizontal_group_bar_chart.svg"
-    },
-    "vertical group bar chart": {
-      "variation_name": "vertical_group_bar_plain_chart_01",
-      "template": "d3-js/vertical group bar chart/vertical_group_bar_plain_chart_01",
-      "output_file": "charttype_vertical_group_bar_chart.svg"
-    },
-    "horizontal diverging bar chart": {
-      "variation_name": "horizontal_diverging_bar_chart_07",
-      "template": "d3-js/horizontal diverging bar chart/horizontal_diverging_bar_chart_07",
-      "output_file": "charttype_horizontal_diverging_bar_chart.svg"
-    }
-  },
   "available_variations": [
     {
       "name": "vertical_bar_chart_09_2",
@@ -1151,43 +1044,46 @@
       ]
     }
   ],
-  "ai_direct_image": "buffer/20251123044738_9197/ai_direct_generated.jpg",
-  "final_image_path": "buffer/Commute/edited_image.jpg",
-  "selected_reference": "infographics/687b3947e993e6b28e70460a4d72ac6067b683b4471307bb5edbce559ab29bbb.png",
+  "reference_page": 14,
+  "selected_reference": "infographics/Yield-Origin.png",
+  "reference_descriptions": {
+    "title_description": "1. **Text Layout**: The title is divided into three lines. The first line has two words, approximately 12 characters long. The second line also has two words, approximately 10 characters. The third line is one phrase with roughly 9 characters. The text is center-aligned.\n\n2. **Font Style**: The font type is sans-serif. The first line is bold with a slightly distressed effect but not italicized. The second and third lines are in regular weight without bold or italic.\n\n3. **Color Scheme**: The main color for the text is pink for the first line, while the second and third lines are white. There is no gradient used in text colors. The background is dark blue with subtle texture and not transparent.\n\n4. **Decorative Effects**: There are no shadows, outlines, or glow effects on the text. The pink text has a subtle distressed texture effect. There are no icons or decorative elements integrated into the text.\n\n5. **Overall Style**: The design gives a modern, slightly vintage feel due to the distressed texture in the font and subtle background texture, simple and straightforward without ornamental elements.",
+    "pictogram_description": "1. **Content Theme**: The image illustrates an ultrasound scan, likely of a fetus. The main elements include the ultrasound printout depicted at an angle.\n\n2. **Drawing Style**: The style is a halftone effect reminiscent of a printed photograph. It uses a texture that gives it a vintage, newspaper-like appearance with a mix of flat and dotted areas.\n\n3. **Color Scheme**: The image predominantly uses shades of blue and white. The colors are muted and create a monochromatic look. There is no use of gradient, just solid colors with a halftone pattern.\n\n4. **Background Treatment**: The background is a solid, deep blue color. It provides a high contrast to the white elements of the ultrasound printout.\n\n5. **Overall Characteristics**: The visual features a halftone texture which creates a sense of depth and pattern. The ultrasound image has a distinct, pixelated quality with no visible shadow or highlight details outside the halftone treatment."
+  },
   "title_options": {
-    "title_0.png": {
+    "title_0_8141e84e.png": {
       "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_0.png",
+      "image_path": "buffer/Commute/title_0_8141e84e.png",
       "success": true
     },
-    "title_1.png": {
+    "title_1_8141e84e.png": {
       "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_1.png",
+      "image_path": "buffer/Commute/title_1_8141e84e.png",
       "success": true
     },
-    "title_2.png": {
+    "title_2_8141e84e.png": {
       "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_2.png",
+      "image_path": "buffer/Commute/title_2_8141e84e.png",
       "success": true
     }
   },
   "current_title_text": "Average Commute Times by Transportation Mode",
   "pictogram_options": {
-    "pictogram_0.png": {
+    "pictogram_0_df63be97.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_0.png",
+      "image_path": "buffer/Commute/pictogram_0_df63be97.png",
       "success": true
     },
-    "pictogram_1.png": {
+    "pictogram_1_df63be97.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_1.png",
+      "image_path": "buffer/Commute/pictogram_1_df63be97.png",
       "success": true
     },
-    "pictogram_2.png": {
+    "pictogram_2_df63be97.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_2.png",
+      "image_path": "buffer/Commute/pictogram_2_df63be97.png",
       "success": true
     }
   },
-  "reference_page": 11
+  "final_image_path": "buffer/Commute/edited_image.jpg"
 }

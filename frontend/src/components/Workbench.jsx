@@ -129,7 +129,7 @@ Generate a high-quality infographic that looks like it was created with the same
   // --- Logic: Data Selection ---
   const handleFileSelect = async (e) => {
     const file = e.target.value;
-    
+
     // Reset downstream state
     setSelectedChartType('');
     setChartTypes([]);
@@ -150,6 +150,20 @@ Generate a high-quality infographic that looks like it was created with the same
     setSelectedPictograms([]);
     setTitleOptions([]);
     setPictogramOptions([]);
+
+    // Clear canvas when switching data
+    if (canvas) {
+      canvas.clear();
+      canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
+      setBgColor('#ffffff');
+      const canvasWrapper = document.querySelector('.canvas-wrapper');
+      if (canvasWrapper) {
+        canvasWrapper.style.backgroundColor = '#ffffff';
+      }
+    }
+
+    // Reset saved positions
+    setSavedPositions({ chart: null, title: null, pictograms: [] });
 
     setSelectedFile(file);
     if (file) {
@@ -345,8 +359,8 @@ Generate a high-quality infographic that looks like it was created with the same
     setSelectedVariation(variationName);
     // Load into Canvas directly from the generated preview (use PNG)
     loadChartToCanvas(variationName, `/currentfilepath/variation_${variationName}.png`);
-    // Start asset generation
-    generateTitle();
+    // Fetch references for the next step
+    fetchReferences();
   };
 
   // --- Logic: References & Assets ---
@@ -364,16 +378,26 @@ Generate a high-quality infographic that looks like it was created with the same
 
   const handleReferenceSelect = async (refName) => {
     // Reset downstream state
-    // Assets are already generated, do not reset
+    setTitleImage('');
+    setSelectedPictograms([]);
+    setTitleOptions([]);
+    setPictogramOptions([]);
 
     setSelectedReference(refName);
-    // Just trigger extraction in background, do not block UI or update canvas
+    setLoading(true);
+    setLoadingText('Extracting style & Generating assets...');
     try {
       const dataName = selectedFile.replace('.csv', '');
       // 1. Extract Layout/Style
-      axios.get(`/api/start_layout_extraction/${refName}/${dataName}`);
+      await axios.get(`/api/start_layout_extraction/${refName}/${dataName}`);
+      
+      pollStatus(async () => {
+          // 2. Generate Title
+          await generateTitle();
+      }, 'layout_extraction');
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
   };
 
@@ -468,9 +492,6 @@ Generate a high-quality infographic that looks like it was created with the same
               const newPictograms = [options[0]];
               setSelectedPictograms(newPictograms);
               setLoading(false);
-              
-              // Fetch references after assets are generated
-              fetchReferences();
               
               // Force update canvas with new assets
               // Use the passed title image if available (since state update might be pending)
@@ -947,7 +968,7 @@ Generate a high-quality infographic that looks like it was created with the same
                  onClick={() => handleVariationSelect(v.name)}
                >
                  <img 
-                    src={`/currentfilepath/variation_${v.name}.svg?t=${previewTimestamp}`}
+                    src={`/currentfilepath/variation_${v.name}.png?t=${previewTimestamp}`}
                     alt={v.name}
                     onError={(e) => {
                         e.target.onerror = null; 
@@ -964,6 +985,55 @@ Generate a high-quality infographic that looks like it was created with the same
              <span>{variationPage + 1} / {Math.ceil(totalVariations / VARIATIONS_PER_PAGE) || 1}</span>
              <button disabled={variationPage >= Math.ceil(totalVariations / VARIATIONS_PER_PAGE) - 1} onClick={handleVariationNext}>&gt;</button>
           </div>
+        </div>
+        )}
+
+        {/* Reference Section */}
+        {selectedVariation && references.length > 0 && (
+        <div className="config-section">
+          <div className="section-title">Reference Style</div>
+          <div className="grid-container">
+            {getPagedData(references, referencePage, REFERENCES_PER_PAGE).map(ref => (
+               <div 
+                 key={ref} 
+                 className={`grid-item ${selectedReference === ref ? 'selected' : ''}`}
+                 onClick={() => handleReferenceSelect(ref)}
+               >
+                 <img 
+                    src={`/infographics/${ref}`} 
+                    alt={ref}
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        // Try static path if infographics fails
+                        e.target.src = `/static/images/references/${ref}`; 
+                    }}
+                 />
+               </div>
+            ))}
+          </div>
+          {/* Pagination */}
+          <div className="pagination">
+             <button disabled={referencePage === 0} onClick={() => setReferencePage(p => p - 1)}>&lt;</button>
+             <span>{referencePage + 1} / {Math.ceil(totalReferences / REFERENCES_PER_PAGE) || 1}</span>
+             <button disabled={referencePage >= Math.ceil(totalReferences / REFERENCES_PER_PAGE) - 1} onClick={handleReferenceNext}>&gt;</button>
+          </div>
+
+          {selectedReference && (
+              <div className="selected-reference-card" style={{marginTop: '15px', border: '1px solid #e0e0e0', padding: '10px', borderRadius: '6px', position: 'relative', backgroundColor: '#fff'}}>
+                  <div style={{fontSize: '12px', marginBottom: '8px', fontWeight: '600', color: '#333'}}>Example Selected</div>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setSelectedReference(''); }}
+                    style={{position: 'absolute', top: '5px', right: '8px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#666', padding: 0, lineHeight: 1}}
+                    title="Remove selection"
+                  >×</button>
+                  <img 
+                    src={`/infographics/${selectedReference}`} 
+                    alt="Selected" 
+                    style={{width: '50%', height: 'auto', objectFit: 'contain', borderRadius: '4px', border: '1px solid #eee', display: 'block', margin: '0 auto'}}
+                    onError={(e) => { e.target.src = `/static/images/references/${selectedReference}`; }}
+                  />
+              </div>
+          )}
         </div>
         )}
 
@@ -1077,55 +1147,6 @@ Generate a high-quality infographic that looks like it was created with the same
                     </div>
                 )
             )}
-        </div>
-        )}
-
-        {/* Reference Section */}
-        {selectedVariation && references.length > 0 && (
-        <div className="config-section">
-          <div className="section-title">Reference Style</div>
-          <div className="grid-container">
-            {getPagedData(references, referencePage, REFERENCES_PER_PAGE).map(ref => (
-               <div 
-                 key={ref} 
-                 className={`grid-item ${selectedReference === ref ? 'selected' : ''}`}
-                 onClick={() => handleReferenceSelect(ref)}
-               >
-                 <img 
-                    src={`/infographics/${ref}`} 
-                    alt={ref}
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        // Try static path if infographics fails
-                        e.target.src = `/static/images/references/${ref}`; 
-                    }}
-                 />
-               </div>
-            ))}
-          </div>
-          {/* Pagination */}
-          <div className="pagination">
-             <button disabled={referencePage === 0} onClick={() => setReferencePage(p => p - 1)}>&lt;</button>
-             <span>{referencePage + 1} / {Math.ceil(totalReferences / REFERENCES_PER_PAGE) || 1}</span>
-             <button disabled={referencePage >= Math.ceil(totalReferences / REFERENCES_PER_PAGE) - 1} onClick={handleReferenceNext}>&gt;</button>
-          </div>
-
-          {selectedReference && (
-              <div className="selected-reference-card" style={{marginTop: '15px', border: '1px solid #e0e0e0', padding: '10px', borderRadius: '6px', position: 'relative', backgroundColor: '#fff'}}>
-                  <div style={{fontSize: '12px', marginBottom: '8px', fontWeight: '600', color: '#333'}}>Example Selected</div>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); setSelectedReference(''); }}
-                    style={{position: 'absolute', top: '5px', right: '8px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#666', padding: 0, lineHeight: 1}}
-                    title="Remove selection"
-                  >×</button>
-                  <img 
-                    src={`/infographics/${selectedReference}`} 
-                    alt="Selected" 
-                    style={{width: '50%', height: 'auto', objectFit: 'contain', borderRadius: '4px', border: '1px solid #eee', display: 'block', margin: '0 auto'}}
-                    onError={(e) => { e.target.src = `/static/images/references/${selectedReference}`; }}
-                  />
-              </div>
-          )}
         </div>
         )}
       </div>

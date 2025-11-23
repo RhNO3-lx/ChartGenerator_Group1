@@ -4,9 +4,9 @@ from combine_title_anno import combine_images
 from split_title_anno import *
 from crop_image import crop
 
-def get_image_only_title(texts, bg_hex, save_path = 'images/result/generated.png', prompt_times = 2, image_times = 4, image_res = "RESOLUTION_1536_640"):
+def get_image_only_title(texts, bg_hex, save_path = 'images/result/generated.png', prompt_times = 2, image_times = 4, image_res = "RESOLUTION_1536_640", style_description = None):
     title_text = texts[0]
-    succ, save_path = get_title(title=title_text, bg_hex=bg_hex, save_path=save_path, prompt_times = prompt_times, image_times = image_times, image_res = image_res)
+    succ, save_path = get_title(title=title_text, bg_hex=bg_hex, save_path=save_path, prompt_times = prompt_times, image_times = image_times, image_res = image_res, style_description = style_description)
     if succ == 0:
         return None
     return save_path

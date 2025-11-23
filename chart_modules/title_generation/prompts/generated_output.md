@@ -1,8 +1,9 @@
-Generate a text image with the content of "Average Commute Times by Transportation Mode". Generate an image with the text layout split into two lines: 
+Generate a text image with the content of "Commute Times by Transportation Mode". Commute Times  
+by Transportation  
+Mode  
 
-1. The first line reads "Average Commute Times" with an emphasis on "Average" and "Commute" by enlarging the font size and using a vibrant blue color. 
-2. The second line reads "by Transportation Mode" in a more subtle, smaller font size, maintaining a dark gray color for contrast.
+The first line "Commute Times" should be emphasized by using a bold sans-serif font with a subtle distressed texture effect in pink color. The second line "by Transportation" and the third line "Mode" will be in a regular sans-serif weight with a clean white color. The entire text will be center-aligned.
 
-Enhance the design by replacing the letter "o" in "Transportation" with an icon of a small train, positioned centrally to maintain balance and draw attention.
+To enhance the design, a bicycle icon will replace the letter "o" in the word "Mode." This icon will be styled to match the contemporary feel of the text, incorporating colors that harmonize with the overall color scheme, ensuring it feels cohesive with the rest of the text.
 
-For font style, use a modern sans-serif typeface that conveys clarity and contemporary appeal. Apply a subtle shadow effect to create depth in the text, making it visually engaging without being overwhelming.
+For the font style, a modern sans-serif typeface will be chosen for its simplicity and readability, contributing to a clean and engaging aesthetic.
