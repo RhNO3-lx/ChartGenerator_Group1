@@ -1,5 +1,9 @@
-Generate a text image with the content of "Seats Distribution Among European Member States". Create an image with the text "Seats Distribution" on the first line and "Among European Member States" on the second line. The first line should be the main title and prominently displayed, using a large, bold, futuristic font with a glowing effect to capture attention. Emphasize the words "Seats" and "Distribution" by enlarging the font size and making them in a bright color, such as #FFCC00, while keeping "Among European Member States" in a more subdued, white color. 
+Generate a text image with the content of "App Store Growth: Google vs. iOS (2009-2013)". Create a text image with the title broken down into three lines as follows: 
 
-Add a decorative element by incorporating an icon of a stylized map of Europe, replacing the letter "o" in "Among" with this icon. This map would integrate smoothly into the word, maintaining the overall flow of the text. Surround the text with soft graphic elements, such as abstract lines or curves that represent connectivity and collaboration, positioned lightly behind the text to enhance readability while adding depth to the composition.
+1. Line 1: "App Store Growth"
+2. Line 2: "Google vs. iOS"
+3. Line 3: "(2009-2013)"
 
-For the artistic effect, apply a subtle texture overlay on the text that mimics a metallic finish, with slight reflections to give it a modern and professional look. The overall design should balance clarity with visual interest, ensuring the message is immediately recognizable while inviting the viewer into a deeper exploration of the topic.
+Emphasize the key text "App Store Growth" by enlarging the font size and changing its color to a vibrant blue. Use a clean, modern sans-serif font for a contemporary feel. For decoration, incorporate a subtle icon of a smartphone integrated into the letter "o" in "Google," replacing the letter's round shape with the icon while maintaining the overall readability. Surround the text with minimal stylized graphics representing app icons and upward growth arrows to signify growth, positioned subtly at the corners without overwhelming the text.
+
+Opt for a futuristic font style to reflect the technological context, and apply a slight glow effect around the letters to add depth and make them stand out.

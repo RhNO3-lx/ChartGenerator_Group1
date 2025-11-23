@@ -6,7 +6,7 @@ def check(  title,
             prompt_path = 'prompts/check_prompt_gpt_en.md', 
             image_path = 'images/title/generated_image.png'):
     client = OpenAI(
-        api_key="sk-ug32KbbvEDPucqnaB207A5EcEd6f47Dc887c14249a12Ff43",
+        api_key="sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360",
         base_url="https://aihubmix.com/v1"
     )
     with open(prompt_path, 'r', encoding='utf-8') as file:

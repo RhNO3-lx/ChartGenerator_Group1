@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request, send_from_directory, Response
+from flask_cors import CORS
 import pandas as pd
 import os
 import time
@@ -27,6 +28,7 @@ from chart_modules.ChartPipeline.modules.infographics_generator.template_utils i
 
 
 app = Flask(__name__)
+CORS(app)
 
 # 存储生成状态
 generation_status = {
@@ -96,15 +98,29 @@ def generate_chart():
 
     charttype = request.args.get('charttype', 'bar')
     datafile = request.args.get('data', 'test')
-    title = request.args.get('title', 'origin_images/titles/App_title.png')
-    pictogram = request.args.get('pictogram', 'origin_images/pictograms/App_pictogram.png')
+    title = request.args.get('title', '')
+    pictogram = request.args.get('pictogram', '')
 
     app.logger.info(f"Chart type: {charttype}")
     app.logger.info(f"Data: {datafile}")
 
     try:
-        title = f"buffer/{generation_status['id']}/{title}"
-        pictogram = f"buffer/{generation_status['id']}/{pictogram}"
+        # 处理标题路径
+        if not title or title == '':
+            # 如果没有提供标题，使用默认的 title_0.png
+            title = f"buffer/{generation_status['id']}/title_0.png"
+        elif "origin_images" not in title:
+            # 如果不是 origin_images，添加 buffer 路径
+            title = f"buffer/{generation_status['id']}/{title}"
+
+        # 处理配图路径
+        if not pictogram or pictogram == '':
+            # 如果没有提供配图，使用默认的 pictogram_0.png
+            pictogram = f"buffer/{generation_status['id']}/pictogram_0.png"
+        elif "origin_images" not in pictogram:
+            # 如果不是 origin_images，添加 buffer 路径
+            pictogram = f"buffer/{generation_status['id']}/{pictogram}"
+            
         img1_base64 = image_to_base64(title)
         img2_base64 = image_to_base64(pictogram)
 
@@ -144,6 +160,10 @@ def generate_chart():
             main_colors = generation_status['style']["colors"],
             bg_color = generation_status['style']["bg_color"]
         )
+
+        # generate_variation now also generates a PNG file at output_path.replace('.svg', '.png')
+        png_filename = f"{charttype}.png"
+        png_url = f"/currentfilepath/{png_filename}"
 
         with open(output_path, 'r', encoding='utf-8') as file:
             svg = file.read()
@@ -210,8 +230,14 @@ def start_find_reference(datafile):
     load_generation_status()
 
     generation_status["selected_data"] = f'processed_data/{datafile.replace("csv","json")}'
-    generation_status['id'] = f'{datetime.now().strftime("%Y%m%d%H%M%S")}_{random.randint(1000, 9999)}'
-    # generation_status['id'] = 'test_id'
+    # 使用数据集名称作为 buffer 文件夹名，去除 .csv 扩展名
+    # 这样同一个数据集的生成结果会保存在同一个文件夹中，实现缓存复用
+    dataset_name = datafile.replace('.csv', '')
+    generation_status['id'] = dataset_name
+
+    # 确保 buffer 文件夹存在
+    buffer_dir = f'buffer/{dataset_name}'
+    os.makedirs(buffer_dir, exist_ok=True)
 
     # 重置 chart type 和 variation 相关状态
     generation_status['chart_type_page'] = 0
@@ -572,7 +598,7 @@ def get_next_references():
         sorted_images = get_sorted_infographics_by_theme(datafile)
     else:
         return jsonify({'status': 'error', 'message': 'No data file selected'}), 400
-    generation_status['reference_page'] = 0
+    
     page = generation_status.get('reference_page', 0)
     page_size = 5
     total_pages = (len(sorted_images) + page_size - 1) // page_size
@@ -855,6 +881,10 @@ def download_final():
 
     return send_from_directory(directory, filename, as_attachment=True)
 
+@app.route('/api/files')
+def get_files():
+    csv_files = get_csv_files()
+    return jsonify({'files': csv_files})
 
 
 if __name__ == '__main__':
@@ -862,5 +892,4 @@ if __name__ == '__main__':
     free_port = find_free_port()
     print(f"Starting server on port {free_port}")
    
-    app.run(debug=True, host='0.0.0.0', port=5176, use_reloader=False)
-    
+    app.run(debug=True, host='0.0.0.0', port=5177, use_reloader=False)

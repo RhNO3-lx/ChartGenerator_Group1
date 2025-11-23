@@ -50,7 +50,7 @@ from concurrent.futures import ThreadPoolExecutor
 import threading
 
 client = OpenAI(
-    api_key="sk-HGwzhul85auxqDzz6eF39b9eD47347F7A454Ad9e8f1f380d",
+    api_key="sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360",
     base_url="https://aihubmix.com/v1"
 )
 

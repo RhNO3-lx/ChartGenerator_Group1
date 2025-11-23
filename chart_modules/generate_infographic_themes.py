@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, List
 import time
 
-API_KEY = "sk-ug32KbbvEDPucqnaB207A5EcEd6f47Dc887c14249a12Ff43"
+API_KEY = "sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360"
 BASE_URL = "https://aihubmix.com/v1"
 
 def encode_image(image_path):

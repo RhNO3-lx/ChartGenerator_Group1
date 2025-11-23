@@ -28,7 +28,7 @@ TEST_TITLE_IMAGE = str(Path(__file__).parent / "test_images" / "test_title.png")
 TEST_PICTOGRAM_IMAGE = str(Path(__file__).parent / "test_images" / "test_pictogram.png")
 # =====================================
 
-API_KEY = "sk-ho2TtXpXZCd50j5q3d4f29D8Cd6246B28212028a0aF69361" # from WangZheng
+API_KEY = "sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360"
 BASE_URL = "https://aihubmix.com/v1"
 
 class InfographicImageGenerator:
@@ -45,66 +45,10 @@ class InfographicImageGenerator:
             base_url=BASE_URL
         )
         self.processed_data_dir = "processed_data"
-        self.output_dir = "generated_images"
+        # output_dir 将在运行时被设置为 buffer/{dataset_name}
+        self.output_dir = None
         self.prompts_dir = "."
 
-        # 缓存目录 - 放在 buffer 文件夹下，可跨任务共享
-        self.cache_dir = "buffer/generation_cache"
-        self.title_cache_dir = os.path.join(self.cache_dir, "titles")
-        self.pictogram_cache_dir = os.path.join(self.cache_dir, "pictograms")
-        self.title_cache_file = os.path.join(self.cache_dir, "title_cache.json")
-        self.pictogram_cache_file = os.path.join(self.cache_dir, "pictogram_cache.json")
-
-        # Create output directories
-        os.makedirs(self.output_dir, exist_ok=True)
-        os.makedirs(f"{self.output_dir}/titles", exist_ok=True)
-        os.makedirs(f"{self.output_dir}/pictograms", exist_ok=True)
-        # Coming Soon directories
-        os.makedirs(f"{self.output_dir}/chart_variations", exist_ok=True)
-        os.makedirs(f"{self.output_dir}/final_infographics", exist_ok=True)
-
-        # Create cache directories
-        os.makedirs(self.cache_dir, exist_ok=True)
-        os.makedirs(self.title_cache_dir, exist_ok=True)
-        os.makedirs(self.pictogram_cache_dir, exist_ok=True)
-
-        # Load cache
-        self.title_cache = self._load_cache(self.title_cache_file)
-        self.pictogram_cache = self._load_cache(self.pictogram_cache_file)
-
-    def _load_cache(self, cache_file: str) -> dict:
-        """加载缓存文件"""
-        if os.path.exists(cache_file):
-            try:
-                with open(cache_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except Exception as e:
-                print(f"Failed to load cache from {cache_file}: {e}")
-                return {}
-        return {}
-
-    def _save_cache(self, cache_file: str, cache_data: dict):
-        """保存缓存文件"""
-        try:
-            with open(cache_file, 'w', encoding='utf-8') as f:
-                json.dump(cache_data, f, indent=2, ensure_ascii=False)
-        except Exception as e:
-            print(f"Failed to save cache to {cache_file}: {e}")
-
-    def _generate_cache_key(self, **kwargs) -> str:
-        """
-        生成缓存键（基于输入参数的哈希值）
-
-        Args:
-            **kwargs: 任意数量的键值对参数
-
-        Returns:
-            str: SHA256 哈希值
-        """
-        # 将所有参数转换为字符串并排序，确保相同参数生成相同的键
-        param_str = json.dumps(kwargs, sort_keys=True)
-        return hashlib.sha256(param_str.encode('utf-8')).hexdigest()
-        
     def load_prompt_file(self, filename: str) -> str:
         """Load prompt file content"""
         prompt_path = os.path.join(str(Path(__file__).parent), filename)
@@ -330,59 +274,47 @@ class InfographicImageGenerator:
         """
         import shutil
 
-        # 生成缓存键
-        cache_key = self._generate_cache_key(
-            csv_path=csv_path,
-            bg_color=bg_color,
-            type='title'
-        )
+        # 简化的缓存逻辑：如果文件存在就直接使用
+        if use_cache and os.path.exists(output_filename):
+            print(f"[CACHE HIT] Using existing title file: {output_filename}")
 
-        # 缓存文件路径（保存在 buffer/generation_cache/titles 中）
-        cache_image_filename = f"{cache_key}.png"
-        cache_image_path = os.path.join(self.title_cache_dir, cache_image_filename)
+            # 尝试从 title_cache.json 读取标题文本（如果存在）
+            title_text = "Cached Title"  # 默认值
+            if self.output_dir:
+                title_cache_file = os.path.join(self.output_dir, "title_cache.json")
+                if os.path.exists(title_cache_file):
+                    try:
+                        with open(title_cache_file, 'r', encoding='utf-8') as f:
+                            cache_data = json.load(f)
+                            # 获取最后一个标题文本
+                            if cache_data:
+                                title_text = list(cache_data.values())[-1].get('title_text', title_text)
+                    except Exception as e:
+                        print(f"Failed to read title cache: {e}")
 
-        # 检查缓存（如果允许使用缓存）
-        if use_cache and cache_key in self.title_cache:
-            cached_result = self.title_cache[cache_key]
-            print(f"[CACHE HIT] Using cached title for {csv_path}")
+            return {
+                'title_text': title_text,
+                'image_path': output_filename,
+                'success': True
+            }
 
-            # 检查缓存的文件是否仍然存在
-            if os.path.exists(cache_image_path):
-                # 复制缓存文件到输出路径
-                os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-                shutil.copy(cache_image_path, output_filename)
-
-                return {
-                    'title_text': cached_result.get('title_text'),
-                    'image_path': output_filename,
-                    'success': True
-                }
-
-            print(f"[CACHE MISS] Cached image not found, regenerating...")
-
+        # 文件不存在，需要生成
+        print(f"[CACHE MISS] Title file not found, generating: {output_filename}")
         csv_data = self.read_csv_data(csv_path)
 
         # Step 1: Generate title text from CSV data using LLM
         title_text = self.generate_title_text(csv_data)
 
-        # 测试模式：直接复制测试图片到缓存和目标路径
+        # 测试模式：直接复制测试图片到输出路径
         if TEST_MODE:
             print(f"[TEST MODE] Skipping title generation, using test image")
             os.makedirs(os.path.dirname(output_filename), exist_ok=True)
             if os.path.exists(TEST_TITLE_IMAGE):
-                # 保存到缓存目录
-                shutil.copy(TEST_TITLE_IMAGE, cache_image_path)
-                # 复制到输出路径
+                # 直接复制到输出路径
                 shutil.copy(TEST_TITLE_IMAGE, output_filename)
 
-                result = {
-                    'title_text': title_text,
-                    'cache_path': cache_image_path,
-                    'success': True
-                }
-                # 保存到缓存
-                self.title_cache[cache_key] = result
-                self._save_cache(self.title_cache_file, self.title_cache)
+                # 保存标题文本到简单的缓存文件
+                self._save_simple_title_cache(title_text)
 
                 return {
                     'title_text': title_text,
@@ -401,31 +333,22 @@ class InfographicImageGenerator:
         try:
             from generate_full_image import get_image_only_title
 
-            # 先生成到缓存路径
+            # 直接生成到目标路径
+            os.makedirs(os.path.dirname(output_filename), exist_ok=True)
             result_path = get_image_only_title(
                 texts=[title_text],
                 bg_hex=bg_color,
-                save_path=cache_image_path,
+                save_path=output_filename,
                 prompt_times=1,
                 image_times=1
             )
 
-            success = result_path is not None and os.path.exists(cache_image_path)
+            success = result_path is not None and os.path.exists(output_filename)
             print(f"Title image generation: {'success' if success else 'failed'}")
 
             if success:
-                # 复制到输出路径
-                os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-                shutil.copy(cache_image_path, output_filename)
-
-                # 保存到缓存元数据
-                cache_result = {
-                    'title_text': title_text,
-                    'cache_path': cache_image_path,
-                    'success': True
-                }
-                self.title_cache[cache_key] = cache_result
-                self._save_cache(self.title_cache_file, self.title_cache)
+                # 保存标题文本到简单的缓存文件
+                self._save_simple_title_cache(title_text)
 
                 return {
                     'title_text': title_text,
@@ -462,56 +385,25 @@ class InfographicImageGenerator:
         """
         import shutil
 
-        # 生成缓存键
-        # 将 colors 转换为可哈希的字符串
-        colors_str = str(colors) if colors else ''
-        cache_key = self._generate_cache_key(
-            title_text=title_text,
-            colors=colors_str,
-            type='pictogram'
-        )
+        # 简化的缓存逻辑：如果文件存在就直接使用
+        if use_cache and os.path.exists(output_filename):
+            print(f"[CACHE HIT] Using existing pictogram file: {output_filename}")
+            return {
+                'pictogram_prompt': 'Cached',
+                'image_path': output_filename,
+                'success': True
+            }
 
-        # 缓存文件路径（保存在 buffer/generation_cache/pictograms 中）
-        cache_image_filename = f"{cache_key}.png"
-        cache_image_path = os.path.join(self.pictogram_cache_dir, cache_image_filename)
+        # 文件不存在，需要生成
+        print(f"[CACHE MISS] Pictogram file not found, generating: {output_filename}")
 
-        # 检查缓存（如果允许使用缓存）
-        if use_cache and cache_key in self.pictogram_cache:
-            cached_result = self.pictogram_cache[cache_key]
-            print(f"[CACHE HIT] Using cached pictogram for title: {title_text}")
-
-            # 检查缓存的文件是否仍然存在
-            if os.path.exists(cache_image_path):
-                # 复制缓存文件到输出路径
-                os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-                shutil.copy(cache_image_path, output_filename)
-
-                return {
-                    'pictogram_prompt': cached_result.get('pictogram_prompt'),
-                    'image_path': output_filename,
-                    'success': True
-                }
-
-            print(f"[CACHE MISS] Cached image not found, regenerating...")
-
-        # 测试模式：直接复制测试图片到缓存和目标路径
+        # 测试模式：直接复制测试图片到输出路径
         if TEST_MODE:
             print(f"[TEST MODE] Skipping pictogram generation, using test image")
             os.makedirs(os.path.dirname(output_filename), exist_ok=True)
             if os.path.exists(TEST_PICTOGRAM_IMAGE):
-                # 保存到缓存目录
-                shutil.copy(TEST_PICTOGRAM_IMAGE, cache_image_path)
-                # 复制到输出路径
+                # 直接复制到输出路径
                 shutil.copy(TEST_PICTOGRAM_IMAGE, output_filename)
-
-                result = {
-                    'pictogram_prompt': '[TEST MODE]',
-                    'cache_path': cache_image_path,
-                    'success': True
-                }
-                # 保存到缓存
-                self.pictogram_cache[cache_key] = result
-                self._save_cache(self.pictogram_cache_file, self.pictogram_cache)
 
                 return {
                     'pictogram_prompt': '[TEST MODE]',
@@ -529,23 +421,11 @@ class InfographicImageGenerator:
         # Generate pictogram prompt
         pictogram_prompt = self.generate_image_prompt(title_text, "pictogram", colors)
 
-        # Generate the pictogram image to cache path first
-        success = self.generate_image(pictogram_prompt, "pictogram", cache_image_path)
+        # Generate the pictogram image directly to output path
+        os.makedirs(os.path.dirname(output_filename), exist_ok=True)
+        success = self.generate_image(pictogram_prompt, "pictogram", output_filename)
 
-        if success and os.path.exists(cache_image_path):
-            # 复制到输出路径
-            os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-            shutil.copy(cache_image_path, output_filename)
-
-            # 保存到缓存元数据
-            cache_result = {
-                'pictogram_prompt': pictogram_prompt,
-                'cache_path': cache_image_path,
-                'success': True
-            }
-            self.pictogram_cache[cache_key] = cache_result
-            self._save_cache(self.pictogram_cache_file, self.pictogram_cache)
-
+        if success and os.path.exists(output_filename):
             return {
                 'pictogram_prompt': pictogram_prompt,
                 'image_path': output_filename,
@@ -557,6 +437,33 @@ class InfographicImageGenerator:
                 'image_path': None,
                 'success': False
             }
+
+    def _save_simple_title_cache(self, title_text: str):
+        """保存标题文本到简单的缓存文件"""
+        if not self.output_dir:
+            return
+
+        cache_file = os.path.join(self.output_dir, "title_cache.json")
+        try:
+            # 读取现有缓存
+            cache_data = {}
+            if os.path.exists(cache_file):
+                with open(cache_file, 'r', encoding='utf-8') as f:
+                    cache_data = json.load(f)
+
+            # 添加新的标题（使用时间戳作为key）
+            import time
+            cache_data[str(int(time.time()))] = {
+                'title_text': title_text,
+                'success': True
+            }
+
+            # 保存
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                json.dump(cache_data, f, indent=2, ensure_ascii=False)
+
+        except Exception as e:
+            print(f"Failed to save title cache: {e}")
 
 def main():
     """Main function"""

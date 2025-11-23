@@ -25,7 +25,7 @@ def text_classifier(text):
 
 def split_title_and_annotation( text_to_split, prompt_path = 'prompts\split_prompt.md'):
     client = OpenAI(
-        api_key="sk-yIje25vOt9QiTmKG4325C0A803A8400e973dEe4dC10e94C6",
+        api_key="sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360",
         base_url="https://aihubmix.com/v1"
     )
     

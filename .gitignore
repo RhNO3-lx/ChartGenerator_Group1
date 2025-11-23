@@ -3,3 +3,4 @@ infographics/
 buffer/
 tmp/
 __pycache__
+/frontend/node_modules

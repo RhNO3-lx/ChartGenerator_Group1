@@ -19,7 +19,7 @@ def get_prompt( title,
     generate_prompt = generate_prompt.replace("{color}", bg_color)
 
     client = OpenAI(
-        api_key="sk-ug32KbbvEDPucqnaB207A5EcEd6f47Dc887c14249a12Ff43",
+        api_key="sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360",
         base_url="https://aihubmix.com/v1"
     )
     response = client.chat.completions.create(

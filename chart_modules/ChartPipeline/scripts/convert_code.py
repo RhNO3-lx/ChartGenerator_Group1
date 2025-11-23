@@ -12,7 +12,7 @@ import time
 import concurrent.futures
 
 # OpenAI API configuration
-API_KEY = 'sk-GZPrsS9VcR4Xf5iADf6a55D0C0Bb4f8d8f12DaC9F0857cAe'
+API_KEY = 'sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360'
 API_PROVIDER = 'https://aihubmix.com'
 def query_openai(prompt: str, code_content: str) -> str:
     """

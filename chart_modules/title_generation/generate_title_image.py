@@ -16,10 +16,8 @@ def get_image(  bg_hex,
     # 使用绝对路径
     if prompt_path is None:
         prompt_path = os.path.join(_current_dir, 'prompts/generated_output.md')
-    url = "https://aihubmix.com/v1"
-    api_key = "sk-ug32KbbvEDPucqnaB207A5EcEd6f47Dc887c14249a12Ff43"
     client = OpenAI(
-        api_key="sk-ug32KbbvEDPucqnaB207A5EcEd6f47Dc887c14249a12Ff43",
+        api_key="sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360",
         base_url="https://aihubmix.com/v1"
     )
     with open(prompt_path, 'r', encoding='utf-8') as file:

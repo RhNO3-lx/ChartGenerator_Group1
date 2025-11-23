@@ -36,6 +36,8 @@ padding = 50
 between_padding = 35
 
 
+import cairosvg
+
 def make_infographic(data: Dict, chart_svg_content: str, output_dir: str, bg_color) -> str:
     bg_color = rgb_to_hex(bg_color)
     chart_content, chart_width, chart_height, chart_offset_x, chart_offset_y = adjust_and_get_bbox(chart_svg_content, bg_color)
@@ -47,10 +49,21 @@ def make_infographic(data: Dict, chart_svg_content: str, output_dir: str, bg_col
     # 检查目录是否存在，如果不存在则创建
     if not os.path.exists(output_dir_path):
         os.makedirs(output_dir_path)
-        
-    with open(output_dir, "w", encoding="utf-8") as f:
+    
+    with open(output_dir, 'w', encoding='utf-8') as f:
         f.write(chart_svg_content)
-    return chart_svg_content
+        
+    # Convert to PNG
+    if output_dir.endswith('.svg'):
+        png_path = output_dir.replace('.svg', '.png')
+        try:
+            print(f"Converting to PNG: {png_path}")
+            cairosvg.svg2png(bytestring=chart_svg_content.encode('utf-8'), write_to=png_path)
+            print(f"Converted to PNG: {png_path}")
+        except Exception as e:
+            print(f"Error converting to PNG: {e}")
+            
+    return output_dir
 
 
 def generate_variation(input: str, output: str, chart_template, main_colors = None, bg_color = None) -> bool:

@@ -11,7 +11,7 @@ from PIL import Image
 from io import BytesIO
 
 # API 配置
-API_KEY = "sk-ho2TtXpXZCd50j5q3d4f29D8Cd6246B28212028a0aF69361"
+API_KEY = "sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360"
 BASE_URL = "https://aihubmix.com/v1"
 
 def svg_to_png(svg_content: str, output_path: str, background_color: str = None) -> bool:
