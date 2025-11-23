@@ -363,8 +363,22 @@ def regenerate_pictogram(title):
 @app.route('/api/status')
 def get_status():
     # Do NOT load from file here, as it might overwrite in-memory progress updates from running threads
-    # load_generation_status() 
+    # load_generation_status()
     return jsonify(generation_status)
+
+@app.route('/api/layout')
+def get_layout():
+    """获取当前选中参考图的布局信息"""
+    global generation_status
+    load_generation_status()
+
+    layout = None
+    reference_image_path = generation_status.get('selected_reference')
+    if reference_image_path:
+        reference_filename = os.path.basename(reference_image_path)
+        layout = parse_reference_layout(reference_filename)
+
+    return jsonify({'layout': layout})
 
 @app.route('/api/chart_types')
 def get_chart_types():
@@ -1005,9 +1019,39 @@ def get_files():
     return jsonify({'files': csv_files})
 
 
+@app.route('/api/data/preview/<filename>')
+def preview_data(filename):
+    """
+    预览CSV数据
+    返回前10行数据
+    """
+    try:
+        # 读取CSV文件
+        file_path = os.path.join('processed_data', filename)
+        if not os.path.exists(file_path):
+            return jsonify({'error': 'File not found'}), 404
+
+        df = pd.read_csv(file_path)
+
+        # 获取列名和前10行数据
+        columns = df.columns.tolist()
+        preview_rows = df.head(10).values.tolist()
+        total_rows = len(df)
+
+        return jsonify({
+            'columns': columns,
+            'rows': preview_rows,
+            'total_rows': total_rows
+        })
+    except Exception as e:
+        print(f"Error previewing data: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     # 使用固定端口
-    port = 5180
+    port = 5176
     print(f"Starting server on port {port}")
-   
+
     app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)

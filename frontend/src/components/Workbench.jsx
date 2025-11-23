@@ -7,6 +7,8 @@ function Workbench() {
   // --- State: Data ---
   const [csvFiles, setCsvFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState('');
+  const [showDataPreview, setShowDataPreview] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
   
   // --- State: Chart Types ---
   const [chartTypes, setChartTypes] = useState([]);
@@ -310,6 +312,27 @@ Generate a high-quality infographic that looks like it was created with the same
     }
   };
 
+  // --- Logic: Data Preview ---
+  const handleDataPreview = async () => {
+    if (!selectedFile) {
+      alert('请先选择数据集');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setLoadingText('Loading data preview...');
+      const response = await axios.get(`/api/data/preview/${selectedFile}`);
+      setPreviewData(response.data);
+      setShowDataPreview(true);
+    } catch (err) {
+      console.error('Failed to load data preview:', err);
+      alert('无法加载数据预览');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const pollStatus = (callback, targetStep) => {
     const interval = setInterval(async () => {
       try {
@@ -572,10 +595,13 @@ Generate a high-quality infographic that looks like it was created with the same
           await axios.get(`/api/start_title_generation/${selectedFile}`);
           pollStatus(async (statusData) => {
               // Update title image state
-              const options = statusData.title_options ? Object.keys(statusData.title_options).sort() : ['title_0.png'];
+              const keys = statusData.title_options ? Object.keys(statusData.title_options).sort() : [];
+              const options = keys.length > 0 ? keys : ['title_0.png'];
               setTitleOptions(options);
               const newTitleImage = options[0];
-              setTitleImage(newTitleImage);
+              // Don't set title image yet, wait for pictogram
+              // setTitleImage(newTitleImage);
+              setPreviewTimestamp(Date.now()); // Force refresh images
               
               // 3. Generate Pictogram
               // Use the text from the first generated title
@@ -597,9 +623,11 @@ Generate a high-quality infographic that looks like it was created with the same
       try {
           await axios.get(`/api/regenerate_title/${selectedFile}`);
           pollStatus(async (statusData) => {
-              const options = statusData.title_options ? Object.keys(statusData.title_options).sort() : ['title_0.png'];
+              const keys = statusData.title_options ? Object.keys(statusData.title_options).sort() : [];
+              const options = keys.length > 0 ? keys : ['title_0.png'];
               setTitleOptions(options);
               setTitleImage(options[0]);
+              setPreviewTimestamp(Date.now()); // Force refresh images
               setLoading(false);
           }, 'title_generation');
       } catch (err) {
@@ -615,10 +643,33 @@ Generate a high-quality infographic that looks like it was created with the same
           const text = titleText || 'InfoGraphic'; 
           await axios.get(`/api/start_pictogram_generation/${encodeURIComponent(text)}`);
           pollStatus((statusData) => {
-              const options = statusData.pictogram_options ? Object.keys(statusData.pictogram_options).sort() : ['pictogram_0.png'];
+              console.log('Pictogram generation finished', statusData);
+              
+              // Ensure we get the options
+              let options = [];
+              if (statusData.pictogram_options) {
+                  options = Object.keys(statusData.pictogram_options).sort();
+              }
+              
+              // Fallback if empty (should not happen if backend works)
+              if (options.length === 0) {
+                  console.warn('No pictogram options found in statusData');
+                  // Try to infer from standard naming if backend failed to populate dict but files exist?
+                  options = ['pictogram_0.png', 'pictogram_1.png', 'pictogram_2.png'];
+              }
+
               setPictogramOptions(options);
+              
+              // Select the first one
               const newPictograms = [options[0]];
+              
+              // Update states together to trigger single canvas update
+              if (currentTitleImage) {
+                  setTitleImage(currentTitleImage);
+              }
               setSelectedPictograms(newPictograms);
+              
+              setPreviewTimestamp(Date.now()); // Force refresh images
               setLoading(false);
               
               // Force update canvas with new assets
@@ -647,9 +698,23 @@ Generate a high-quality infographic that looks like it was created with the same
           const text = 'InfoGraphic'; 
           await axios.get(`/api/regenerate_pictogram/${encodeURIComponent(text)}`);
           pollStatus((statusData) => {
-              const options = statusData.pictogram_options ? Object.keys(statusData.pictogram_options).sort() : ['pictogram_0.png'];
+              console.log('Pictogram regeneration finished', statusData);
+              
+              // Ensure we get the options
+              let options = [];
+              if (statusData.pictogram_options) {
+                  options = Object.keys(statusData.pictogram_options).sort();
+              }
+              
+              // Fallback if empty
+              if (options.length === 0) {
+                  console.warn('No pictogram options found in statusData');
+                  options = ['pictogram_0.png', 'pictogram_1.png', 'pictogram_2.png'];
+              }
+
               setPictogramOptions(options);
               setSelectedPictograms([options[0]]);
+              setPreviewTimestamp(Date.now()); // Force refresh images
               setLoading(false);
           }, 'pictogram_generation');
       } catch (err) {
@@ -660,12 +725,15 @@ Generate a high-quality infographic that looks like it was created with the same
 
   // Auto-reload canvas when assets change
   useEffect(() => {
-      if (selectedVariation && (titleImage || selectedPictograms.length > 0)) {
+      console.log('useEffect triggered:', { selectedVariation, titleImage, selectedPictograms, canvas: !!canvas });
+      if (canvas && selectedVariation && (titleImage || selectedPictograms.length > 0)) {
           // Use direct URL for chart to avoid re-generation, and overlay assets in frontend
-          // Pass true to indicate we should preserve positions
-          loadChartToCanvas(selectedVariation, `/currentfilepath/variation_${selectedVariation}.png`, true);
+          // First load after reference selection should NOT preserve positions (use layout instead)
+          // Subsequent changes should preserve positions
+          const shouldPreservePositions = canvas.getObjects().length > 1;
+          loadChartToCanvas(selectedVariation, `/currentfilepath/variation_${selectedVariation}.png`, shouldPreservePositions);
       }
-  }, [titleImage, selectedPictograms]);
+  }, [canvas, titleImage, selectedPictograms, selectedVariation]);
 
   // Note: Initial canvas state is saved in loadChartToCanvas function
   // This useEffect is kept as a backup but may not be needed
@@ -748,6 +816,24 @@ Generate a high-quality infographic that looks like it was created with the same
           if (directUrl) {
               // Load directly from the generated file (PNG)
               imageUrl = directUrl;
+
+              // 即使使用 directUrl，也需要获取 layout 信息用于定位
+              try {
+                  const statusRes = await axios.get('/api/status');
+                  const selectedReference = statusRes.data.selected_reference;
+                  console.log('Fetched status, selected_reference:', selectedReference);
+                  if (selectedReference) {
+                      // 从后端获取 layout 信息
+                      const layoutRes = await axios.get('/api/layout');
+                      layout = layoutRes.data.layout;
+                      console.log('Fetched layout:', layout);
+                      bgColor = statusRes.data.style?.bg_color
+                          ? `#${statusRes.data.style.bg_color.map(c => c.toString(16).padStart(2, '0')).join('')}`
+                          : '#ffffff';
+                  }
+              } catch (err) {
+                  console.warn('Failed to fetch layout info:', err);
+              }
           } else {
               // Call backend to generate/composite
               const dataName = selectedFile.replace('.csv', '');
@@ -823,19 +909,144 @@ Generate a high-quality infographic that looks like it was created with the same
                   maxWidth: canvas.width * 0.9,
                   maxHeight: canvas.height * 0.7
               };
-          } else if (layout && layout.chart) {
-              // Use layout from backend (from reference)
-              console.log('Using reference layout:', layout);
-              chartOptions = {
-                  left: layout.chart.x * canvas.width,
-                  top: layout.chart.y * canvas.height,
-                  maxWidth: layout.chart.width * canvas.width,
-                  maxHeight: layout.chart.height * canvas.height,
+
+              // Title saved positions
+              if (currentPositions.title) {
+                  titleOptions = currentPositions.title;
+              } else {
+                  titleOptions = {
+                      maxWidth: 400,
+                      maxHeight: 150,
+                      left: 20,
+                      top: 20,
+                      originX: 'left',
+                      originY: 'top'
+                  };
+              }
+
+              // Pictogram saved positions handled later
+              imageOptions = {
+                  maxWidth: 200,
+                  maxHeight: 200,
+                  left: canvas.width - 220,
+                  top: canvas.height - 220,
                   originX: 'left',
                   originY: 'top'
               };
+          } else if (layout && layout.width && layout.height) {
+              // 使用参考图布局：将 layout 按比例缩放到画布中并居中
+              console.log('Using reference layout:', layout);
+
+              // 计算缩放比例，使 layout 能够放入画布中（留一些边距）
+              const padding = 40; // 画布边距
+              const layoutScale = Math.min(
+                  (canvas.width - padding * 2) / layout.width,
+                  (canvas.height - padding * 2) / layout.height
+              );
+
+              // 缩放后的 layout 尺寸
+              const scaledLayoutWidth = layout.width * layoutScale;
+              const scaledLayoutHeight = layout.height * layoutScale;
+
+              // 计算居中偏移量
+              const offsetX = (canvas.width - scaledLayoutWidth) / 2;
+              const offsetY = (canvas.height - scaledLayoutHeight) / 2;
+
+              console.log('Layout scale:', layoutScale, 'offsetX:', offsetX, 'offsetY:', offsetY);
+
+              // 辅助函数：计算元素在缩放后的 layout 中的位置和尺寸
+              const calculateBoxOptions = (box) => {
+                  if (!box) return null;
+
+                  // 框在缩放后 layout 中的位置和尺寸（box的坐标是相对比例）
+                  const boxX = offsetX + box.x * scaledLayoutWidth;
+                  const boxY = offsetY + box.y * scaledLayoutHeight;
+                  const boxWidth = box.width * scaledLayoutWidth;
+                  const boxHeight = box.height * scaledLayoutHeight;
+
+                  console.log('Box calculated:', { boxX, boxY, boxWidth, boxHeight });
+
+                  return {
+                      // 框的中心位置（用于居中放置元素）
+                      centerX: boxX + boxWidth / 2,
+                      centerY: boxY + boxHeight / 2,
+                      maxWidth: boxWidth,
+                      maxHeight: boxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              };
+
+              // Chart options
+              if (layout.chart) {
+                  const chartBox = calculateBoxOptions(layout.chart);
+                  chartOptions = {
+                      left: chartBox.centerX,
+                      top: chartBox.centerY,
+                      maxWidth: chartBox.maxWidth,
+                      maxHeight: chartBox.maxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+                  console.log('Chart options:', chartOptions);
+              } else {
+                  chartOptions = {
+                      maxWidth: canvas.width * 0.9,
+                      maxHeight: canvas.height * 0.7,
+                      left: canvas.width / 2,
+                      top: canvas.height / 2,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              }
+
+              // Title options
+              if (layout.title) {
+                  const titleBox = calculateBoxOptions(layout.title);
+                  titleOptions = {
+                      left: titleBox.centerX,
+                      top: titleBox.centerY,
+                      maxWidth: titleBox.maxWidth,
+                      maxHeight: titleBox.maxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+                  console.log('Title options:', titleOptions);
+              } else {
+                  titleOptions = {
+                      maxWidth: 400,
+                      maxHeight: 150,
+                      left: canvas.width / 2,
+                      top: 80,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              }
+
+              // Image/Pictogram options
+              if (layout.image) {
+                  const imageBox = calculateBoxOptions(layout.image);
+                  imageOptions = {
+                      left: imageBox.centerX,
+                      top: imageBox.centerY,
+                      maxWidth: imageBox.maxWidth,
+                      maxHeight: imageBox.maxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+                  console.log('Pictogram options:', imageOptions);
+              } else {
+                  imageOptions = {
+                      maxWidth: 200,
+                      maxHeight: 200,
+                      left: canvas.width - 120,
+                      top: canvas.height - 120,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              }
           } else {
-              // Default layout
+              // Default layout (no reference)
               chartOptions = {
                   maxWidth: canvas.width * 0.9,
                   maxHeight: canvas.height * 0.7,
@@ -844,21 +1055,7 @@ Generate a high-quality infographic that looks like it was created with the same
                   originX: 'left',
                   originY: 'top'
               };
-          }
 
-          // Title options
-          if (preservePositions && currentPositions.title) {
-              titleOptions = currentPositions.title;
-          } else if (layout && layout.title) {
-              titleOptions = {
-                  left: layout.title.x * canvas.width,
-                  top: layout.title.y * canvas.height,
-                  maxWidth: layout.title.width * canvas.width,
-                  maxHeight: layout.title.height * canvas.height,
-                  originX: 'left',
-                  originY: 'top'
-              };
-          } else {
               titleOptions = {
                   maxWidth: 400,
                   maxHeight: 150,
@@ -867,19 +1064,7 @@ Generate a high-quality infographic that looks like it was created with the same
                   originX: 'left',
                   originY: 'top'
               };
-          }
 
-          // Image/Pictogram options
-          if (layout && layout.image) {
-              imageOptions = {
-                  left: layout.image.x * canvas.width,
-                  top: layout.image.y * canvas.height,
-                  maxWidth: layout.image.width * canvas.width,
-                  maxHeight: layout.image.height * canvas.height,
-                  originX: 'left',
-                  originY: 'top'
-              };
-          } else {
               imageOptions = {
                   maxWidth: 200,
                   maxHeight: 200,
@@ -1138,11 +1323,25 @@ Generate a high-quality infographic that looks like it was created with the same
           <div className="dataset-control">
             <select value={selectedFile} onChange={handleFileSelect} className="dataset-select">
               <option value="">选择数据集...</option>
-              {csvFiles.map(f => (
-                <option key={f} value={f}>{f.replace('.csv', '')}</option>
-              ))}
+              {csvFiles
+                .filter(f => f === 'Space.csv' || f === 'Commute.csv')
+                .map(f => (
+                  <option key={f} value={f}>{f.replace('.csv', '')}</option>
+                ))}
             </select>
-            <button className="upload-btn" title="Upload (Not Supported)" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>↑</button>
+            <button
+              className="upload-btn"
+              title="预览数据"
+              onClick={handleDataPreview}
+              disabled={!selectedFile}
+              style={{
+                opacity: selectedFile ? 1 : 0.5,
+                cursor: selectedFile ? 'pointer' : 'not-allowed',
+                background: selectedFile ? '#4CAF50' : '#ccc'
+              }}
+            >
+              👁️
+            </button>
           </div>
         </div>
 
@@ -1653,6 +1852,84 @@ Generate a high-quality infographic that looks like it was created with the same
                   boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
                 }}
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Data Preview Modal */}
+      {showDataPreview && previewData && (
+        <div className="refined-preview-modal" onClick={() => setShowDataPreview(false)}>
+          <div className="refined-preview-content" onClick={(e) => e.stopPropagation()} style={{maxWidth: '90%', width: '1000px'}}>
+            <div className="refined-preview-header">
+              <h3 style={{margin: 0, display: 'flex', alignItems: 'center', gap: '10px'}}>
+                <span>📊</span>
+                <span>数据预览 - {selectedFile.replace('.csv', '')}</span>
+              </h3>
+              <button
+                className="close-btn"
+                onClick={() => setShowDataPreview(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#666',
+                  padding: 0
+                }}
+              >×</button>
+            </div>
+            <div style={{marginTop: '20px', maxHeight: '70vh', overflowY: 'auto'}}>
+              {previewData.columns && previewData.rows && (
+                <div>
+                  <div style={{marginBottom: '15px', color: '#666', fontSize: '14px'}}>
+                    共 {previewData.total_rows || previewData.rows.length} 行数据，显示前 {previewData.rows.length} 行
+                  </div>
+                  <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    fontSize: '14px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
+                    <thead>
+                      <tr style={{background: '#f5f5f5'}}>
+                        {previewData.columns.map((col, idx) => (
+                          <th key={idx} style={{
+                            padding: '12px',
+                            textAlign: 'left',
+                            borderBottom: '2px solid #ddd',
+                            fontWeight: '600',
+                            color: '#333'
+                          }}>
+                            {col}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {previewData.rows.map((row, rowIdx) => (
+                        <tr key={rowIdx} style={{
+                          background: rowIdx % 2 === 0 ? 'white' : '#fafafa',
+                          transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#f0f0f0'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = rowIdx % 2 === 0 ? 'white' : '#fafafa'}
+                        >
+                          {row.map((cell, cellIdx) => (
+                            <td key={cellIdx} style={{
+                              padding: '10px 12px',
+                              borderBottom: '1px solid #eee',
+                              color: '#555'
+                            }}>
+                              {cell !== null && cell !== undefined ? String(cell) : '-'}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -6,35 +6,35 @@
   "style": {
     "colors": [
       [
-        241,
-        139,
-        37
+        104,
+        40,
+        33
       ],
       [
-        3,
-        2,
-        2
+        240,
+        150,
+        12
       ],
       [
-        82,
-        55,
-        227
+        166,
+        90,
+        39
       ],
       [
-        11,
-        190,
-        130
+        195,
+        133,
+        113
       ],
       [
-        62,
-        57,
-        55
+        246,
+        229,
+        207
       ]
     ],
     "bg_color": [
-      244,
-      238,
-      219
+      54,
+      15,
+      0
     ]
   },
   "selected_data": "processed_data/Commute.json",
@@ -1045,43 +1045,43 @@
     }
   ],
   "reference_page": 14,
-  "selected_reference": "infographics/Commute-Origin.png",
+  "selected_reference": "infographics/Stone-Origin.png",
   "reference_descriptions": {
-    "title_description": "1. **Text Layout**: The title is split into three lines. The first line contains 3 words, the second line contains 2 words, and the third line has approximately 9 words. The text is left-aligned.\n\n2. **Font Style**: The fonts used appear to be a mix of serif and sans-serif. The top two lines are serif and bold, with \"AI at Work\" using a very bold style, while \"ACROSS GENERATIONS\" is bold sans-serif. The third line uses a regular weight sans-serif font. There is no italicization.\n\n3. **Color Scheme**: The primary text color is black. There is selective emphasis on the word \"their own\" in the third line, which is highlighted with a pink rectangle background and black text. The overall background is a very light beige with a subtle dotted texture.\n\n4. **Decorative Effects**: The text does not appear to have shadows, outlines, or glowing effects. The emphasis on \"their own\" with a pink highlight serves as the primary decorative element.\n\n5. **Overall Style**: The style is modern and professional, with a clear emphasis on readability and emphasis where needed. The use of bold fonts and subtle highlights suggests a contemporary, clean, and slightly formal design.",
-    "pictogram_description": "1. **Content Theme**: The image illustrates a technology and learning-related theme. The main elements include a graduate holding a large tablet displaying code, a person using a laptop, a scientist with augmented reality glasses reading documents, and a seated elder with a smartphone.\n\n2. **Drawing Style**: It employs a flat design with bold, clean lines. The illustration uses simple shapes and forms with a slightly abstract representation.\n\n3. **Color Scheme**: Dominant colors include blue, yellow, and red, set against black and white. The colors are vibrant and bold, with no gradients, maintaining a high contrast appearance.\n\n4. **Background Treatment**: The background consists of block colors with a grid or dotted pattern, divided into vertical stripes behind each character, adding a sense of structure.\n\n5. **Overall Characteristics**: The visual style is characterized by its graphic simplicity and modern look, with the use of flat geometric shapes, no shadows, or textures, enhancing readability and focus on the characters and their activities."
+    "title_description": "**Text Layout**: The title is divided into three lines. The first line \"Per Capita\" contains two words, the second line \"BEER\" contains one word, the third line \"CONSUMPTION\" contains one word. The text is center-aligned.\n\n**Font Style**: The font for \"BEER\" and \"CONSUMPTION\" is a bold, artistic serif typeface that is chunky and exaggerated. \"Per Capita\" is in a bold script or playful serif style with no italics.\n\n**Color Scheme**: The primary color for \"BEER\" is a cream white, \"CONSUMPTION\" is in bright orange, and \"Per Capita\" is in a reddish-orange hue. There are no gradients used, and the background is a dark, warm brown tone with no transparency.\n\n**Decorative Effects**: No apparent shadow or glow effects, but the chunky shape of the letters in \"BEER\" and \"CONSUMPTION\" gives a 3D-like visual impression. The image does not include icons or graphic elements integrated with the text.\n\n**Overall Style**: The overall style conveys a retro yet playful feel with bold and fun typography, suggestive of vintage beer advertising or signage.",
+    "pictogram_description": "1. **Content Theme**: The image depicts beer consumption per capita, focusing on a top-down view of a beer glass. The key elements include a glass of beer with visible froth and bubbles, alongside a stylized bar graph on the left.\n\n2. **Drawing Style**: The style is a realistic photograph for the beer, combined with flat design elements for the bar graph and text. The lines in the bar graph are smooth and moderately thick.\n\n3. **Color Scheme**: The image uses warm, rich colors, mainly amber and golden hues for the beer. The bar graph and text are in bright orange, providing a vivid contrast. There is no use of gradients in the flat design elements.\n\n4. **Background Treatment**: The background is a wooden texture, possibly representing a table, which contributes to a realistic setting. It’s subtly blurred to keep the focus on the beer and graph.\n\n5. **Overall Characteristics**: The image combines realistic textures, such as the bubbles and wood grain, with flat, bold design elements. The interplay between realistic and flat elements creates a visually striking contrast. There are no noticeable shadows or highlights on the flat design parts."
   },
   "title_options": {
-    "title_0_8141e84e.png": {
+    "title_0_44736cfd.png": {
       "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_0_8141e84e.png",
+      "image_path": "buffer/Commute/title_0_44736cfd.png",
       "success": true
     },
-    "title_1_8141e84e.png": {
+    "title_1_44736cfd.png": {
       "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_1_8141e84e.png",
+      "image_path": "buffer/Commute/title_1_44736cfd.png",
       "success": true
     },
-    "title_2_8141e84e.png": {
+    "title_2_44736cfd.png": {
       "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_2_8141e84e.png",
+      "image_path": "buffer/Commute/title_2_44736cfd.png",
       "success": true
     }
   },
   "current_title_text": "Average Commute Times by Transportation Mode",
   "pictogram_options": {
-    "pictogram_0_df63be97.png": {
+    "pictogram_0_7aa6ebf2.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_0_df63be97.png",
+      "image_path": "buffer/Commute/pictogram_0_7aa6ebf2.png",
       "success": true
     },
-    "pictogram_1_df63be97.png": {
+    "pictogram_1_7aa6ebf2.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_1_df63be97.png",
+      "image_path": "buffer/Commute/pictogram_1_7aa6ebf2.png",
       "success": true
     },
-    "pictogram_2_df63be97.png": {
+    "pictogram_2_7aa6ebf2.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_2_df63be97.png",
+      "image_path": "buffer/Commute/pictogram_2_7aa6ebf2.png",
       "success": true
     }
   },
