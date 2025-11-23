@@ -1,40 +1,40 @@
 {
-  "step": "layout_extraction",
+  "step": "final_export",
   "status": "completed",
-  "progress": "分析参考图风格...",
+  "progress": "导出完成！",
   "completed": true,
   "style": {
     "colors": [
       [
+        241,
+        139,
+        37
+      ],
+      [
+        3,
+        2,
+        2
+      ],
+      [
+        82,
+        55,
+        227
+      ],
+      [
+        11,
+        190,
+        130
+      ],
+      [
+        62,
         57,
-        86,
-        112
-      ],
-      [
-        129,
-        153,
-        165
-      ],
-      [
-        229,
-        169,
-        206
-      ],
-      [
-        71,
-        157,
-        132
-      ],
-      [
-        209,
-        226,
-        215
+        55
       ]
     ],
     "bg_color": [
-      31,
-      66,
-      96
+      244,
+      238,
+      219
     ]
   },
   "selected_data": "processed_data/Commute.json",
@@ -1045,10 +1045,10 @@
     }
   ],
   "reference_page": 14,
-  "selected_reference": "infographics/Yield-Origin.png",
+  "selected_reference": "infographics/Commute-Origin.png",
   "reference_descriptions": {
-    "title_description": "1. **Text Layout**: The title is divided into three lines. The first line has two words, approximately 12 characters long. The second line also has two words, approximately 10 characters. The third line is one phrase with roughly 9 characters. The text is center-aligned.\n\n2. **Font Style**: The font type is sans-serif. The first line is bold with a slightly distressed effect but not italicized. The second and third lines are in regular weight without bold or italic.\n\n3. **Color Scheme**: The main color for the text is pink for the first line, while the second and third lines are white. There is no gradient used in text colors. The background is dark blue with subtle texture and not transparent.\n\n4. **Decorative Effects**: There are no shadows, outlines, or glow effects on the text. The pink text has a subtle distressed texture effect. There are no icons or decorative elements integrated into the text.\n\n5. **Overall Style**: The design gives a modern, slightly vintage feel due to the distressed texture in the font and subtle background texture, simple and straightforward without ornamental elements.",
-    "pictogram_description": "1. **Content Theme**: The image illustrates an ultrasound scan, likely of a fetus. The main elements include the ultrasound printout depicted at an angle.\n\n2. **Drawing Style**: The style is a halftone effect reminiscent of a printed photograph. It uses a texture that gives it a vintage, newspaper-like appearance with a mix of flat and dotted areas.\n\n3. **Color Scheme**: The image predominantly uses shades of blue and white. The colors are muted and create a monochromatic look. There is no use of gradient, just solid colors with a halftone pattern.\n\n4. **Background Treatment**: The background is a solid, deep blue color. It provides a high contrast to the white elements of the ultrasound printout.\n\n5. **Overall Characteristics**: The visual features a halftone texture which creates a sense of depth and pattern. The ultrasound image has a distinct, pixelated quality with no visible shadow or highlight details outside the halftone treatment."
+    "title_description": "1. **Text Layout**: The title is split into three lines. The first line contains 3 words, the second line contains 2 words, and the third line has approximately 9 words. The text is left-aligned.\n\n2. **Font Style**: The fonts used appear to be a mix of serif and sans-serif. The top two lines are serif and bold, with \"AI at Work\" using a very bold style, while \"ACROSS GENERATIONS\" is bold sans-serif. The third line uses a regular weight sans-serif font. There is no italicization.\n\n3. **Color Scheme**: The primary text color is black. There is selective emphasis on the word \"their own\" in the third line, which is highlighted with a pink rectangle background and black text. The overall background is a very light beige with a subtle dotted texture.\n\n4. **Decorative Effects**: The text does not appear to have shadows, outlines, or glowing effects. The emphasis on \"their own\" with a pink highlight serves as the primary decorative element.\n\n5. **Overall Style**: The style is modern and professional, with a clear emphasis on readability and emphasis where needed. The use of bold fonts and subtle highlights suggests a contemporary, clean, and slightly formal design.",
+    "pictogram_description": "1. **Content Theme**: The image illustrates a technology and learning-related theme. The main elements include a graduate holding a large tablet displaying code, a person using a laptop, a scientist with augmented reality glasses reading documents, and a seated elder with a smartphone.\n\n2. **Drawing Style**: It employs a flat design with bold, clean lines. The illustration uses simple shapes and forms with a slightly abstract representation.\n\n3. **Color Scheme**: Dominant colors include blue, yellow, and red, set against black and white. The colors are vibrant and bold, with no gradients, maintaining a high contrast appearance.\n\n4. **Background Treatment**: The background consists of block colors with a grid or dotted pattern, divided into vertical stripes behind each character, adding a sense of structure.\n\n5. **Overall Characteristics**: The visual style is characterized by its graphic simplicity and modern look, with the use of flat geometric shapes, no shadows, or textures, enhancing readability and focus on the characters and their activities."
   },
   "title_options": {
     "title_0_8141e84e.png": {
