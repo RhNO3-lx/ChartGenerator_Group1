@@ -1,7 +1,7 @@
 {
-  "step": "final_export",
+  "step": "chart_type_preview",
   "status": "completed",
-  "progress": "导出完成！",
+  "progress": "生成图表类型预览...",
   "completed": true,
   "style": {
     "colors": [
@@ -37,10 +37,290 @@
       43
     ]
   },
-  "selected_data": "processed_data/Country.json",
+  "selected_data": "processed_data/Green.json",
   "selected_pictogram": "",
   "selected_title": "",
   "extraction_templates": [
+    [
+      "echarts_py/pie chart/pie_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "echarts_py/pie chart/pie_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "echarts_py/pie chart/pie_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pie chart/pie_chart_03_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pie chart/pie_chart_01_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pie chart/pie_chart_00",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pie chart/pie_chart_01_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pie chart/pie_chart_icons_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pie chart/pie_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_04_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_02_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_06_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_00",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_03_d3_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_05_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_00_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_04_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_09",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_03_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_07_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_08",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_icons_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_icons_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/donut chart/donut_chart_icons_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle donut chart/semicircle_donut_chart_05_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle donut chart/semicircle_donut_chart_06_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle donut chart/semicircle_donut_chart_04_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle donut chart/semicircle_donut_chart_03_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle donut chart/semicircle_donut_chart_00",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle donut chart/semicircle_donut_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/rose chart/rose_chart_new_00",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/rose chart/rose_chart_new_00_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/rose chart/rose_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/multiple gauge chart/multiple_gauge_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/multiple gauge chart/multiple_gauge_chart_03_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle pie chart/semicircle_pie_chart_01_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle pie chart/semicircle_pie_chart_03_d3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/semicircle pie chart/semicircle_pie_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
     [
       "d3-js/horizontal bar chart/horizontal_bar_chart_1",
       [
@@ -91,7 +371,21 @@
       ]
     ],
     [
+      "d3-js/horizontal bar chart/horizontal_bar_chart_9",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/horizontal bar chart/horizontal_bar_chart_3",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/horizontal bar chart/horizontal_bar_chart_18",
       [
         "x",
         "y"
@@ -175,6 +469,13 @@
       ]
     ],
     [
+      "d3-js/horizontal bar chart/horizontal_bar_chart_19",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/horizontal bar chart/horizontal_bar_chart_01",
       [
         "x",
@@ -210,6 +511,13 @@
       ]
     ],
     [
+      "d3-js/horizontal bar chart/horizontal_bar_plain_chart_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/horizontal bar chart/horizontal_bar_plain_chart_02",
       [
         "x",
@@ -231,7 +539,28 @@
       ]
     ],
     [
+      "d3-js/lollipop chart/vertical_lollipop_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/lollipop chart/lollipop_icon_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/lollipop chart/lollipop_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/lollipop chart/lollipop_icon_chart_02",
       [
         "x",
         "y"
@@ -245,7 +574,14 @@
       ]
     ],
     [
-      "d3-js/horizontal dot bar chart/horizontal_dot_bar_chart_02",
+      "d3-js/horizontal waffle chart/horizontal_waffle_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/horizontal waffle chart/horizontal_waffle_chart_01",
       [
         "x",
         "y"
@@ -259,14 +595,49 @@
       ]
     ],
     [
-      "d3-js/horizontal dot bar chart/horizontal_dot_bar_plain_chart_02",
+      "d3-js/horizontal dot bar chart/horizontal_dot_bar_plain_chart_01",
       [
         "x",
         "y"
       ]
     ],
     [
-      "d3-js/horizontal dot bar chart/horizontal_dot_bar_plain_chart_01",
+      "d3-js/radial area chart/radial_area_chart_grid_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/radial area chart/radial_area_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/radial spline chart/radial_spline_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/radial spline chart/radial_spline_chart_grid_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_09_2",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_20",
       [
         "x",
         "y"
@@ -281,6 +652,20 @@
     ],
     [
       "d3-js/vertical bar chart/vertical_bar_chart_08_2",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_07",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_08",
       [
         "x",
         "y"
@@ -308,7 +693,77 @@
       ]
     ],
     [
+      "d3-js/vertical bar chart/vertical_bar_chart_24",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_15",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_09",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_19_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_23",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_06",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_16",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/vertical bar chart/vertical_bar_chart_17",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_chart_10",
       [
         "x",
         "y"
@@ -322,7 +777,91 @@
       ]
     ],
     [
+      "d3-js/vertical bar chart/vertical_bar_chart_05",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/vertical bar chart/vertical_bar_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_plain_chart_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_plain_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical bar chart/vertical_bar_plain_chart_05",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart(droplet)/proportional_area_chart_other_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/radar line chart/radar_line_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/radar line chart/radar_line_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/radar spline chart/radar_spline_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/radar spline chart/radar_spline_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pictorial percentage bar chart/vertical_pictorial_percentage_bar_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pictorial percentage bar chart/vertical_pictorial_percentage_bar_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pictorial percentage bar chart/pictorial_percentage_bar_plain_chart_01",
       [
         "x",
         "y"
@@ -343,6 +882,13 @@
       ]
     ],
     [
+      "d3-js/circular bar chart/circular_bar_chart_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/circular bar chart/circular_bar_chart_03",
       [
         "x",
@@ -350,21 +896,7 @@
       ]
     ],
     [
-      "d3-js/circular bar chart/circular_bar_plain_chart_02",
-      [
-        "x",
-        "y"
-      ]
-    ],
-    [
       "d3-js/circular bar chart/circular_bar_chart_icons_01",
-      [
-        "x",
-        "y"
-      ]
-    ],
-    [
-      "d3-js/circular bar chart/circular_bar_chart_icons_02",
       [
         "x",
         "y"
@@ -406,7 +938,273 @@
       ]
     ],
     [
-      "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_05",
+      "d3-js/radial line chart/radial_line_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid chart/pyramid_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid chart/pyramid_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid chart/pyramid_chart_01_dark",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid chart/pyramid_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap/voronoi_treemap_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap/voronoi_treemap_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/small multiples of waffle charts/small_multiples_waffle_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/vertical_bar_chart_new_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/multiple line graph/vertical_bar_chart_new_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical waffle chart/vertical_waffle_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical waffle chart/vertical_waffle_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical waffle chart/vertical_waffle_chart_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/vertical waffle chart/vertical_waffle_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid diagram/pyramid_diagram_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid diagram/pyramid_diagram_01_3d_dark",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid diagram/pyramid_diagram_01_3d",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid diagram/pyramid_diagram_01_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid diagram/pyramid_diagram_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/pyramid diagram/pyramid_diagram_02_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/funnel chart/funnel_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/funnel chart/funnel_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/funnel chart/funnel_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/funnel chart/funnel_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/waffle chart/waffle_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/waffle chart/waffle_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_05_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_05_dark",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_06_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_01_dark",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/treemap/treemap_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/small multiples of gauge chart/small_multiples_gauge_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/small multiples of gauge chart/small_multiples_gauge_plain_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/small multiples of gauge charts/small_multiples_gauge_plain_chart_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_02",
       [
         "x",
         "y"
@@ -427,7 +1225,14 @@
       ]
     ],
     [
-      "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_04",
+      "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_3d_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_03",
       [
         "x",
         "y"
@@ -441,7 +1246,56 @@
       ]
     ],
     [
+      "d3-js/proportional area chart (circle)/proportional_area_chart_circle_06",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (circle)/proportional_area_chart_circle_3d_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/proportional area chart (circle)/proportional_area_chart_circle_11",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (circle)/proportional_area_chart_circle_02_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (circle)/proportional_area_chart_circle_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (circle)/proportional_area_chart_circle_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (circle)/proportional_area_chart_circle_07",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (square)/proportional_area_chart_square_07",
       [
         "x",
         "y"
@@ -455,7 +1309,49 @@
       ]
     ],
     [
+      "d3-js/proportional area chart (square)/proportional_area_chart_square_3d_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (square)/proportional_area_chart_square_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (square)/proportional_area_chart_square_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/proportional area chart (square)/proportional_area_chart_square_08",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (square)/proportional_area_chart_square_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (square)/proportional_area_chart_square_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart (square)/proportional_area_chart_square_06",
       [
         "x",
         "y"
@@ -476,6 +1372,20 @@
       ]
     ],
     [
+      "d3-js/triangle bar chart/triangle_bar_chart_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/triangle bar chart/triangle_bar_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
       "d3-js/proportional area chart (pentagram)/proportional_area_chart_pentagram_02",
       [
         "x",
@@ -488,77 +1398,263 @@
         "x",
         "y"
       ]
+    ],
+    [
+      "d3-js/voronoi treemap(rectangle)/voronoi_treemap_rectangle_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap(rectangle)/voronoi_treemap_rectangle_01",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap(rectangle)/voronoi_treemap_rectangle_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap(circle)/voronoi_treemap_circle_01_dark",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap(circle)/voronoi_treemap_circle_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap(circle)/voronoi_treemap_circle_04",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/voronoi treemap(circle)/voronoi_treemap_circle_03_hand",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart/proportional_area_plain_chart_03",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart/proportional_area_plain_chart_02",
+      [
+        "x",
+        "y"
+      ]
+    ],
+    [
+      "d3-js/proportional area chart/proportional_area_plain_chart_01",
+      [
+        "x",
+        "y"
+      ]
     ]
   ],
-  "id": "20251123013925_5320",
-  "chart_type_page": 3,
+  "id": "20251123020942_2219",
+  "chart_type_page": 2,
   "variation_page": 0,
-  "selected_chart_type": "vertical bar chart",
+  "selected_chart_type": "",
   "available_chart_types": [
     {
-      "type": "horizontal bar chart",
-      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_1"
+      "type": "small multiples of gauge charts",
+      "template": "d3-js/small multiples of gauge charts/small_multiples_gauge_plain_chart_04"
     },
     {
-      "type": "lollipop chart",
-      "template": "d3-js/lollipop chart/horizontal_lollipop_chart_02"
+      "type": "funnel chart",
+      "template": "d3-js/funnel chart/funnel_chart_01"
     },
     {
-      "type": "horizontal dot bar chart",
-      "template": "d3-js/horizontal dot bar chart/horizontal_dot_bar_chart_02"
+      "type": "pyramid diagram",
+      "template": "d3-js/pyramid diagram/pyramid_diagram_01"
+    },
+    {
+      "type": "vertical waffle chart",
+      "template": "d3-js/vertical waffle chart/vertical_waffle_chart_02"
+    },
+    {
+      "type": "radial area chart",
+      "template": "d3-js/radial area chart/radial_area_chart_grid_01"
+    },
+    {
+      "type": "multiple line graph",
+      "template": "d3-js/multiple line graph/vertical_bar_chart_new_01"
+    },
+    {
+      "type": "multiple gauge chart",
+      "template": "d3-js/multiple gauge chart/multiple_gauge_chart_03"
+    },
+    {
+      "type": "treemap",
+      "template": "d3-js/treemap/treemap_plain_chart_02"
+    },
+    {
+      "type": "horizontal waffle chart",
+      "template": "d3-js/horizontal waffle chart/horizontal_waffle_chart_02"
+    },
+    {
+      "type": "semicircle pie chart",
+      "template": "d3-js/semicircle pie chart/semicircle_pie_chart_01_d3"
+    },
+    {
+      "type": "waffle chart",
+      "template": "d3-js/waffle chart/waffle_plain_chart_01"
+    },
+    {
+      "type": "proportional area chart(droplet)",
+      "template": "d3-js/proportional area chart(droplet)/proportional_area_chart_other_01"
+    },
+    {
+      "type": "radar line chart",
+      "template": "d3-js/radar line chart/radar_line_chart_03"
+    },
+    {
+      "type": "voronoi treemap(circle)",
+      "template": "d3-js/voronoi treemap(circle)/voronoi_treemap_circle_01_dark"
     },
     {
       "type": "vertical bar chart",
-      "template": "d3-js/vertical bar chart/vertical_bar_chart_07_2"
+      "template": "d3-js/vertical bar chart/vertical_bar_chart_09_2"
+    },
+    {
+      "type": "radial line chart",
+      "template": "d3-js/radial line chart/radial_line_plain_chart_01"
+    },
+    {
+      "type": "voronoi treemap",
+      "template": "d3-js/voronoi treemap/voronoi_treemap_plain_chart_02"
     },
     {
       "type": "vertical dot bar chart",
       "template": "d3-js/vertical dot bar chart/vertical_dot_bar_plain_chart_01"
     },
     {
-      "type": "circular bar chart",
-      "template": "d3-js/circular bar chart/circular_bar_chart_01"
+      "type": "pictorial percentage bar chart",
+      "template": "d3-js/pictorial percentage bar chart/vertical_pictorial_percentage_bar_chart_01"
+    },
+    {
+      "type": "semicircle donut chart",
+      "template": "d3-js/semicircle donut chart/semicircle_donut_chart_05_d3"
+    },
+    {
+      "type": "rose chart",
+      "template": "d3-js/rose chart/rose_chart_new_00"
+    },
+    {
+      "type": "horizontal dot bar chart",
+      "template": "d3-js/horizontal dot bar chart/horizontal_dot_bar_chart_01"
+    },
+    {
+      "type": "donut chart",
+      "template": "d3-js/donut chart/donut_chart_02"
     },
     {
       "type": "radial bar chart",
       "template": "d3-js/radial bar chart/radial_bar_plain_chart_01"
     },
     {
-      "type": "proportional area chart (triangle)",
-      "template": "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_05"
+      "type": "small multiples of gauge chart",
+      "template": "d3-js/small multiples of gauge chart/small_multiples_gauge_plain_chart_02"
+    },
+    {
+      "type": "radial spline chart",
+      "template": "d3-js/radial spline chart/radial_spline_plain_chart_01"
+    },
+    {
+      "type": "proportional area chart (square)",
+      "template": "d3-js/proportional area chart (square)/proportional_area_chart_square_07"
+    },
+    {
+      "type": "proportional area chart",
+      "template": "d3-js/proportional area chart/proportional_area_plain_chart_03"
+    },
+    {
+      "type": "voronoi treemap(rectangle)",
+      "template": "d3-js/voronoi treemap(rectangle)/voronoi_treemap_rectangle_02"
+    },
+    {
+      "type": "circular bar chart",
+      "template": "d3-js/circular bar chart/circular_bar_chart_01"
     },
     {
       "type": "proportional area chart (circle)",
       "template": "d3-js/proportional area chart (circle)/proportional_area_chart_circle_12"
     },
     {
-      "type": "proportional area chart (square)",
-      "template": "d3-js/proportional area chart (square)/proportional_area_chart_square_09"
+      "type": "pyramid chart",
+      "template": "d3-js/pyramid chart/pyramid_chart_01"
+    },
+    {
+      "type": "proportional area chart (pentagram)",
+      "template": "d3-js/proportional area chart (pentagram)/proportional_area_chart_pentagram_02"
+    },
+    {
+      "type": "triangle bar chart",
+      "template": "d3-js/triangle bar chart/triangle_bar_chart_01"
+    },
+    {
+      "type": "pie chart",
+      "template": "echarts_py/pie chart/pie_chart_01"
+    },
+    {
+      "type": "radar spline chart",
+      "template": "d3-js/radar spline chart/radar_spline_chart_03"
+    },
+    {
+      "type": "lollipop chart",
+      "template": "d3-js/lollipop chart/horizontal_lollipop_chart_02"
+    },
+    {
+      "type": "proportional area chart (triangle)",
+      "template": "d3-js/proportional area chart (triangle)/proportional_area_chart_triangle_02"
+    },
+    {
+      "type": "horizontal bar chart",
+      "template": "d3-js/horizontal bar chart/horizontal_bar_chart_1"
     },
     {
       "type": "proportional area chart (hexagon)",
       "template": "d3-js/proportional area chart (hexagon)/proportional_area_chart_hexagon_01"
     },
     {
-      "type": "proportional area chart (pentagram)",
-      "template": "d3-js/proportional area chart (pentagram)/proportional_area_chart_pentagram_02"
+      "type": "small multiples of waffle charts",
+      "template": "d3-js/small multiples of waffle charts/small_multiples_waffle_plain_chart_01"
     }
   ],
   "chart_type_previews": {
-    "proportional area chart (square)": {
-      "variation_name": "proportional_area_chart_square_08",
-      "template": "d3-js/proportional area chart (square)/proportional_area_chart_square_08",
-      "output_file": "charttype_proportional_area_chart_(square).svg"
+    "multiple gauge chart": {
+      "variation_name": "multiple_gauge_chart_03",
+      "template": "d3-js/multiple gauge chart/multiple_gauge_chart_03",
+      "output_file": "charttype_multiple_gauge_chart.svg"
     },
-    "proportional area chart (hexagon)": {
-      "variation_name": "proportional_area_chart_hexagon_01",
-      "template": "d3-js/proportional area chart (hexagon)/proportional_area_chart_hexagon_01",
-      "output_file": "charttype_proportional_area_chart_(hexagon).svg"
+    "treemap": {
+      "variation_name": "treemap_plain_chart_02",
+      "template": "d3-js/treemap/treemap_plain_chart_02",
+      "output_file": "charttype_treemap.svg"
     },
-    "proportional area chart (pentagram)": {
-      "variation_name": "proportional_area_chart_pentagram_02",
-      "template": "d3-js/proportional area chart (pentagram)/proportional_area_chart_pentagram_02",
-      "output_file": "charttype_proportional_area_chart_(pentagram).svg"
+    "horizontal waffle chart": {
+      "variation_name": "horizontal_waffle_chart_02",
+      "template": "d3-js/horizontal waffle chart/horizontal_waffle_chart_02",
+      "output_file": "charttype_horizontal_waffle_chart.svg"
     }
   },
   "available_variations": [

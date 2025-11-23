@@ -126,10 +126,10 @@
     "vertical_bar_plain_chart_01": 1
   },
   "semicircle donut chart": {
-    "total_count": 15,
+    "total_count": 16,
     "semicircle_donut_chart_04_d3": 2,
     "semicircle_donut_chart_00": 2,
-    "semicircle_donut_chart_06_d3": 2,
+    "semicircle_donut_chart_06_d3": 3,
     "semicircle_donut_chart_05_d3": 5,
     "semicircle_donut_chart_03_d3": 2,
     "semicircle_donut_plain_chart_01": 2
@@ -160,12 +160,12 @@
     "circular_bar_plain_chart_02": 1
   },
   "pie chart": {
-    "total_count": 21,
+    "total_count": 22,
     "pie_chart_01": 4,
     "pie_chart_03": 3,
     "pie_chart_03_d3": 3,
     "pie_chart_01_hand": 4,
-    "pie_chart_02": 4,
+    "pie_chart_02": 5,
     "pie_chart_00": 1,
     "pie_chart_01_d3": 2
   },
@@ -180,9 +180,9 @@
     "small_multiple_area_chart_01": 1
   },
   "horizontal bar chart": {
-    "total_count": 16,
+    "total_count": 17,
     "horizontal_bar_chart_1": 1,
-    "horizontal_bar_chart_33": 1,
+    "horizontal_bar_chart_33": 2,
     "horizontal_bar_chart_2": 2,
     "horizontal_bar_chart_5": 2,
     "horizontal_bar_chart_2_hand": 2,
@@ -204,20 +204,21 @@
     "grouped_scatterplot_03": 1
   },
   "rose chart": {
-    "total_count": 4,
+    "total_count": 5,
     "rose_chart_new_00_hand": 1,
     "rose_chart_new_00": 1,
-    "rose_plain_chart_01": 2
+    "rose_plain_chart_01": 3
   },
   "donut chart": {
-    "total_count": 12,
+    "total_count": 13,
     "donut_chart_00": 1,
     "donut_chart_03_d3": 1,
     "donut_chart_00_hand": 2,
     "donut_chart_04_hand": 3,
     "donut_chart_02": 2,
     "donut_chart_02_hand": 2,
-    "donut_chart_icons_01": 1
+    "donut_chart_icons_01": 1,
+    "donut_chart_08": 1
   },
   "range chart": {
     "total_count": 71,
@@ -225,15 +226,15 @@
     "horizontal_range_bar_chart_01": 29
   },
   "lollipop chart": {
-    "total_count": 15,
-    "lollipop_plain_chart_01": 4,
+    "total_count": 16,
+    "lollipop_plain_chart_01": 5,
     "lollipop_icon_chart_01": 6,
     "horizontal_lollipop_chart_02": 4,
     "lollipop_plain_chart_02": 1
   },
   "horizontal dot bar chart": {
-    "total_count": 9,
-    "horizontal_dot_bar_plain_chart_01": 1,
+    "total_count": 10,
+    "horizontal_dot_bar_plain_chart_01": 2,
     "horizontal_dot_bar_chart_02": 4,
     "horizontal_dot_bar_plain_chart_02": 2,
     "horizontal_dot_bar_chart_01": 2
@@ -243,8 +244,8 @@
     "vertical_dot_bar_plain_chart_01": 2
   },
   "proportional area chart (triangle)": {
-    "total_count": 10,
-    "proportional_area_chart_triangle_08": 4,
+    "total_count": 11,
+    "proportional_area_chart_triangle_08": 5,
     "proportional_area_chart_triangle_05": 2,
     "proportional_area_chart_triangle_09": 3,
     "proportional_area_chart_triangle_04": 1
@@ -260,11 +261,12 @@
     "multiple_radar_chart_03": 1
   },
   "multiple gauge chart": {
-    "total_count": 10,
-    "multiple_gauge_chart_03": 2,
+    "total_count": 12,
+    "multiple_gauge_chart_03": 3,
     "gauge_chart_01": 3,
     "multiple_gauge_chart_02": 2,
-    "multiple_gauge_chart_01": 3
+    "multiple_gauge_chart_01": 3,
+    "multiple_gauge_chart_03_hand": 1
   },
   "multiple semi donut chart": {
     "total_count": 2,
@@ -277,8 +279,9 @@
     "multiple_rose_chart_01": 1
   },
   "semicircle pie chart": {
-    "total_count": 1,
-    "semicircle_pie_chart_01_d3": 1
+    "total_count": 2,
+    "semicircle_pie_chart_01_d3": 1,
+    "semicircle_pie_chart_03_d3": 1
   },
   "proportional area chart (square)": {
     "total_count": 1,
@@ -291,5 +294,38 @@
   "proportional area chart (pentagram)": {
     "total_count": 1,
     "proportional_area_chart_pentagram_02": 1
+  },
+  "horizontal waffle chart": {
+    "total_count": 2,
+    "horizontal_waffle_chart_01": 1,
+    "horizontal_waffle_chart_02": 1
+  },
+  "radial area chart": {
+    "total_count": 1,
+    "radial_area_chart_grid_01": 1
+  },
+  "radial spline chart": {
+    "total_count": 1,
+    "radial_spline_plain_chart_01": 1
+  },
+  "voronoi treemap(rectangle)": {
+    "total_count": 1,
+    "voronoi_treemap_rectangle_03": 1
+  },
+  "radar spline chart": {
+    "total_count": 2,
+    "radar_spline_chart_03": 2
+  },
+  "proportional area chart": {
+    "total_count": 1,
+    "proportional_area_plain_chart_01": 1
+  },
+  "radar line chart": {
+    "total_count": 1,
+    "radar_line_chart_03": 1
+  },
+  "treemap": {
+    "total_count": 1,
+    "treemap_plain_chart_02": 1
   }
 }

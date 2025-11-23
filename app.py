@@ -336,6 +336,9 @@ def get_chart_types():
                     'template': template[0]  # 保存一个代表性模板
                 })
 
+    # 打乱 chart types 的顺序
+    random.shuffle(chart_types)
+
     # 保存到 generation_status
     generation_status['available_chart_types'] = chart_types
     save_generation_status()  # 保存到缓存文件
