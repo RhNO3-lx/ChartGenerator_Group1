@@ -53,24 +53,41 @@ async function regeneratePictogram() {
     }
 }
 
-// 显示配图选择（单张显示版本）
+// 显示配图选择（3选1版本）
 async function showPictogramSelection() {
     try {
-        const response = await fetch(`/api/pictograms`);
-        const pictograms = await response.json();
+        const response = await fetch(`/api/status`);
+        const status = await response.json();
 
-        if (pictograms && pictograms.length > 0) {
-            // 单张图片显示
-            const mainPictogram = document.getElementById('mainPictogram');
-            const mainImg = mainPictogram.querySelector('.selection-image');
-            mainImg.src = `static/img/loading.gif`;
-            mainPictogram.setAttribute('data-filename', pictograms[0]);
+        const pictogramOptions = status.pictogram_options || {};
+        const pictogramKeys = Object.keys(pictogramOptions);
 
-            // 后台替换图片
-            loadImageWhenReady(mainImg, `/currentfilepath/pictogram_0.png`);
+        if (pictogramKeys.length > 0) {
+            const container = document.getElementById('pictogramContainer');
+            container.innerHTML = '';
 
-            // 设置选中的配图
-            selectedPictogram = pictograms[0];
+            // 创建3个配图选项
+            for (let i = 0; i < 3; i++) {
+                const pictogramKey = `pictogram_${i}.png`;
+                const pictogramData = pictogramOptions[pictogramKey];
+
+                if (pictogramData && pictogramData.success) {
+                    const item = document.createElement('div');
+                    item.className = 'pictogram-item';
+                    item.setAttribute('data-filename', pictogramKey);
+
+                    item.innerHTML = `
+                        <div class="pictogram-image-container">
+                            <img class="pictogram-image" src="/currentfilepath/${pictogramKey}?t=${Date.now()}" alt="配图 ${i+1}">
+                        </div>
+                    `;
+
+                    container.appendChild(item);
+                }
+            }
+
+            // 设置点击事件
+            setupPictogramSelection();
         }
 
         // 启用按钮
@@ -87,4 +104,28 @@ async function showPictogramSelection() {
         console.error('获取配图失败:', error);
         alert('获取配图失败，请重试');
     }
+}
+
+// 设置配图选择事件
+function setupPictogramSelection() {
+    const pictogramItems = document.querySelectorAll('.pictogram-item');
+    const selectBtn = document.getElementById('selectPictogramBtn');
+
+    pictogramItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // 移除所有选中状态
+            pictogramItems.forEach(p => p.classList.remove('selected'));
+
+            // 检查选择是否改变
+            if (selectedPictogram != this.getAttribute('data-filename') && selectedPictogram) {
+                hideCards(["resultCard"]);
+            }
+
+            // 添加选中状态
+            this.classList.add('selected');
+            selectedPictogram = this.getAttribute('data-filename');
+
+            selectBtn.disabled = false;
+        });
+    });
 }

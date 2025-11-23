@@ -54,28 +54,43 @@ async function regenerateTitle() {
     }
 }
 
-// 显示标题选择（单张显示版本）
+// 显示标题选择（3选1版本）
 async function showTitleSelection() {
     try {
-        const response = await fetch(`/api/titles`);
-        const titles = await response.json();
+        const response = await fetch(`/api/status`);
+        const status = await response.json();
 
-        if (titles && titles.length > 0) {
-            // 单张图片显示
-            const mainTitle = document.getElementById('mainTitle');
-            const mainImg = mainTitle.querySelector('.selection-image');
-            mainImg.src = `static/img/loading.gif`;
-            mainTitle.setAttribute('data-filename', titles[0]);
+        const titleOptions = status.title_options || {};
+        const titleKeys = Object.keys(titleOptions);
 
-            // 后台替换图片
-            loadImageWhenReady(mainImg, `/currentfilepath/title_0.png`);
+        if (titleKeys.length > 0) {
+            const container = document.getElementById('titleContainer');
+            container.innerHTML = '';
 
-            // 设置选中的标题
-            selectedTitle = titles[0];
+            // 创建3个标题选项
+            for (let i = 0; i < 3; i++) {
+                const titleKey = `title_${i}.png`;
+                const titleData = titleOptions[titleKey];
+
+                if (titleData && titleData.success) {
+                    const item = document.createElement('div');
+                    item.className = 'title-item';
+                    item.setAttribute('data-filename', titleKey);
+
+                    item.innerHTML = `
+                        <div class="title-image-container">
+                            <img class="title-image" src="/currentfilepath/${titleKey}?t=${Date.now()}" alt="标题 ${i+1}">
+                        </div>
+                        <div class="title-text">"${titleData.title_text}"</div>
+                    `;
+
+                    container.appendChild(item);
+                }
+            }
+
+            // 设置点击事件
+            setupTitleSelection();
         }
-
-        // 获取并显示标题文字
-        await fetchAndDisplayTitleText();
 
         // 启用按钮
         document.getElementById('selectTitleBtn').disabled = false;
@@ -91,6 +106,30 @@ async function showTitleSelection() {
         console.error('获取标题失败:', error);
         alert('获取标题失败，请重试');
     }
+}
+
+// 设置标题选择事件
+function setupTitleSelection() {
+    const titleItems = document.querySelectorAll('.title-item');
+    const selectBtn = document.getElementById('selectTitleBtn');
+
+    titleItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // 移除所有选中状态
+            titleItems.forEach(t => t.classList.remove('selected'));
+
+            // 检查选择是否改变
+            if (selectedTitle != this.getAttribute('data-filename') && selectedTitle) {
+                hideCards(["pictogramCard", "resultCard"]);
+            }
+
+            // 添加选中状态
+            this.classList.add('selected');
+            selectedTitle = this.getAttribute('data-filename');
+
+            selectBtn.disabled = false;
+        });
+    });
 }
 
 // 获取并显示标题文字

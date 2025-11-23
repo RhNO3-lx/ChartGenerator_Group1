@@ -36,8 +36,8 @@
     "radial_range_area_chart_grid_01": 1
   },
   "multiple area chart": {
-    "total_count": 66,
-    "multiple_area_chart_01": 60,
+    "total_count": 67,
+    "multiple_area_chart_01": 61,
     "spline_multiple_area_chart_01": 6
   },
   "multiple line graph": {
@@ -86,9 +86,9 @@
     "multiple_pie_chart_05": 183
   },
   "dumbbell plot": {
-    "total_count": 145,
-    "dumbbell_plot_plain_chart_01": 143,
-    "dumbbell_plot_plain_chart_02": 2
+    "total_count": 149,
+    "dumbbell_plot_plain_chart_01": 145,
+    "dumbbell_plot_plain_chart_02": 4
   },
   "vertical group bar chart": {
     "total_count": 53,
@@ -412,8 +412,8 @@
     "span_plain_chart_01": 1
   },
   "small multiples of line graphs": {
-    "total_count": 8,
-    "small_multiples_line_graphs_plain_chart_01": 8
+    "total_count": 9,
+    "small_multiples_line_graphs_plain_chart_01": 9
   },
   "spline graph": {
     "total_count": 11,

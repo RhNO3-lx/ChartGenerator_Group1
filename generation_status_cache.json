@@ -1,7 +1,7 @@
 {
   "step": "pictogram_generation",
   "status": "completed",
-  "progress": "生成配图中...",
+  "progress": "生成配图 3/3...",
   "completed": true,
   "style": {
     "colors": [
@@ -933,123 +933,91 @@
   "id": "App",
   "chart_type_page": 0,
   "variation_page": 0,
-  "selected_chart_type": "layered spline area chart",
+  "selected_chart_type": "dumbbell plot",
   "available_chart_types": [
-    {
-      "type": "multiple spline graph",
-      "template": "d3-js/multiple spline graph/multiple_spline_graph_01"
-    },
-    {
-      "type": "vertical grouped bar chart",
-      "template": "d3-js/vertical grouped bar chart/vertical_group_bar_plain_chart_04"
-    },
-    {
-      "type": "layered spline area chart",
-      "template": "d3-js/layered spline area chart/layered_spline_area_plain_chart_01"
-    },
-    {
-      "type": "stacked radial bar chart",
-      "template": "d3-js/stacked radial bar chart/stacked_radial_bar_chart_02"
-    },
-    {
-      "type": "multiple pie chart",
-      "template": "d3-js/multiple pie chart/multiple_pie_chart_05"
-    },
-    {
-      "type": "radial grouped bar chart",
-      "template": "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_02"
-    },
-    {
-      "type": "radial bar chart",
-      "template": "d3-js/radial bar chart/radial_bar_chart_02"
-    },
-    {
-      "type": "small multiple stepped line graph",
-      "template": "d3-js/small multiple stepped line graph/small_multiple_step_line_graph_plain_chart_01"
-    },
-    {
-      "type": "small multiples of gauge chart",
-      "template": "d3-js/small multiples of gauge chart/small_multiples_gauge_plain_chart_01"
-    },
-    {
-      "type": "vertical group bar chart",
-      "template": "d3-js/vertical group bar chart/vertical_group_bar_chart_13"
-    },
-    {
-      "type": "spline graph",
-      "template": "d3-js/spline graph/spline_graph_01"
-    },
-    {
-      "type": "radial layered area chart",
-      "template": "d3-js/radial layered area chart/radial_layered_area_plain_chart_01"
-    },
-    {
-      "type": "small multiples of spline graphs",
-      "template": "d3-js/small multiples of spline graphs/small_multiples_spline_graphs_plain_chart_01"
-    },
-    {
-      "type": "diverging bar chart",
-      "template": "d3-js/diverging bar chart/diverging_bar_plain_chart_04"
-    },
     {
       "type": "dumbbell plot",
       "template": "d3-js/dumbbell plot/dumbbell_plot_plain_chart_01"
-    },
-    {
-      "type": "small multiple line graph",
-      "template": "d3-js/small multiple line graph/small_multiple_line_graph_01"
-    },
-    {
-      "type": "slope chart",
-      "template": "d3-js/slope chart/slope_chart_01"
-    },
-    {
-      "type": "multiple radar spline chart",
-      "template": "d3-js/multiple radar spline chart/multiple_radar_spline_chart_03"
-    },
-    {
-      "type": "multiple area chart",
-      "template": "d3-js/multiple area chart/spline_multiple_area_chart_01"
-    },
-    {
-      "type": "small multiples of area charts",
-      "template": "d3-js/small multiples of area charts/small_multiple_area_plain_chart_01"
-    },
-    {
-      "type": "multiple radar line chart",
-      "template": "d3-js/multiple radar line chart/multiple_radar_line_chart_03"
-    },
-    {
-      "type": "small multiples of pie charts",
-      "template": "d3-js/small multiples of pie charts/small_multiples_semicircle_pie_plain_chart_01"
-    },
-    {
-      "type": "multiple radar chart",
-      "template": "d3-js/multiple radar chart/multiple_radar_chart_03"
-    },
-    {
-      "type": "small multiples of spline area charts",
-      "template": "d3-js/small multiples of spline area charts/small_multiple_spline_area_plain_chart_01"
-    },
-    {
-      "type": "radial range area chart",
-      "template": "d3-js/radial range area chart/radial_range_area_chart_grid_01"
     },
     {
       "type": "small multiples of line graphs",
       "template": "d3-js/small multiples of line graphs/small_multiples_line_graphs_plain_chart_01"
     },
     {
-      "type": "small multiple area chart",
-      "template": "d3-js/small multiple area chart/small_multiple_area_chart_02"
+      "type": "multiple area chart",
+      "template": "d3-js/multiple area chart/spline_multiple_area_chart_01"
+    },
+    {
+      "type": "stepped line graph",
+      "template": "d3-js/stepped line graph/stepped_line_graph_plain_chart_02"
+    },
+    {
+      "type": "circular stacked bar chart",
+      "template": "d3-js/circular stacked bar chart/circular_stacked_bar_plain_chart_01"
+    },
+    {
+      "type": "alluvial diagram",
+      "template": "d3-js/alluvial diagram/alluvial_diagram_plain_chart_01"
+    },
+    {
+      "type": "small multiples of spline area charts",
+      "template": "d3-js/small multiples of spline area charts/small_multiple_spline_area_plain_chart_01"
+    },
+    {
+      "type": "small multiples of area charts",
+      "template": "d3-js/small multiples of area charts/small_multiple_area_plain_chart_01"
+    },
+    {
+      "type": "stacked circular bar chart",
+      "template": "d3-js/stacked circular bar chart/stacked_circular_bar_chart_03"
+    },
+    {
+      "type": "stacked radial bar chart",
+      "template": "d3-js/stacked radial bar chart/stacked_radial_bar_chart_02"
+    },
+    {
+      "type": "radial grouped bar chart",
+      "template": "d3-js/radial grouped bar chart/radial_grouped_bar_plain_chart_02"
+    },
+    {
+      "type": "line graph",
+      "template": "d3-js/line graph/line_graph_plain_chart_02"
+    },
+    {
+      "type": "group dot bar chart",
+      "template": "d3-js/group dot bar chart/horizontal_group_dot_bar_chart_0"
+    },
+    {
+      "type": "diverging bar chart",
+      "template": "d3-js/diverging bar chart/diverging_bar_plain_chart_04"
+    },
+    {
+      "type": "multiple radar spline chart",
+      "template": "d3-js/multiple radar spline chart/multiple_radar_spline_chart_03"
+    },
+    {
+      "type": "small multiple stepped line graph",
+      "template": "d3-js/small multiple stepped line graph/small_multiple_step_line_graph_plain_chart_01"
     },
     {
       "type": "group radial bar chart",
       "template": "d3-js/group radial bar chart/group_radial_bar_chart_02"
     },
     {
-      "type": "group dot bar chart",
-      "template": "d3-js/group dot bar chart/horizontal_group_dot_bar_chart_0"
+      "type": "multiple radar line chart",
+      "template": "d3-js/multiple radar line chart/multiple_radar_line_chart_03"
+    },
+    {
+      "type": "multiple step line graph",
+      "template": "d3-js/multiple step line graph/multiple_step_line_graph_01"
+    },
+    {
+      "type": "radial bar chart",
+      "template": "d3-js/radial bar chart/radial_bar_chart_02"
+    },
+    {
+      "type": "radial stacked area chart",
+      "template": "d3-js/radial stacked area chart/radial_stacked_area_plain_chart_01"
     },
     {
       "type": "multiple line graph",
@@ -1060,36 +1028,64 @@
       "template": "d3-js/horizontal diverging bar chart/horizontal_diverging_bar_chart_11"
     },
     {
-      "type": "circular stacked bar chart",
-      "template": "d3-js/circular stacked bar chart/circular_stacked_bar_plain_chart_01"
+      "type": "test",
+      "template": "d3-js/test/test"
     },
     {
       "type": "diverging area chart",
       "template": "d3-js/diverging area chart/diverging_area_plain_chart_01"
     },
     {
-      "type": "stacked circular bar chart",
-      "template": "d3-js/stacked circular bar chart/stacked_circular_bar_chart_03"
+      "type": "horizontal group bar chart",
+      "template": "d3-js/horizontal group bar chart/horizontal_group_bar_chart_13"
     },
     {
-      "type": "stepped line graph",
-      "template": "d3-js/stepped line graph/stepped_line_graph_plain_chart_02"
+      "type": "vertical grouped bar chart",
+      "template": "d3-js/vertical grouped bar chart/vertical_group_bar_plain_chart_04"
     },
     {
-      "type": "alluvial diagram",
-      "template": "d3-js/alluvial diagram/alluvial_diagram_plain_chart_01"
+      "type": "multiple pie chart",
+      "template": "d3-js/multiple pie chart/multiple_pie_chart_05"
     },
     {
-      "type": "range area chart",
-      "template": "d3-js/range area chart/range_area_chart_01"
+      "type": "slope chart",
+      "template": "d3-js/slope chart/slope_chart_01"
     },
     {
-      "type": "radial stacked bar chart",
-      "template": "d3-js/radial stacked bar chart/radial_stacked_bar_plain_chart_01"
+      "type": "multiple radar chart",
+      "template": "d3-js/multiple radar chart/multiple_radar_chart_03"
     },
     {
-      "type": "small multiple step line graph",
-      "template": "d3-js/small multiple step line graph/small_multiple_step_line_graph_icons_01"
+      "type": "small multiples of spline graphs",
+      "template": "d3-js/small multiples of spline graphs/small_multiples_spline_graphs_plain_chart_01"
+    },
+    {
+      "type": "spline graph",
+      "template": "d3-js/spline graph/spline_graph_01"
+    },
+    {
+      "type": "span chart",
+      "template": "d3-js/span chart/span_plain_chart_02"
+    },
+    {
+      "type": "layered spline area chart",
+      "template": "d3-js/layered spline area chart/layered_spline_area_plain_chart_01"
+    },
+    {
+      "type": "small multiples of pie charts",
+      "template": "d3-js/small multiples of pie charts/small_multiples_semicircle_pie_plain_chart_01"
+    },
+    {
+      "type": "layered area chart",
+      "template": "d3-js/layered area chart/layered_area_chart_03"
+    },
+    {
+      "type": "multiple spline graph",
+      "template": "d3-js/multiple spline graph/multiple_spline_graph_01"
+    },
+    {
+      "type": "small multiple area chart",
+      "template": "d3-js/small multiple area chart/small_multiple_area_chart_02"
     },
     {
       "type": "range chart",
@@ -1100,63 +1096,76 @@
       "template": "d3-js/diverging spline area chart/diverging_spline_area_plain_chart_01"
     },
     {
-      "type": "test",
-      "template": "d3-js/test/test"
+      "type": "small multiple step line graph",
+      "template": "d3-js/small multiple step line graph/small_multiple_step_line_graph_icons_01"
     },
     {
-      "type": "radial layered spline area chart",
-      "template": "d3-js/radial layered spline area chart/radial_layered_spline_area_plain_chart_01"
+      "type": "radial range area chart",
+      "template": "d3-js/radial range area chart/radial_range_area_chart_grid_01"
     },
     {
-      "type": "span chart",
-      "template": "d3-js/span chart/span_plain_chart_02"
+      "type": "radial stacked bar chart",
+      "template": "d3-js/radial stacked bar chart/radial_stacked_bar_plain_chart_01"
+    },
+    {
+      "type": "radial layered area chart",
+      "template": "d3-js/radial layered area chart/radial_layered_area_plain_chart_01"
+    },
+    {
+      "type": "small multiple line graph",
+      "template": "d3-js/small multiple line graph/small_multiple_line_graph_01"
     },
     {
       "type": "stacked area chart",
       "template": "d3-js/stacked area chart/stacked_area_plain_chart_02"
     },
     {
-      "type": "radial stacked area chart",
-      "template": "d3-js/radial stacked area chart/radial_stacked_area_plain_chart_01"
+      "type": "radial layered spline area chart",
+      "template": "d3-js/radial layered spline area chart/radial_layered_spline_area_plain_chart_01"
     },
     {
-      "type": "multiple step line graph",
-      "template": "d3-js/multiple step line graph/multiple_step_line_graph_01"
+      "type": "small multiples of gauge chart",
+      "template": "d3-js/small multiples of gauge chart/small_multiples_gauge_plain_chart_01"
     },
     {
-      "type": "line graph",
-      "template": "d3-js/line graph/line_graph_plain_chart_02"
+      "type": "range area chart",
+      "template": "d3-js/range area chart/range_area_chart_01"
     },
     {
-      "type": "layered area chart",
-      "template": "d3-js/layered area chart/layered_area_chart_03"
-    },
-    {
-      "type": "horizontal group bar chart",
-      "template": "d3-js/horizontal group bar chart/horizontal_group_bar_chart_13"
+      "type": "vertical group bar chart",
+      "template": "d3-js/vertical group bar chart/vertical_group_bar_chart_13"
     }
   ],
   "chart_type_previews": {
-    "multiple spline graph": {
-      "variation_name": "multiple_spline_graph_01",
-      "template": "d3-js/multiple spline graph/multiple_spline_graph_01",
-      "output_file": "charttype_multiple_spline_graph.svg"
+    "dumbbell plot": {
+      "variation_name": "dumbbell_plot_plain_chart_01",
+      "template": "d3-js/dumbbell plot/dumbbell_plot_plain_chart_01",
+      "output_file": "charttype_dumbbell_plot.svg"
     },
-    "vertical grouped bar chart": {
-      "variation_name": "vertical_group_bar_chart_8",
-      "template": "d3-js/vertical grouped bar chart/vertical_group_bar_chart_8",
-      "output_file": "charttype_vertical_grouped_bar_chart.svg"
+    "small multiples of line graphs": {
+      "variation_name": "small_multiples_line_graphs_plain_chart_01",
+      "template": "d3-js/small multiples of line graphs/small_multiples_line_graphs_plain_chart_01",
+      "output_file": "charttype_small_multiples_of_line_graphs.svg"
     },
-    "layered spline area chart": {
-      "variation_name": "layered_spline_area_plain_chart_01",
-      "template": "d3-js/layered spline area chart/layered_spline_area_plain_chart_01",
-      "output_file": "charttype_layered_spline_area_chart.svg"
+    "multiple area chart": {
+      "variation_name": "multiple_area_chart_01",
+      "template": "d3-js/multiple area chart/multiple_area_chart_01",
+      "output_file": "charttype_multiple_area_chart.svg"
     }
   },
   "available_variations": [
     {
-      "name": "layered_spline_area_plain_chart_01",
-      "template": "d3-js/layered spline area chart/layered_spline_area_plain_chart_01",
+      "name": "dumbbell_plot_plain_chart_01",
+      "template": "d3-js/dumbbell plot/dumbbell_plot_plain_chart_01",
+      "fields": [
+        "x",
+        "y",
+        "group"
+      ]
+    },
+    {
+      "name": "dumbbell_plot_plain_chart_02",
+      "template": "d3-js/dumbbell plot/dumbbell_plot_plain_chart_02",
       "fields": [
         "x",
         "y",
@@ -1172,13 +1181,33 @@
       "title_text": "App Store Growth: Google vs. iOS (2009-2013)",
       "image_path": "buffer/App/title_0.png",
       "success": true
+    },
+    "title_1.png": {
+      "title_text": "App Store Growth: Google Play vs iOS",
+      "image_path": "buffer/App/title_1.png",
+      "success": true
+    },
+    "title_2.png": {
+      "title_text": "App Store Growth: Google vs. iOS (2009-2013)",
+      "image_path": "buffer/App/title_2.png",
+      "success": true
     }
   },
   "current_title_text": "App Store Growth: Google vs. iOS (2009-2013)",
   "pictogram_options": {
     "pictogram_0.png": {
-      "pictogram_prompt": "# Task\nGenerate a visual illustration (pictogram) for an infographic with the title: \"App Store Growth: Google vs. iOS (2009-2013)\"\n\n# Requirements\n1. **Content**: Create visual elements related to the entities and concepts mentioned in the title\n2. **Style**: Simple, clean vector graphics using colors: [[241, 139, 37], [3, 2, 2], [82, 55, 227], [11, 190, 130], [62, 57, 55]]\n3. **Background**: Completely transparent (alpha channel)\n4. **CRITICAL - NO TEXT**: Absolutely no text, words, letters, numbers, or any written content. Pure visual graphics only.\n\n# Output\nDirectly generate an image",
+      "pictogram_prompt": "Cached",
       "image_path": "buffer/App/pictogram_0.png",
+      "success": true
+    },
+    "pictogram_1.png": {
+      "pictogram_prompt": "# Task\nGenerate a visual illustration (pictogram) for an infographic with the title: \"App Store Growth: Google vs. iOS (2009-2013)\"\n\n# Requirements\n1. **Content**: Create visual elements related to the entities and concepts mentioned in the title\n2. **Style**: Simple, clean vector graphics using colors: [[241, 139, 37], [3, 2, 2], [82, 55, 227], [11, 190, 130], [62, 57, 55]]\n3. **Background**: Completely transparent (alpha channel)\n4. **CRITICAL - NO TEXT**: Absolutely no text, words, letters, numbers, or any written content. Pure visual graphics only.\n\n# Output\nDirectly generate an image",
+      "image_path": "buffer/App/pictogram_1.png",
+      "success": true
+    },
+    "pictogram_2.png": {
+      "pictogram_prompt": "# Task\nGenerate a visual illustration (pictogram) for an infographic with the title: \"App Store Growth: Google vs. iOS (2009-2013)\"\n\n# Requirements\n1. **Content**: Create visual elements related to the entities and concepts mentioned in the title\n2. **Style**: Simple, clean vector graphics using colors: [[241, 139, 37], [3, 2, 2], [82, 55, 227], [11, 190, 130], [62, 57, 55]]\n3. **Background**: Completely transparent (alpha channel)\n4. **CRITICAL - NO TEXT**: Absolutely no text, words, letters, numbers, or any written content. Pure visual graphics only.\n\n# Output\nDirectly generate an image",
+      "image_path": "buffer/App/pictogram_2.png",
       "success": true
     }
   },

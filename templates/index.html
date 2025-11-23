@@ -637,6 +637,92 @@
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
         }
 
+        /* 网格选择容器样式（用于标题和配图的3选1） */
+        .grid-selection-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .title-item,
+        .pictogram-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            background: #f8f9ff;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .title-item {
+            height: 300px;
+        }
+
+        .pictogram-item {
+            height: 280px;
+        }
+
+        .title-item:hover,
+        .pictogram-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .title-item.selected,
+        .pictogram-item.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            background: #f0f2ff;
+        }
+
+        .title-image-container,
+        .pictogram-image-container {
+            width: 100%;
+            height: calc(100% - 50px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            padding: 6px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .pictogram-image-container {
+            height: 100%;
+        }
+
+        .title-image,
+        .pictogram-image {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .title-text {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+
         .title-text-display {
             text-align: center;
             font-size: 1.2rem;
@@ -817,24 +903,17 @@
 
         <div id="titleCard" class="card hidden">
             <div class="card-header">
-                📝 标题预览
+                📝 选择标题（3选1）
             </div>
             <div class="card-body">
-                <div class="single-selection-container">
-                    <div class="single-selection-item" id="mainTitle">
-                        <div class="selection-image-container">
-                            <img class="selection-image" alt="生成的标题">
-                        </div>
-                    </div>
-                    <div class="title-text-display" id="titleTextDisplay">
-                        <!-- 标题文字将显示在这里 -->
-                    </div>
+                <div id="titleContainer" class="grid-selection-container">
+                    <!-- 标题选项将在这里动态生成 -->
                 </div>
                 <div class="text-center" style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
                     <button class="btn btn-secondary" id="regenerateTitleBtn" onclick="regenerateTitle()">
-                        🔄 重新生成
+                        🔄 重新生成3个
                     </button>
-                    <button class="btn btn-primary" id="selectTitleBtn" onclick="startPictogramGeneration()">
+                    <button class="btn btn-primary" id="selectTitleBtn" onclick="startPictogramGeneration()" disabled>
                         ✅ 确认标题
                     </button>
                 </div>
@@ -843,21 +922,17 @@
 
         <div id="pictogramCard" class="card hidden">
             <div class="card-header">
-                🎭 配图预览
+                🎭 选择配图（3选1）
             </div>
             <div class="card-body">
-                <div class="single-selection-container">
-                    <div class="single-selection-item" id="mainPictogram">
-                        <div class="selection-image-container">
-                            <img class="selection-image" alt="生成的配图">
-                        </div>
-                    </div>
+                <div id="pictogramContainer" class="grid-selection-container">
+                    <!-- 配图选项将在这里动态生成 -->
                 </div>
                 <div class="text-center" style="margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
                     <button class="btn btn-secondary" id="regeneratePictogramBtn" onclick="regeneratePictogram()">
-                        🔄 重新生成
+                        🔄 重新生成3个
                     </button>
-                    <button class="btn btn-primary" id="selectPictogramBtn" onclick="generateFinalInfographic()">
+                    <button class="btn btn-primary" id="selectPictogramBtn" onclick="generateFinalInfographic()" disabled>
                         🎨 生成最终图表
                     </button>
                 </div>

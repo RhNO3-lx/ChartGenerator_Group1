@@ -87,7 +87,7 @@ def conduct_title_generation(datafile, generation_status, use_cache=True):
     generation_status['completed'] = False
 
     try:
-        # 生成单张标题图片
+        # 生成3张标题图片
         generation_status['progress'] = '生成标题中...'
         generator = InfographicImageGenerator()
         generator.output_dir = f"buffer/{generation_status['id']}"
@@ -100,26 +100,32 @@ def conduct_title_generation(datafile, generation_status, use_cache=True):
         else:
             bg_hex = "#f5f3ef"  # 默认浅灰色
 
-        # 生成单张标题
-        output_filename = f"buffer/{generation_status['id']}/title_0.png"
-        result = generator.generate_single_title(
-            csv_path=os.path.join('processed_data', datafile),
-            bg_color=bg_hex,
-            output_filename=output_filename,
-            use_cache=use_cache
-        )
+        # 生成3个标题选项
+        title_options = {}
+        for i in range(3):
+            output_filename = f"buffer/{generation_status['id']}/title_{i}.png"
+            generation_status['progress'] = f'生成标题 {i+1}/3...'
 
-        # 存储当前标题信息
-        generation_status['title_options'] = {
-            'title_0.png': {
+            result = generator.generate_single_title(
+                csv_path=os.path.join('processed_data', datafile),
+                bg_color=bg_hex,
+                output_filename=output_filename,
+                use_cache=use_cache
+            )
+
+            title_options[f'title_{i}.png'] = {
                 'title_text': result['title_text'],
                 'image_path': result['image_path'],
                 'success': result['success']
             }
-        }
-        generation_status['current_title_text'] = result['title_text']
 
-        print(f"Generated title: {result['title_text']}")
+            print(f"Generated title {i}: {result['title_text']}")
+
+        # 存储所有标题选项
+        generation_status['title_options'] = title_options
+        # 默认使用第一个标题
+        generation_status['current_title_text'] = title_options['title_0.png']['title_text']
+
         generation_status['status'] = 'completed'
         generation_status['completed'] = True
 
@@ -136,7 +142,7 @@ def conduct_pictogram_generation(title, generation_status, use_cache=True):
     generation_status['completed'] = False
 
     try:
-        # 生成单张配图
+        # 生成3张配图
         generator = InfographicImageGenerator()
         generator.output_dir = f"buffer/{generation_status['id']}"
 
@@ -145,25 +151,30 @@ def conduct_pictogram_generation(title, generation_status, use_cache=True):
         if not title_text and title in generation_status.get('title_options', {}):
             title_text = generation_status['title_options'][title].get('title_text', '')
 
-        # 生成单张配图
-        output_filename = f"buffer/{generation_status['id']}/pictogram_0.png"
-        result = generator.generate_single_pictogram(
-            title_text=title_text,
-            colors=generation_status['style']['colors'],
-            output_filename=output_filename,
-            use_cache=use_cache
-        )
+        # 生成3个配图选项
+        pictogram_options = {}
+        for i in range(3):
+            output_filename = f"buffer/{generation_status['id']}/pictogram_{i}.png"
+            generation_status['progress'] = f'生成配图 {i+1}/3...'
 
-        # 存储当前配图信息
-        generation_status['pictogram_options'] = {
-            'pictogram_0.png': {
+            result = generator.generate_single_pictogram(
+                title_text=title_text,
+                colors=generation_status['style']['colors'],
+                output_filename=output_filename,
+                use_cache=use_cache
+            )
+
+            pictogram_options[f'pictogram_{i}.png'] = {
                 'pictogram_prompt': result['pictogram_prompt'],
                 'image_path': result['image_path'],
                 'success': result['success']
             }
-        }
 
-        print(f"Generated pictogram for: {title_text}")
+            print(f"Generated pictogram {i} for: {title_text}")
+
+        # 存储所有配图选项
+        generation_status['pictogram_options'] = pictogram_options
+
         generation_status['status'] = 'completed'
         generation_status['completed'] = True
 
