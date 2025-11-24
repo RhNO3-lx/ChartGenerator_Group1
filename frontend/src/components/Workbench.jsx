@@ -1969,7 +1969,7 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
             }}
             title="裁剪导出当前画布内容"
           >
-            ⬇️ 下载画布
+            ⬇️ 下载
           </button>
         </div>
 
