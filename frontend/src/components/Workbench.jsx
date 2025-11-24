@@ -928,9 +928,8 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
               currentPositions = savedPositions;
           }
           
-          let imageUrl = '';
-          let bgColor = '#ffffff';
-          let layout = null;
+      let imageUrl = '';
+      let layout = null;
 
           if (directUrl) {
               // Load directly from the generated file (PNG)
@@ -944,11 +943,8 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
                   if (selectedReference) {
                       // 从后端获取 layout 信息
                       const layoutRes = await axios.get('/api/layout');
-                      layout = layoutRes.data.layout;
-                      console.log('Fetched layout:', layout);
-                      bgColor = statusRes.data.style?.bg_color
-                          ? `#${statusRes.data.style.bg_color.map(c => c.toString(16).padStart(2, '0')).join('')}`
-                          : '#ffffff';
+              layout = layoutRes.data.layout;
+              console.log('Fetched layout:', layout);
                   }
               } catch (err) {
                   console.warn('Failed to fetch layout info:', err);
@@ -969,22 +965,19 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
               });
               // Use PNG url from backend
               imageUrl = res.data.png_url;
-              bgColor = res.data.bg_color;
               layout = res.data.layout;
           }
           
           canvas.clear();
-          // Use background color from response or keep current canvas background
-          let canvasBgColor = bgColor || canvas.backgroundColor || '#ffffff';
-          if (canvasBgColor) {
-            canvas.setBackgroundColor(canvasBgColor, canvas.renderAll.bind(canvas));
-            setBgColor(canvasBgColor);
-            
-            // Also apply to canvas wrapper
-            const canvasWrapper = document.querySelector('.canvas-wrapper');
-            if (canvasWrapper) {
-                canvasWrapper.style.backgroundColor = canvasBgColor;
-            }
+          // Keep user-selected/background color (default white) instead of backend color
+          const canvasBgColor = bgColor || canvas.backgroundColor || '#ffffff';
+          canvas.setBackgroundColor(canvasBgColor, canvas.renderAll.bind(canvas));
+          setBgColor(canvasBgColor);
+          
+          // Also apply to canvas wrapper
+          const canvasWrapper = document.querySelector('.canvas-wrapper');
+          if (canvasWrapper) {
+              canvasWrapper.style.backgroundColor = canvasBgColor;
           }
 
           const addImage = (url, options) => {
