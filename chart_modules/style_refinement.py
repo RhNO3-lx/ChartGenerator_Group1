@@ -112,23 +112,27 @@ def refine_with_gemini(reference_image_path: str, current_image_path: str, outpu
         )
 
         # 构建提示词
-        prompt = """You are given two images:
+        prompt = """You are an expert infographic designer. You are performing a strict "Style Transfer" task using two inputs:
 
-1. **Reference Image**: An infographic with a specific visual style (colors, layout, typography, design elements)
-2. **Current Image**: A newly generated infographic that needs to be refined
+1.  **Style Source (Reference Image)**: Extract ONLY the visual language (color palette, textures, font style, icon style, border thickness, background patterns). **IGNORE all text, specific data values, charts, and subject matter in this image.**
+2.  **Content Source (Current Image)**: This contains the ACTUAL content to be rendered. Extract the exact text, data points, layout structure, chart types, and hierarchy from here.
 
-Your task is to refine the Current Image by applying the visual style from the Reference Image, while preserving all the data, content, and information from the Current Image.
+**Your Task:**
+Redesign the "Content Source" by applying the aesthetic of the "Style Source".
 
-Specifically:
-- Match the color palette from the Reference Image
-- Apply similar design aesthetics (shapes, icons, decorative elements)
-- Use similar typography style if applicable
-- Preserve the layout structure of the Current Image
-- Fix visual defects (blurry text, distorted shapes)
-- Ensure stability and consistency of **title, chart, pictogram**
-- Keep the core content of **title, chart, pictogram** from the Current Image unchanged
+**Strict Guidelines:**
+1.  **Content Authority:** The generated image must ONLY contain information (text, numbers, shapes of charts) from the **Content Source**.
+2.  **Style Application:** Apply the color scheme, typography *style* (not the text itself), and decorative elements from the **Style Source**.
+3.  **Negative Constraints (CRITICAL):**
+    - Do NOT copy any text, numbers, or specific illustrations from the **Style Source**.
+    - Do NOT hallucinate new objects that appear in the **Style Source** but are not in the **Content Source**.
+    - If the Style Source shows a pie chart but the Content Source shows a bar chart, you MUST draw a bar chart.
 
-Generate a high-quality infographic that looks like it was created with the same design system as the Reference Image."""
+**Execution Steps:**
+1.  Analyze the layout and data of the **Content Source**.
+2.  Analyze the artistic style of the **Style Source**.
+3.  Reconstruct the **Content Source** using the artistic style of the **Style Source**.
+4.  Final Check: Ensure no text or data from the **Style Source** has leaked into the final output."""
 
         # 调用 Gemini 模型
         response = client.chat.completions.create(
@@ -387,3 +391,10 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
             'image_path': None,
             'error': str(e)
         }
+
+
+# refine_with_gemini(
+#     reference_image_path="/data/minzhi/code/ChartGalaxyDemo/infographics/by_author_@visualcapitalist_chart_18e2e434d7486e34e0650adee26db1b27bdf924a6108a12cac5c6f3a0d821745.png",
+#     current_image_path="/data/minzhi/code/github/ChartGalaxyDemo/buffer/Green/edited_image.jpg",
+#     output_path="/data/minzhi/code/github/1.png"
+# )

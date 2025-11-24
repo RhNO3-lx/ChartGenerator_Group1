@@ -506,8 +506,8 @@ def generate_chart_type_previews():
     print(f"[DEBUG API] extraction_templates 数量: {len(generation_status.get('extraction_templates', []))}")
 
     # 启动预览生成线程
-    # thread = Thread(target=threaded_task, args=(conduct_chart_type_preview_generation, current_page_types, generation_status,))
-    # thread.start()
+    thread = Thread(target=threaded_task, args=(conduct_chart_type_preview_generation, current_page_types, generation_status,))
+    thread.start()
 
     return jsonify({'status': 'started', 'chart_types': current_page_types})
 
@@ -1008,4 +1008,4 @@ if __name__ == '__main__':
     free_port = find_free_port()
     print(f"Starting server on port {free_port}")
    
-    app.run(debug=True, host='0.0.0.0', port=5176, use_reloader=False)
+    app.run(debug=True, host='0.0.0.0', port=free_port, use_reloader=False)
