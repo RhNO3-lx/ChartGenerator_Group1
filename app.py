@@ -265,6 +265,9 @@ def start_find_reference(datafile):
     generation_status['chart_type_page'] = 0
     generation_status['variation_page'] = 0
     generation_status['selected_chart_type'] = ''
+    generation_status['extraction_templates'] = None
+    generation_status['available_chart_types'] = None
+    save_generation_status()
 
     # 重置 reference 分页（内存变量）
     reference_page = 0
@@ -272,7 +275,6 @@ def start_find_reference(datafile):
     # 启动布局抽取线程
     thread = Thread(target = threaded_task, args=(conduct_reference_finding, datafile, generation_status,))
     thread.start()
-    # save_generation_status()
     return jsonify({'status': 'started'})
 
 @app.route('/api/start_layout_extraction/<reference>/<datafile>')
