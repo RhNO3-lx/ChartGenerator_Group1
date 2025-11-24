@@ -24,11 +24,6 @@ pip install -r requirements.txt
 python app.py
 ```
 
-3. 在浏览器中访问：
-```
-http://localhost:5000
-```
-
 ### 前端（React）
 
 1. 安装依赖：
@@ -48,25 +43,16 @@ npm run dev
 
 1. 在"数据选择与预览"区域选择一个数据集
 2. 查看数据表格预览
-3. 点击"生成信息图表"按钮
-4. 等待生成过程完成（约5秒）
-5. 查看生成的精美信息图表
+3. 选择合适的图表样式、标题和配图素材
+4. 调整素材位置
+5. 查看生成的信息图表
+6. 使用大模型进行精修
 
-## 文件结构
-
-```
-ChartGalaxyDemo/
-├── app.py                      # Flask后端入口
-├── requirements.txt            # Python依赖
-├── templates/                  # 后端模板（保留）
-├── processed_data/             # CSV数据文件
-├── infographics/               # PNG图片文件
-└── frontend/                   # React 前端
-```
 
 ## 技术栈
 
 - **后端**: Python Flask
 - **前端**: React + Vite + Fabric.js
 - **数据处理**: Pandas
+
 - **UI设计**: 现代化渐变设计 
