@@ -7,6 +7,8 @@ function Workbench() {
   // --- State: Data ---
   const [csvFiles, setCsvFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState('');
+  const [showDataPreview, setShowDataPreview] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
   
   // --- State: Chart Types ---
   const [chartTypes, setChartTypes] = useState([]);
@@ -30,29 +32,36 @@ function Workbench() {
   const [previewTimestamp, setPreviewTimestamp] = useState(Date.now());
 
   // --- State: Edit Panel ---
-  const [showEditPanel, setShowEditPanel] = useState(false);
+  const [showEditPanel, setShowEditPanel] = useState(true); // Always show edit panel
   const [bgColor, setBgColor] = useState('#ffffff');
   const [editConfig, setEditConfig] = useState({
     colorScheme: 'default',
     textSize: 'medium',
     textStyle: 'normal',
-    prompt: `You are given two images:
+    prompt: `You are an expert infographic designer. You are given a chart/data visualization image.
+Your task is to transform this chart into a beautiful, professional infographic with the following requirements:
 
-1. **Reference Image**: An infographic with a specific visual style (colors, layout, typography, design elements)
-2. **Current Image**: A newly generated infographic that needs to be refined
+**Content Requirements:**
+- **DO NOT modify the data, numbers, labels, or any information** shown in the chart
+- Keep all chart values, axes, legends, and data points exactly as they appear
+- Preserve the chart type and structure
 
-Your task is to refine the Current Image by applying the visual style from the Reference Image, while preserving all the data, content, and information from the Current Image.
+**Visual Enhancement:**
+- Add a professional, eye-catching design with modern aesthetics
+- Use a harmonious color palette that enhances readability
+- Add appropriate decorative elements, icons, or illustrations
+- Create a clean, well-organized layout
+- Use professional typography for titles and labels
+- Add subtle backgrounds or patterns if appropriate
+- Ensure visual consistency throughout the design
 
-Specifically:
-- Match the color palette from the Reference Image
-- Apply similar design aesthetics (shapes, icons, decorative elements)
-- Use similar typography style if applicable
-- Preserve the layout structure of the Current Image
-- Fix visual defects (blurry text, distorted shapes)
-- Ensure stability and consistency of **title, chart, pictogram**
-- Keep the core content of **title, chart, pictogram** from the Current Image unchanged
+**Quality Standards:**
+- High resolution and clarity
+- No blurry text or distorted elements
+- Professional and polished appearance
+- Suitable for presentation or publication
 
-Generate a high-quality infographic that looks like it was created with the same design system as the Reference Image.`
+Generate a stunning infographic that transforms the raw chart into a visually appealing, professional design while keeping all the data intact.`
   });
   
   // --- State: Refine ---
@@ -78,6 +87,18 @@ Generate a high-quality infographic that looks like it was created with the same
     title: null,
     pictograms: []
   });
+
+  // --- State: Undo/Redo History ---
+  const [history, setHistory] = useState([]); // Array of canvas states (JSON strings)
+  const [historyIndex, setHistoryIndex] = useState(-1); // Current position in history
+  const maxHistorySize = 50; // Limit history size
+  const historyRef = useRef({ history: [], historyIndex: -1 }); // Ref to access latest history
+
+  // Sync historyRef with state
+  useEffect(() => {
+    historyRef.current.history = history;
+    historyRef.current.historyIndex = historyIndex;
+  }, [history, historyIndex]);
 
   // --- Initialization ---
   useEffect(() => {
@@ -107,6 +128,112 @@ Generate a high-quality infographic that looks like it was created with the same
         container.style.backgroundColor = initialBgColor;
     }
 
+    // Save canvas state function
+    const saveCanvasState = () => {
+      if (!c) return;
+      const json = JSON.stringify(c.toJSON());
+      setHistory(prev => {
+        const currentIndex = historyRef.current.historyIndex;
+        const newHistory = prev.slice(0, currentIndex + 1);
+        newHistory.push(json);
+        // Limit history size
+        if (newHistory.length > maxHistorySize) {
+          newHistory.shift();
+          historyRef.current.historyIndex = maxHistorySize - 1;
+        } else {
+          historyRef.current.historyIndex = newHistory.length - 1;
+        }
+        historyRef.current.history = newHistory;
+        return newHistory;
+      });
+    };
+
+    // Undo function
+    const performUndo = () => {
+      if (!c || historyRef.current.historyIndex <= 0) return;
+      const newIndex = historyRef.current.historyIndex - 1;
+      const stateJson = historyRef.current.history[newIndex];
+      if (stateJson) {
+        c.loadFromJSON(stateJson, () => {
+          c.renderAll();
+          historyRef.current.historyIndex = newIndex;
+          setHistoryIndex(newIndex);
+        });
+      }
+    };
+
+    // Redo function
+    const performRedo = () => {
+      if (!c || historyRef.current.historyIndex >= historyRef.current.history.length - 1) return;
+      const newIndex = historyRef.current.historyIndex + 1;
+      const stateJson = historyRef.current.history[newIndex];
+      if (stateJson) {
+        c.loadFromJSON(stateJson, () => {
+          c.renderAll();
+          historyRef.current.historyIndex = newIndex;
+          setHistoryIndex(newIndex);
+        });
+      }
+    };
+
+    // Keyboard event handler for Delete key
+    const handleKeyDown = (e) => {
+      if (!c) return;
+      // Delete or Backspace key
+      if ((e.key === 'Delete' || e.key === 'Backspace') && c.getActiveObject()) {
+        e.preventDefault();
+        const activeObject = c.getActiveObject();
+        if (activeObject) {
+          saveCanvasState();
+          if (activeObject.type === 'activeSelection') {
+            // Multiple objects selected
+            activeObject.getObjects().forEach(obj => c.remove(obj));
+            c.discardActiveObject();
+          } else {
+            // Single object selected
+            c.remove(activeObject);
+          }
+          c.renderAll();
+        }
+      }
+      // Ctrl+Z for undo, Ctrl+Y or Ctrl+Shift+Z for redo
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'z' && !e.shiftKey) {
+          e.preventDefault();
+          performUndo();
+        } else if ((e.key === 'y' || (e.key === 'z' && e.shiftKey)) && !e.altKey) {
+          e.preventDefault();
+          performRedo();
+        }
+      }
+    };
+
+    // Add keyboard event listener
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Listen to canvas object changes for history
+    c.on('object:added', () => {
+      // Debounce to avoid too many history entries
+      clearTimeout(c._historyTimeout);
+      c._historyTimeout = setTimeout(() => {
+        saveCanvasState();
+      }, 300);
+    });
+
+    c.on('object:removed', () => {
+      clearTimeout(c._historyTimeout);
+      c._historyTimeout = setTimeout(() => {
+        saveCanvasState();
+      }, 300);
+    });
+
+    c.on('object:modified', () => {
+      clearTimeout(c._historyTimeout);
+      c._historyTimeout = setTimeout(() => {
+        saveCanvasState();
+      }, 300);
+    });
+
     // Resize canvas on window resize
     const resizeCanvas = () => {
         const container = document.querySelector('.canvas-wrapper');
@@ -121,8 +248,12 @@ Generate a high-quality infographic that looks like it was created with the same
     window.addEventListener('resize', resizeCanvas);
 
     return () => {
-      c.dispose();
+      window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('resize', resizeCanvas);
+      if (c._historyTimeout) {
+        clearTimeout(c._historyTimeout);
+      }
+      c.dispose();
     };
   }, []);
 
@@ -165,6 +296,12 @@ Generate a high-quality infographic that looks like it was created with the same
     // Reset saved positions
     setSavedPositions({ chart: null, title: null, pictograms: [] });
 
+    // Reset history when switching files
+    setHistory([]);
+    setHistoryIndex(-1);
+    historyRef.current.history = [];
+    historyRef.current.historyIndex = -1;
+
     setSelectedFile(file);
     if (file) {
       setLoading(true);
@@ -182,7 +319,28 @@ Generate a high-quality infographic that looks like it was created with the same
     }
   };
 
-  const pollStatus = (callback, targetStep) => {
+  // --- Logic: Data Preview ---
+  const handleDataPreview = async () => {
+    if (!selectedFile) {
+      alert('请先选择数据集');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setLoadingText('Loading data preview...');
+      const response = await axios.get(`/api/data/preview/${selectedFile}`);
+      setPreviewData(response.data);
+      setShowDataPreview(true);
+    } catch (err) {
+      console.error('Failed to load data preview:', err);
+      alert('无法加载数据预览');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const pollStatus = (callback, targetStep, autoStopLoading = true) => {
     const interval = setInterval(async () => {
       try {
         const res = await axios.get('/api/status');
@@ -195,7 +353,9 @@ Generate a high-quality infographic that looks like it was created with the same
 
         if (completed) {
           clearInterval(interval);
-          setLoading(false);
+          if (autoStopLoading) {
+            setLoading(false);
+          }
           callback(res.data);
         }
       } catch (err) {
@@ -394,7 +554,7 @@ Generate a high-quality infographic that looks like it was created with the same
       pollStatus(async () => {
           // 2. Generate Title
           await generateTitle();
-      }, 'layout_extraction');
+      }, 'layout_extraction', false);
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -439,15 +599,19 @@ Generate a high-quality infographic that looks like it was created with the same
   };
 
   const generateTitle = async () => {
+      setLoading(true);
       setLoadingText('Generating title...');
       try {
           await axios.get(`/api/start_title_generation/${selectedFile}`);
           pollStatus(async (statusData) => {
               // Update title image state
-              const options = statusData.title_options ? Object.keys(statusData.title_options).sort() : ['title_0.png'];
+              const keys = statusData.title_options ? Object.keys(statusData.title_options).sort() : [];
+              const options = keys.length > 0 ? keys : ['title_0.png'];
               setTitleOptions(options);
               const newTitleImage = options[0];
-              setTitleImage(newTitleImage);
+              // Don't set title image yet, wait for pictogram
+              // setTitleImage(newTitleImage);
+              setPreviewTimestamp(Date.now()); // Force refresh images
               
               // 3. Generate Pictogram
               // Use the text from the first generated title
@@ -456,7 +620,7 @@ Generate a high-quality infographic that looks like it was created with the same
                                 : (statusData.selected_title || 'InfoGraphic');
                                 
               await generatePictogram(titleText, newTitleImage);
-          }, 'title_generation');
+          }, 'title_generation', false);
       } catch (err) {
           console.error(err);
           setLoading(false);
@@ -469,9 +633,11 @@ Generate a high-quality infographic that looks like it was created with the same
       try {
           await axios.get(`/api/regenerate_title/${selectedFile}`);
           pollStatus(async (statusData) => {
-              const options = statusData.title_options ? Object.keys(statusData.title_options).sort() : ['title_0.png'];
+              const keys = statusData.title_options ? Object.keys(statusData.title_options).sort() : [];
+              const options = keys.length > 0 ? keys : ['title_0.png'];
               setTitleOptions(options);
               setTitleImage(options[0]);
+              setPreviewTimestamp(Date.now()); // Force refresh images
               setLoading(false);
           }, 'title_generation');
       } catch (err) {
@@ -481,16 +647,40 @@ Generate a high-quality infographic that looks like it was created with the same
   };
 
   const generatePictogram = async (titleText, currentTitleImage = null) => {
+      setLoading(true);
       setLoadingText('Generating pictogram...');
       try {
           // If titleText is not provided (e.g. manual regeneration), try to get it or use default
           const text = titleText || 'InfoGraphic'; 
           await axios.get(`/api/start_pictogram_generation/${encodeURIComponent(text)}`);
           pollStatus((statusData) => {
-              const options = statusData.pictogram_options ? Object.keys(statusData.pictogram_options).sort() : ['pictogram_0.png'];
+              console.log('Pictogram generation finished', statusData);
+              
+              // Ensure we get the options
+              let options = [];
+              if (statusData.pictogram_options) {
+                  options = Object.keys(statusData.pictogram_options).sort();
+              }
+              
+              // Fallback if empty (should not happen if backend works)
+              if (options.length === 0) {
+                  console.warn('No pictogram options found in statusData');
+                  // Try to infer from standard naming if backend failed to populate dict but files exist?
+                  options = ['pictogram_0.png', 'pictogram_1.png', 'pictogram_2.png'];
+              }
+
               setPictogramOptions(options);
+              
+              // Select the first one
               const newPictograms = [options[0]];
+              
+              // Update states together to trigger single canvas update
+              if (currentTitleImage) {
+                  setTitleImage(currentTitleImage);
+              }
               setSelectedPictograms(newPictograms);
+              
+              setPreviewTimestamp(Date.now()); // Force refresh images
               setLoading(false);
               
               // Force update canvas with new assets
@@ -505,7 +695,7 @@ Generate a high-quality infographic that looks like it was created with the same
                   // Actually, React state updates trigger re-renders and then useEffects.
                   // So the existing useEffect should handle it.
               }
-          }, 'pictogram_generation');
+          }, 'pictogram_generation', true);
       } catch (err) {
           console.error(err);
           setLoading(false);
@@ -519,9 +709,23 @@ Generate a high-quality infographic that looks like it was created with the same
           const text = 'InfoGraphic'; 
           await axios.get(`/api/regenerate_pictogram/${encodeURIComponent(text)}`);
           pollStatus((statusData) => {
-              const options = statusData.pictogram_options ? Object.keys(statusData.pictogram_options).sort() : ['pictogram_0.png'];
+              console.log('Pictogram regeneration finished', statusData);
+              
+              // Ensure we get the options
+              let options = [];
+              if (statusData.pictogram_options) {
+                  options = Object.keys(statusData.pictogram_options).sort();
+              }
+              
+              // Fallback if empty
+              if (options.length === 0) {
+                  console.warn('No pictogram options found in statusData');
+                  options = ['pictogram_0.png', 'pictogram_1.png', 'pictogram_2.png'];
+              }
+
               setPictogramOptions(options);
               setSelectedPictograms([options[0]]);
+              setPreviewTimestamp(Date.now()); // Force refresh images
               setLoading(false);
           }, 'pictogram_generation');
       } catch (err) {
@@ -532,12 +736,88 @@ Generate a high-quality infographic that looks like it was created with the same
 
   // Auto-reload canvas when assets change
   useEffect(() => {
-      if (selectedVariation && (titleImage || selectedPictograms.length > 0)) {
+      console.log('useEffect triggered:', { selectedVariation, titleImage, selectedPictograms, canvas: !!canvas });
+      if (canvas && selectedVariation && (titleImage || selectedPictograms.length > 0)) {
           // Use direct URL for chart to avoid re-generation, and overlay assets in frontend
-          // Pass true to indicate we should preserve positions
-          loadChartToCanvas(selectedVariation, `/currentfilepath/variation_${selectedVariation}.png`, true);
+          // First load after reference selection should NOT preserve positions (use layout instead)
+          // Subsequent changes should preserve positions
+          const shouldPreservePositions = canvas.getObjects().length > 1;
+          loadChartToCanvas(selectedVariation, `/currentfilepath/variation_${selectedVariation}.png`, shouldPreservePositions);
       }
-  }, [titleImage, selectedPictograms]);
+  }, [canvas, titleImage, selectedPictograms, selectedVariation]);
+
+  // Auto-load refinement history when both title and pictogram are available
+  useEffect(() => {
+      const loadRefinementHistory = async () => {
+          // Only load history if we have all required materials
+          if (!titleImage || !selectedPictograms || selectedPictograms.length === 0 || !selectedVariation) {
+              return;
+          }
+
+          console.log('Loading refinement history for materials:', {
+              titleImage,
+              pictogram: selectedPictograms[0],
+              chart_type: selectedVariation
+          });
+
+          try {
+              const response = await axios.post('/api/material_history', {
+                  title: titleImage,
+                  pictogram: selectedPictograms[0],
+                  chart_type: selectedVariation
+              });
+
+              if (response.data.found && response.data.versions && response.data.versions.length > 0) {
+                  console.log(`Found ${response.data.total_versions} historical versions`);
+
+                  // Convert versions to refinedImages format
+                  const historyImages = response.data.versions.map(version => ({
+                      url: `/${version.url}?t=${Date.now()}`,
+                      timestamp: new Date(version.timestamp).getTime(),
+                      version: version.version,
+                      fromHistory: true
+                  }));
+
+                  // Set the refined images with history
+                  setRefinedImages(historyImages);
+
+                  console.log('Loaded refinement history:', historyImages.length, 'images');
+              } else {
+                  console.log('No refinement history found for these materials');
+                  // Clear refined images if no history
+                  setRefinedImages([]);
+              }
+          } catch (error) {
+              console.error('Failed to load refinement history:', error);
+              // Don't clear images on error, keep existing state
+          }
+      };
+
+      loadRefinementHistory();
+  }, [titleImage, selectedPictograms, selectedVariation]);
+
+  // Note: Initial canvas state is saved in loadChartToCanvas function
+  // This useEffect is kept as a backup but may not be needed
+
+  // Update delete button state when selection changes
+  const [hasSelection, setHasSelection] = useState(false);
+  useEffect(() => {
+    if (!canvas) return;
+    
+    const updateSelection = () => {
+      setHasSelection(!!canvas.getActiveObject());
+    };
+
+    canvas.on('selection:created', updateSelection);
+    canvas.on('selection:updated', updateSelection);
+    canvas.on('selection:cleared', updateSelection);
+
+    return () => {
+      canvas.off('selection:created', updateSelection);
+      canvas.off('selection:updated', updateSelection);
+      canvas.off('selection:cleared', updateSelection);
+    };
+  }, [canvas]);
 
   const loadChartToCanvas = async (variationName, directUrl = null, preservePositions = false) => {
       if (!canvas || !selectedFile) return;
@@ -597,6 +877,24 @@ Generate a high-quality infographic that looks like it was created with the same
           if (directUrl) {
               // Load directly from the generated file (PNG)
               imageUrl = directUrl;
+
+              // 即使使用 directUrl，也需要获取 layout 信息用于定位
+              try {
+                  const statusRes = await axios.get('/api/status');
+                  const selectedReference = statusRes.data.selected_reference;
+                  console.log('Fetched status, selected_reference:', selectedReference);
+                  if (selectedReference) {
+                      // 从后端获取 layout 信息
+                      const layoutRes = await axios.get('/api/layout');
+                      layout = layoutRes.data.layout;
+                      console.log('Fetched layout:', layout);
+                      bgColor = statusRes.data.style?.bg_color
+                          ? `#${statusRes.data.style.bg_color.map(c => c.toString(16).padStart(2, '0')).join('')}`
+                          : '#ffffff';
+                  }
+              } catch (err) {
+                  console.warn('Failed to fetch layout info:', err);
+              }
           } else {
               // Call backend to generate/composite
               const dataName = selectedFile.replace('.csv', '');
@@ -672,19 +970,144 @@ Generate a high-quality infographic that looks like it was created with the same
                   maxWidth: canvas.width * 0.9,
                   maxHeight: canvas.height * 0.7
               };
-          } else if (layout && layout.chart) {
-              // Use layout from backend (from reference)
-              console.log('Using reference layout:', layout);
-              chartOptions = {
-                  left: layout.chart.x * canvas.width,
-                  top: layout.chart.y * canvas.height,
-                  maxWidth: layout.chart.width * canvas.width,
-                  maxHeight: layout.chart.height * canvas.height,
+
+              // Title saved positions
+              if (currentPositions.title) {
+                  titleOptions = currentPositions.title;
+              } else {
+                  titleOptions = {
+                      maxWidth: 400,
+                      maxHeight: 150,
+                      left: 20,
+                      top: 20,
+                      originX: 'left',
+                      originY: 'top'
+                  };
+              }
+
+              // Pictogram saved positions handled later
+              imageOptions = {
+                  maxWidth: 200,
+                  maxHeight: 200,
+                  left: canvas.width - 220,
+                  top: canvas.height - 220,
                   originX: 'left',
                   originY: 'top'
               };
+          } else if (layout && layout.width && layout.height) {
+              // 使用参考图布局：将 layout 按比例缩放到画布中并居中
+              console.log('Using reference layout:', layout);
+
+              // 计算缩放比例，使 layout 能够放入画布中（留一些边距）
+              const padding = 40; // 画布边距
+              const layoutScale = Math.min(
+                  (canvas.width - padding * 2) / layout.width,
+                  (canvas.height - padding * 2) / layout.height
+              );
+
+              // 缩放后的 layout 尺寸
+              const scaledLayoutWidth = layout.width * layoutScale;
+              const scaledLayoutHeight = layout.height * layoutScale;
+
+              // 计算居中偏移量
+              const offsetX = (canvas.width - scaledLayoutWidth) / 2;
+              const offsetY = (canvas.height - scaledLayoutHeight) / 2;
+
+              console.log('Layout scale:', layoutScale, 'offsetX:', offsetX, 'offsetY:', offsetY);
+
+              // 辅助函数：计算元素在缩放后的 layout 中的位置和尺寸
+              const calculateBoxOptions = (box) => {
+                  if (!box) return null;
+
+                  // 框在缩放后 layout 中的位置和尺寸（box的坐标是相对比例）
+                  const boxX = offsetX + box.x * scaledLayoutWidth;
+                  const boxY = offsetY + box.y * scaledLayoutHeight;
+                  const boxWidth = box.width * scaledLayoutWidth;
+                  const boxHeight = box.height * scaledLayoutHeight;
+
+                  console.log('Box calculated:', { boxX, boxY, boxWidth, boxHeight });
+
+                  return {
+                      // 框的中心位置（用于居中放置元素）
+                      centerX: boxX + boxWidth / 2,
+                      centerY: boxY + boxHeight / 2,
+                      maxWidth: boxWidth,
+                      maxHeight: boxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              };
+
+              // Chart options
+              if (layout.chart) {
+                  const chartBox = calculateBoxOptions(layout.chart);
+                  chartOptions = {
+                      left: chartBox.centerX,
+                      top: chartBox.centerY,
+                      maxWidth: chartBox.maxWidth,
+                      maxHeight: chartBox.maxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+                  console.log('Chart options:', chartOptions);
+              } else {
+                  chartOptions = {
+                      maxWidth: canvas.width * 0.9,
+                      maxHeight: canvas.height * 0.7,
+                      left: canvas.width / 2,
+                      top: canvas.height / 2,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              }
+
+              // Title options
+              if (layout.title) {
+                  const titleBox = calculateBoxOptions(layout.title);
+                  titleOptions = {
+                      left: titleBox.centerX,
+                      top: titleBox.centerY,
+                      maxWidth: titleBox.maxWidth,
+                      maxHeight: titleBox.maxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+                  console.log('Title options:', titleOptions);
+              } else {
+                  titleOptions = {
+                      maxWidth: 400,
+                      maxHeight: 150,
+                      left: canvas.width / 2,
+                      top: 80,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              }
+
+              // Image/Pictogram options
+              if (layout.image) {
+                  const imageBox = calculateBoxOptions(layout.image);
+                  imageOptions = {
+                      left: imageBox.centerX,
+                      top: imageBox.centerY,
+                      maxWidth: imageBox.maxWidth,
+                      maxHeight: imageBox.maxHeight,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+                  console.log('Pictogram options:', imageOptions);
+              } else {
+                  imageOptions = {
+                      maxWidth: 200,
+                      maxHeight: 200,
+                      left: canvas.width - 120,
+                      top: canvas.height - 120,
+                      originX: 'center',
+                      originY: 'center'
+                  };
+              }
           } else {
-              // Default layout
+              // Default layout (no reference)
               chartOptions = {
                   maxWidth: canvas.width * 0.9,
                   maxHeight: canvas.height * 0.7,
@@ -693,21 +1116,7 @@ Generate a high-quality infographic that looks like it was created with the same
                   originX: 'left',
                   originY: 'top'
               };
-          }
 
-          // Title options
-          if (preservePositions && currentPositions.title) {
-              titleOptions = currentPositions.title;
-          } else if (layout && layout.title) {
-              titleOptions = {
-                  left: layout.title.x * canvas.width,
-                  top: layout.title.y * canvas.height,
-                  maxWidth: layout.title.width * canvas.width,
-                  maxHeight: layout.title.height * canvas.height,
-                  originX: 'left',
-                  originY: 'top'
-              };
-          } else {
               titleOptions = {
                   maxWidth: 400,
                   maxHeight: 150,
@@ -716,19 +1125,7 @@ Generate a high-quality infographic that looks like it was created with the same
                   originX: 'left',
                   originY: 'top'
               };
-          }
 
-          // Image/Pictogram options
-          if (layout && layout.image) {
-              imageOptions = {
-                  left: layout.image.x * canvas.width,
-                  top: layout.image.y * canvas.height,
-                  maxWidth: layout.image.width * canvas.width,
-                  maxHeight: layout.image.height * canvas.height,
-                  originX: 'left',
-                  originY: 'top'
-              };
-          } else {
               imageOptions = {
                   maxWidth: 200,
                   maxHeight: 200,
@@ -777,11 +1174,82 @@ Generate a high-quality infographic that looks like it was created with the same
 
           canvas.renderAll();
 
+          // Save initial state after loading
+          setTimeout(() => {
+            if (canvas && canvas.getObjects().length > 0) {
+              const json = JSON.stringify(canvas.toJSON());
+              setHistory([json]);
+              setHistoryIndex(0);
+              historyRef.current.history = [json];
+              historyRef.current.historyIndex = 0;
+            }
+          }, 100);
+
       } catch (err) {
           console.error(err);
       } finally {
           setLoading(false);
       }
+  };
+
+  // --- Undo/Redo Functions ---
+  const handleUndo = () => {
+    if (!canvas || historyRef.current.historyIndex <= 0) return;
+    const newIndex = historyRef.current.historyIndex - 1;
+    const stateJson = historyRef.current.history[newIndex];
+    if (stateJson) {
+      canvas.loadFromJSON(stateJson, () => {
+        canvas.renderAll();
+        historyRef.current.historyIndex = newIndex;
+        setHistoryIndex(newIndex);
+      });
+    }
+  };
+
+  const handleRedo = () => {
+    if (!canvas || historyRef.current.historyIndex >= historyRef.current.history.length - 1) return;
+    const newIndex = historyRef.current.historyIndex + 1;
+    const stateJson = historyRef.current.history[newIndex];
+    if (stateJson) {
+      canvas.loadFromJSON(stateJson, () => {
+        canvas.renderAll();
+        historyRef.current.historyIndex = newIndex;
+        setHistoryIndex(newIndex);
+      });
+    }
+  };
+
+  const handleDelete = () => {
+    if (!canvas) return;
+    const activeObject = canvas.getActiveObject();
+    if (activeObject) {
+      // Save state before deletion
+      const json = JSON.stringify(canvas.toJSON());
+      setHistory(prev => {
+        const currentIndex = historyRef.current.historyIndex;
+        const newHistory = prev.slice(0, currentIndex + 1);
+        newHistory.push(json);
+        if (newHistory.length > maxHistorySize) {
+          newHistory.shift();
+          historyRef.current.historyIndex = maxHistorySize - 1;
+        } else {
+          historyRef.current.historyIndex = newHistory.length - 1;
+        }
+        historyRef.current.history = newHistory;
+        return newHistory;
+      });
+      setHistoryIndex(historyRef.current.historyIndex);
+
+      if (activeObject.type === 'activeSelection') {
+        // Multiple objects selected
+        activeObject.getObjects().forEach(obj => canvas.remove(obj));
+        canvas.discardActiveObject();
+      } else {
+        // Single object selected
+        canvas.remove(activeObject);
+      }
+      canvas.renderAll();
+    }
   };
 
   // --- Background Color Management ---
@@ -803,31 +1271,40 @@ Generate a high-quality infographic that looks like it was created with the same
           alert('Canvas not initialized');
           return;
       }
-      
+
       setIsRefining(true);
       setLoading(true);
       setLoadingText('正在使用 AI 精修信息图表...');
-      
+
       try {
-          // Export canvas to PNG base64
+          // Export full canvas to PNG base64 (2x resolution)
           const pngDataURL = canvas.toDataURL({
               format: 'png',
               quality: 1,
-              multiplier: 2  // 2x resolution
+              multiplier: 2
           });
-          
-          // Send to backend for refinement
+
+          // Get background color for backend processing
+          const backgroundColor = canvas.backgroundColor || '#ffffff';
+
+          // Send to backend for refinement with auto-cropping
+          // Include material information for caching
           const response = await axios.post('/api/export_final', {
-              png_base64: pngDataURL
+              png_base64: pngDataURL,
+              background_color: backgroundColor,
+              title: titleImage,
+              pictogram: selectedPictograms.length > 0 ? selectedPictograms[0] : '',
+              chart_type: selectedVariation,
+              force_regenerate: true  // Always generate new version for AI refine button
           });
-          
+
           if (response.data.status === 'started') {
               // Poll for completion
               await pollRefinementStatus();
           } else {
               throw new Error(response.data.error || '生成失败');
           }
-          
+
       } catch (error) {
           console.error('Refine failed:', error);
           alert('精修失败: ' + error.message);
@@ -840,40 +1317,65 @@ Generate a high-quality infographic that looks like it was created with the same
   const pollRefinementStatus = async () => {
       const maxAttempts = 120; // Max 2 minutes
       let attempts = 0;
-      
+
       while (attempts < maxAttempts) {
           try {
               const response = await axios.get('/api/status');
               const status = response.data;
-              
+
               // Update loading text with progress
               if (status.progress) {
                   setLoadingText(status.progress);
               }
-              
+
               if (status.step === 'final_export' && status.completed) {
                   if (status.status === 'completed') {
-                      // Success! Add refined image to the list
-                      const refinedUrl = `/api/download_final?t=${Date.now()}`;
-                      setRefinedImages(prev => [...prev, {
-                          url: refinedUrl,
-                          timestamp: Date.now()
-                      }]);
-                      // Keep edit panel open to show the result
+                      // Success! Reload the refinement history to get the new version
+                      console.log('Refinement completed, reloading history...');
+
+                      // Reload history after successful refinement
+                      try {
+                          const historyResponse = await axios.post('/api/material_history', {
+                              title: titleImage,
+                              pictogram: selectedPictograms.length > 0 ? selectedPictograms[0] : '',
+                              chart_type: selectedVariation
+                          });
+
+                          if (historyResponse.data.found && historyResponse.data.versions && historyResponse.data.versions.length > 0) {
+                              const historyImages = historyResponse.data.versions.map(version => ({
+                                  url: `/${version.url}?t=${Date.now()}`,
+                                  timestamp: new Date(version.timestamp).getTime(),
+                                  version: version.version,
+                                  fromHistory: true
+                              }));
+
+                              setRefinedImages(historyImages);
+                              console.log('Reloaded history:', historyImages.length, 'images');
+                          }
+                      } catch (historyError) {
+                          console.error('Failed to reload history:', historyError);
+                          // Fallback: add just the new image
+                          const refinedUrl = `/api/download_final?t=${Date.now()}`;
+                          setRefinedImages(prev => [...prev, {
+                              url: refinedUrl,
+                              timestamp: Date.now()
+                          }]);
+                      }
+
                       return;
                   } else if (status.status === 'error') {
                       throw new Error(status.progress || '精修失败');
                   }
               }
-              
+
           } catch (error) {
               console.error('Status check failed:', error);
           }
-          
+
           await new Promise(resolve => setTimeout(resolve, 1000));
           attempts++;
       }
-      
+
       throw new Error('精修超时，请重试');
   };
   
@@ -904,26 +1406,40 @@ Generate a high-quality infographic that looks like it was created with the same
     <div className="workbench-container">
       {/* Left Sidebar: Configuration */}
       <div className="sidebar">
-        <div className="sidebar-header">Configuration</div>
+        <div className="sidebar-header">图表配置</div>
         
         {/* Dataset Section */}
         <div className="config-section">
-          <div className="section-title">Dataset</div>
+          <div className="section-title">数据集选择</div>
           <div className="dataset-control">
             <select value={selectedFile} onChange={handleFileSelect} className="dataset-select">
-              <option value="">Select Dataset...</option>
-              {csvFiles.map(f => (
-                <option key={f} value={f}>{f.replace('.csv', '')}</option>
-              ))}
+              <option value="">选择数据集...</option>
+              {csvFiles
+                .filter(f => f === 'Space.csv' || f === 'Commute.csv')
+                .map(f => (
+                  <option key={f} value={f}>{f.replace('.csv', '')}</option>
+                ))}
             </select>
-            <button className="upload-btn" title="Upload (Not Supported)" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>↑</button>
+            <button
+              className="upload-btn"
+              title="预览数据"
+              onClick={handleDataPreview}
+              disabled={!selectedFile}
+              style={{
+                opacity: selectedFile ? 1 : 0.5,
+                cursor: selectedFile ? 'pointer' : 'not-allowed',
+                background: selectedFile ? '#4CAF50' : '#ccc'
+              }}
+            >
+              👁️
+            </button>
           </div>
         </div>
 
         {/* Types Section */}
         {selectedFile && (
         <div className="config-section">
-          <div className="section-title">Types</div>
+          <div className="section-title">推荐图表类型</div>
           <div className="grid-container">
             {getPagedData(chartTypes, chartTypePage, CHART_TYPES_PER_PAGE).map(type => (
                <div 
@@ -955,7 +1471,7 @@ Generate a high-quality infographic that looks like it was created with the same
         {/* Variation Section */}
         {selectedChartType && (
         <div className="config-section">
-          <div className="section-title">Variation</div>
+          <div className="section-title">推荐图表变体</div>
           <div className="grid-container">
             {getPagedData(variations, variationPage, VARIATIONS_PER_PAGE).map(v => (
                <div 
@@ -987,7 +1503,7 @@ Generate a high-quality infographic that looks like it was created with the same
         {/* Reference Section */}
         {selectedVariation && references.length > 0 && (
         <div className="config-section">
-          <div className="section-title">Reference Style</div>
+          <div className="section-title">推荐参考图片</div>
           <div className="grid-container">
             {getPagedData(references, referencePage, REFERENCES_PER_PAGE).map(ref => (
                <div 
@@ -1016,7 +1532,7 @@ Generate a high-quality infographic that looks like it was created with the same
 
           {selectedReference && (
               <div className="selected-reference-card" style={{marginTop: '15px', border: '1px solid #e0e0e0', padding: '10px', borderRadius: '6px', position: 'relative', backgroundColor: '#fff'}}>
-                  <div style={{fontSize: '12px', marginBottom: '8px', fontWeight: '600', color: '#333'}}>Example Selected</div>
+                  <div style={{fontSize: '1rem', marginBottom: '8px', fontWeight: '600', color: '#333'}}>当前参考图片</div>
                   <button 
                     onClick={(e) => { e.stopPropagation(); setSelectedReference(''); }}
                     style={{position: 'absolute', top: '5px', right: '8px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#666', padding: 0, lineHeight: 1}}
@@ -1036,14 +1552,14 @@ Generate a high-quality infographic that looks like it was created with the same
         {/* Assets Section */}
         {selectedVariation && (titleImage || selectedPictograms.length > 0) && (
         <div className="config-section">
-            <div className="section-title">Generated Assets</div>
+            <div className="section-title">元素生成结果</div>
             
             {/* Title Selection */}
             {titleOptions.length > 0 ? (
                 <div className="asset-group" style={{marginBottom: '15px'}}>
                     <div className="asset-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
-                        <label style={{fontSize: '12px', fontWeight: '600', color: '#666'}}>Title</label>
-                        <button onClick={regenerateTitle} style={{fontSize: '10px', padding: '2px 6px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer'}}>Regenerate</button>
+                        <label style={{fontSize: '1rem', fontWeight: '600', color: '#666'}}>标题</label>
+                        <button onClick={regenerateTitle} style={{fontSize: '0.875rem', padding: '2px 6px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer'}}>重新生成</button>
                     </div>
                     <div className="asset-options-grid" style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px'}}>
                         {titleOptions.map(opt => (
@@ -1078,7 +1594,7 @@ Generate a high-quality infographic that looks like it was created with the same
                     <div className="asset-item">
                         <div>
                             <label>Title</label>
-                            <button onClick={regenerateTitle}>Regenerate</button>
+                            <button onClick={regenerateTitle}>重新生成</button>
                         </div>
                         <img src={`/currentfilepath/${titleImage}?t=${Date.now()}`} alt="Title" />
                     </div>
@@ -1089,8 +1605,8 @@ Generate a high-quality infographic that looks like it was created with the same
             {pictogramOptions.length > 0 ? (
                 <div className="asset-group">
                     <div className="asset-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
-                        <label style={{fontSize: '12px', fontWeight: '600', color: '#666'}}>Pictogram (Multi-select)</label>
-                        <button onClick={regeneratePictogram} style={{fontSize: '10px', padding: '2px 6px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer'}}>Regenerate</button>
+                        <label style={{fontSize: '1rem', fontWeight: '600', color: '#666'}}>图像（可多选）</label>
+                        <button onClick={regeneratePictogram} style={{fontSize: '0.875rem', padding: '2px 6px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer'}}>重新生成</button>
                     </div>
                     <div className="asset-options-grid" style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px'}}>
                         {pictogramOptions.map(opt => (
@@ -1137,7 +1653,7 @@ Generate a high-quality infographic that looks like it was created with the same
                     <div className="asset-item">
                         <div>
                             <label>Pictogram</label>
-                            <button onClick={regeneratePictogram}>Regenerate</button>
+                            <button onClick={regeneratePictogram}>重新生成</button>
                         </div>
                         <img src={`/currentfilepath/${selectedPictograms[0]}?t=${Date.now()}`} alt="Pictogram" />
                     </div>
@@ -1149,23 +1665,64 @@ Generate a high-quality infographic that looks like it was created with the same
 
       {/* Main Preview Area */}
       <div className="main-preview">
-        <div className="preview-header">预览图</div>
+        <div className="preview-header">可编辑画布</div>
         <div className="canvas-wrapper">
             <canvas id="workbenchCanvas" />
         </div>
         
-        {/* Edit Button */}
-        <button className="edit-fab" onClick={() => setShowEditPanel(!showEditPanel)}>
-            Edit
-        </button>
-
-        {/* Edit Panel (Floating) */}
-        {showEditPanel && (
-            <div className="edit-panel">
-                <div className="edit-panel-header">
-                    <span>✏️ 编辑与精修</span>
-                    <button className="close-btn" onClick={() => { setShowEditPanel(false); }}>×</button>
-                </div>
+        {/* Canvas Control Buttons */}
+        <div className="canvas-controls" style={{
+          position: 'absolute',
+          top: '24px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: '8px',
+          zIndex: 10
+        }}>
+          <button 
+            onClick={handleRedo}
+            disabled={historyIndex >= history.length - 1}
+            style={{
+              padding: '8px 16px',
+              background: historyIndex >= history.length - 1 ? '#e0e0e0' : '#6366f1',
+              color: historyIndex >= history.length - 1 ? '#999' : 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: historyIndex >= history.length - 1 ? 'not-allowed' : 'pointer',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              opacity: historyIndex >= history.length - 1 ? 0.5 : 1
+            }}
+            title="重做 (Ctrl+Y)"
+          >
+            ↷ 重做
+          </button>
+          <button 
+            onClick={handleDelete}
+            disabled={!canvas || !hasSelection}
+            style={{
+              padding: '8px 16px',
+              background: (!canvas || !hasSelection) ? '#e0e0e0' : '#ef4444',
+              color: (!canvas || !hasSelection) ? '#999' : 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: (!canvas || !hasSelection) ? 'not-allowed' : 'pointer',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              opacity: (!canvas || !hasSelection) ? 0.5 : 1
+            }}
+            title="删除选中元素 (Delete)"
+          >
+            🗑️ 删除
+          </button>
+        </div>
+        
+        {/* Edit Panel (Always Visible, Fixed at Bottom) */}
+        <div className="edit-panel">
+            <div className="edit-panel-header">
+                <span>✏️ 编辑</span>
+            </div>
                 
                 <div className="edit-panel-content">
                 {/* Left Column: Controls */}
@@ -1190,12 +1747,12 @@ Generate a high-quality infographic that looks like it was created with the same
                             ))}
                         </div>
                         <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                            <input 
-                                type="color" 
-                                value={bgColor} 
+                            <input
+                                type="color"
+                                value={bgColor}
                                 onChange={(e) => handleBgColorChange(e.target.value)}
                                 style={{
-                                    width: '50px',
+                                    width: '35px',
                                     height: '36px',
                                     border: '1px solid var(--border-color)',
                                     borderRadius: '6px',
@@ -1203,9 +1760,9 @@ Generate a high-quality infographic that looks like it was created with the same
                                     padding: '2px'
                                 }}
                             />
-                            <input 
-                                type="text" 
-                                value={bgColor} 
+                            <input
+                                type="text"
+                                value={bgColor}
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     if (/^#[0-9A-Fa-f]{0,6}$/.test(value)) {
@@ -1217,7 +1774,7 @@ Generate a high-quality infographic that looks like it was created with the same
                                 }}
                                 placeholder="#ffffff"
                                 style={{
-                                    flex: 1,
+                                    width: '90px',
                                     padding: '8px 12px',
                                     border: '1px solid var(--border-color)',
                                     borderRadius: '6px',
@@ -1315,7 +1872,6 @@ Generate a high-quality infographic that looks like it was created with the same
                 </div>
                 </div>
             </div>
-        )}
       </div>
 
       {/* Loading Overlay */}
@@ -1379,6 +1935,84 @@ Generate a high-quality infographic that looks like it was created with the same
                   boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
                 }}
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Data Preview Modal */}
+      {showDataPreview && previewData && (
+        <div className="refined-preview-modal" onClick={() => setShowDataPreview(false)}>
+          <div className="refined-preview-content" onClick={(e) => e.stopPropagation()} style={{maxWidth: '90%', width: '1000px'}}>
+            <div className="refined-preview-header">
+              <h3 style={{margin: 0, display: 'flex', alignItems: 'center', gap: '10px'}}>
+                <span>📊</span>
+                <span>数据预览 - {selectedFile.replace('.csv', '')}</span>
+              </h3>
+              <button
+                className="close-btn"
+                onClick={() => setShowDataPreview(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#666',
+                  padding: 0
+                }}
+              >×</button>
+            </div>
+            <div style={{marginTop: '20px', maxHeight: '70vh', overflowY: 'auto'}}>
+              {previewData.columns && previewData.rows && (
+                <div>
+                  <div style={{marginBottom: '15px', color: '#666', fontSize: '14px'}}>
+                    共 {previewData.total_rows || previewData.rows.length} 行数据，显示前 {previewData.rows.length} 行
+                  </div>
+                  <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    fontSize: '14px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
+                    <thead>
+                      <tr style={{background: '#f5f5f5'}}>
+                        {previewData.columns.map((col, idx) => (
+                          <th key={idx} style={{
+                            padding: '12px',
+                            textAlign: 'left',
+                            borderBottom: '2px solid #ddd',
+                            fontWeight: '600',
+                            color: '#333'
+                          }}>
+                            {col}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {previewData.rows.map((row, rowIdx) => (
+                        <tr key={rowIdx} style={{
+                          background: rowIdx % 2 === 0 ? 'white' : '#fafafa',
+                          transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#f0f0f0'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = rowIdx % 2 === 0 ? 'white' : '#fafafa'}
+                        >
+                          {row.map((cell, cellIdx) => (
+                            <td key={cellIdx} style={{
+                              padding: '10px 12px',
+                              borderBottom: '1px solid #eee',
+                              color: '#555'
+                            }}>
+                              {cell !== null && cell !== undefined ? String(cell) : '-'}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         </div>

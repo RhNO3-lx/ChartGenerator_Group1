@@ -6,35 +6,35 @@
   "style": {
     "colors": [
       [
-        241,
-        139,
-        37
-      ],
-      [
-        3,
-        2,
-        2
-      ],
-      [
-        82,
-        55,
-        227
-      ],
-      [
-        11,
         190,
-        130
+        195,
+        210
       ],
       [
-        62,
-        57,
+        43,
+        48,
+        49
+      ],
+      [
+        116,
+        94,
         55
+      ],
+      [
+        207,
+        172,
+        101
+      ],
+      [
+        126,
+        138,
+        136
       ]
     ],
     "bg_color": [
-      244,
-      238,
-      219
+      239,
+      240,
+      244
     ]
   },
   "selected_data": "processed_data/App.json",
@@ -980,43 +980,43 @@
   ],
   "available_variations": [],
   "reference_page": 14,
-  "selected_reference": "infographics/Commute-Origin.png",
+  "selected_reference": "infographics/Space-Origin.png",
   "reference_descriptions": {
-    "title_description": "1. **Text Layout**: The title is split into three lines. The first line contains 3 words, the second line contains 2 words, and the third line has approximately 9 words. The text is left-aligned.\n\n2. **Font Style**: The fonts used appear to be a mix of serif and sans-serif. The top two lines are serif and bold, with \"AI at Work\" using a very bold style, while \"ACROSS GENERATIONS\" is bold sans-serif. The third line uses a regular weight sans-serif font. There is no italicization.\n\n3. **Color Scheme**: The primary text color is black. There is selective emphasis on the word \"their own\" in the third line, which is highlighted with a pink rectangle background and black text. The overall background is a very light beige with a subtle dotted texture.\n\n4. **Decorative Effects**: The text does not appear to have shadows, outlines, or glowing effects. The emphasis on \"their own\" with a pink highlight serves as the primary decorative element.\n\n5. **Overall Style**: The style is modern and professional, with a clear emphasis on readability and emphasis where needed. The use of bold fonts and subtle highlights suggests a contemporary, clean, and slightly formal design.",
-    "pictogram_description": "1. **Content Theme**: The image illustrates a technology and learning-related theme. The main elements include a graduate holding a large tablet displaying code, a person using a laptop, a scientist with augmented reality glasses reading documents, and a seated elder with a smartphone.\n\n2. **Drawing Style**: It employs a flat design with bold, clean lines. The illustration uses simple shapes and forms with a slightly abstract representation.\n\n3. **Color Scheme**: Dominant colors include blue, yellow, and red, set against black and white. The colors are vibrant and bold, with no gradients, maintaining a high contrast appearance.\n\n4. **Background Treatment**: The background consists of block colors with a grid or dotted pattern, divided into vertical stripes behind each character, adding a sense of structure.\n\n5. **Overall Characteristics**: The visual style is characterized by its graphic simplicity and modern look, with the use of flat geometric shapes, no shadows, or textures, enhancing readability and focus on the characters and their activities."
+    "title_description": "1. **Text Layout**: The text is divided into two lines. The first line has four words, while the second line has seven words. The text is center-aligned.\n\n2. **Font Style**: The font is sans-serif, bold, and not italicized. It has a clean and modern appearance.\n\n3. **Color Scheme**: The text color is dark gray or black, creating a strong contrast against a light background, which is likely white or very light gray.\n\n4. **Decorative Effects**: There are no additional decorative effects such as shadows, outlines, or glow. The text is simple with no icons or decorative elements integrated into it.\n\n5. **Overall Style**: The overall style is modern, minimalistic, and straightforward, conveying a sense of professionalism and clarity. It has a clean and no-frills aesthetic, suitable for corporate or analytical content.",
+    "pictogram_description": "1. **Content Theme**: The image depicts stacks of money in the form of dollar bills, suggesting financial or revenue-focused content, possibly related to Apple's financial performance. The main elements include bundles of hundred-dollar bills and the Apple logo.\n\n2. **Drawing Style**: The style is a semi-realistic rendering with elements of 3D visual representation, particularly noticeable in the depiction of the money stacks. The lines around the money are precise and moderately thick, providing a clear but stylized representation.\n\n3. **Color Scheme**: The colors used are mostly realistic for the money, featuring greens, grays, and yellows typical of US currency. The Apple logo background is a soft blue and gray tone, which is more subdued and complements the foreground elements without over-shadowing them. There are no gradients used.\n\n4. **Background Treatment**: The background is a large, stylized Apple logo with a soft bluish-gray color. It is a solid shape, lending a clean and corporate feel to the image without any patterns or textures.\n\n5. **Overall Characteristics**: The visual features a structured composition with a clear focal point on the money stacks. It exhibits a business-oriented style with realistic elements combined with branding, offering a professional and clean appearance."
   },
   "title_options": {
-    "title_0_8141e84e.png": {
-      "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_0_8141e84e.png",
+    "title_0_72947699.png": {
+      "title_text": "Global Space Exploration Funding by Country",
+      "image_path": "buffer/Space/title_0_72947699.png",
       "success": true
     },
-    "title_1_8141e84e.png": {
-      "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_1_8141e84e.png",
+    "title_1_72947699.png": {
+      "title_text": "Global Space Exploration Funding by Country",
+      "image_path": "buffer/Space/title_1_72947699.png",
       "success": true
     },
-    "title_2_8141e84e.png": {
-      "title_text": "Average Commute Times by Transportation Mode",
-      "image_path": "buffer/Commute/title_2_8141e84e.png",
+    "title_2_72947699.png": {
+      "title_text": "Global Space Exploration Funding by Country",
+      "image_path": "buffer/Space/title_2_72947699.png",
       "success": true
     }
   },
-  "current_title_text": "Average Commute Times by Transportation Mode",
+  "current_title_text": "Global Space Exploration Funding by Country",
   "pictogram_options": {
-    "pictogram_0_df63be97.png": {
+    "pictogram_0_8f6a3a3b.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_0_df63be97.png",
+      "image_path": "buffer/Space/pictogram_0_8f6a3a3b.png",
       "success": true
     },
-    "pictogram_1_df63be97.png": {
+    "pictogram_1_8f6a3a3b.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_1_df63be97.png",
+      "image_path": "buffer/Space/pictogram_1_8f6a3a3b.png",
       "success": true
     },
-    "pictogram_2_df63be97.png": {
+    "pictogram_2_8f6a3a3b.png": {
       "pictogram_prompt": "Cached",
-      "image_path": "buffer/Commute/pictogram_2_df63be97.png",
+      "image_path": "buffer/Space/pictogram_2_8f6a3a3b.png",
       "success": true
     }
   },

@@ -1,9 +1,8 @@
-Generate a text image with the content of "Average Commute Times by Transportation Mode". Average Commute  
-Times by  
-Transportation Mode  
-  
-The title will be split into three lines with the first line focusing on the primary concept "Average Commute," the second line emphasizing "Times by," and the third line detailing "Transportation Mode." The text is left-aligned for a professional appearance. The key text "Average Commute" will be emphasized by enlarging the font size significantly to draw attention, while retaining a classic serif font for an authoritative look. The remaining parts of the title will be in a regular-sized sans-serif font to contrast but maintain clarity.  
+Generate a text image with the content of "Global Space Funding by Country, 2024". Global Space Funding  
+by Country, 2024  
 
-To enhance the visual interest, the icon of a small train will replace the letter "T" in the word "Transportation." This will add a thematic decoration that resonates with the subject of commuting. The train icon will be designed in a simple, monochrome style to keep it professional and blend well with the text.  
+The first line "Global Space Funding" should be emphasized with a larger font size to denote it as the main title. The second line "by Country, 2024" should be placed directly below the first line, center-aligned, in a slightly smaller size to create a visual hierarchy. 
 
-For font style, a combination of a bold serif for the first two lines and a clean sans-serif typeface for the last line will be utilized to maintain a modern appearance while ensuring readability. There will be no artistic effects applied; the focus will remain on clear communication without distractions from shadows or outlines. The design will adhere to a modern and professional aesthetic, ensuring clarity and readability throughout.
+To add a decorative touch, incorporate a simple rocket icon to replace the letter "o" in the word "Global." The icon should be clean and minimalistic, matching the overall font style. 
+
+The chosen font style is sans-serif, bold, and modern, reflecting a futuristic theme appropriate for the space funding context. No additional artistic effects, such as shadows or glows, will be used to maintain a minimalistic and professional appearance. The color scheme will follow a dark gray or black for text to ensure strong contrast and clarity over the light background.
