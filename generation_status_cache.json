@@ -1,5 +1,5 @@
 {
-  "step": "pictogram_generation",
+  "step": "find_reference",
   "status": "completed",
   "progress": "并行生成配图中...",
   "completed": true,
@@ -885,7 +885,7 @@
   "id": "Commute",
   "chart_type_page": 0,
   "variation_page": 0,
-  "selected_chart_type": "vertical bar chart",
+  "selected_chart_type": "",
   "available_chart_types": [
     {
       "type": "horizontal bar chart",
