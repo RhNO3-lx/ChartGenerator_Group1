@@ -5,3 +5,7 @@ __pycache__
 /frontend/node_modules
 generation_status_cache.json
 buffer/
+title_cache.json
+variation.json
+*.swp
+*.pyc

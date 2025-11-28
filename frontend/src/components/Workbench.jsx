@@ -130,6 +130,7 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
     }
   };
 
+  
   const pushSnapshot = (stateJson) => {
     if (!stateJson) return;
     snapshotsRef.current = [...snapshotsRef.current, stateJson];
