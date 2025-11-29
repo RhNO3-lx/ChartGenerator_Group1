@@ -1,8 +1,8 @@
-Generate a text image with the content of "Global Space Funding by Country, 2024". Global Space Funding  
-by Country, 2024  
+Generate a text image with the content of "Global Space Funding by Country, 2023". Global Space Funding  
+by Country, 2023
 
-The first line "Global Space Funding" should be emphasized with a larger font size to denote it as the main title. The second line "by Country, 2024" should be placed directly below the first line, center-aligned, in a slightly smaller size to create a visual hierarchy. 
+The text is center-aligned and divided into two lines. The first line features the four words "Global Space Funding," while the second line consists of the seven words "by Country, 2023." The font is a modern, sans-serif typeface that is bold, ensuring high readability and a professional appearance. The text color is dark gray, providing strong contrast against the light background. For emphasis, the entire first line should be slightly larger than the second line to highlight its importance. 
 
-To add a decorative touch, incorporate a simple rocket icon to replace the letter "o" in the word "Global." The icon should be clean and minimalistic, matching the overall font style. 
+To enhance the visual appeal without clutter, decorative elements will be incorporated with a minimalist approach: an icon of a rocket will be used to replace the letter "o" in "Global." This icon will blend seamlessly into the text, maintaining the overall modern aesthetic. 
 
-The chosen font style is sans-serif, bold, and modern, reflecting a futuristic theme appropriate for the space funding context. No additional artistic effects, such as shadows or glows, will be used to maintain a minimalistic and professional appearance. The color scheme will follow a dark gray or black for text to ensure strong contrast and clarity over the light background.
+The design embraces a clean, straightforward style that focuses on professional clarity, appropriate for an analytical context with no additional effects such as shadows or outlines. It emphasizes a strong focus on content while ensuring the poster remains visually appealing and informative.

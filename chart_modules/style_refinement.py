@@ -6,13 +6,16 @@ import os
 import base64
 import openai
 from pathlib import Path
-import cairosvg
 from PIL import Image
 from io import BytesIO
 import numpy as np
 import json
 import hashlib
 from datetime import datetime
+import tempfile
+import shutil
+from chart_modules.parse_utils import convert_svg_to_html
+from chart_modules.screenshot_utils import get_driver, take_screenshot
 
 # API 配置
 API_KEY = "sk-NNBhkfmYuZB6IQCY7f9eCd8841864eB6B3C7Fc0a7d4a8360"
@@ -198,33 +201,80 @@ def check_material_cache(materials: dict) -> dict:
 def svg_to_png(svg_content: str, output_path: str, background_color: str = None) -> bool:
     """
     将 SVG 内容转换为 PNG 文件
+    使用 SVG -> HTML -> Screenshot 的方式
 
     Args:
         svg_content: SVG 文件内容（字符串）
         output_path: 输出 PNG 文件路径
-        background_color: 背景颜色（hex 格式），None 表示透明背景
+        background_color: 背景颜色（hex 格式），None 表示透明背景（暂未使用，保留接口兼容性）
 
     Returns:
         bool: 转换是否成功
     """
+    driver = None
+    temp_dir = None
     try:
         # 确保输出目录存在
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        output_dir = os.path.dirname(output_path)
+        if output_dir:  # 如果路径包含目录
+            os.makedirs(output_dir, exist_ok=True)
+        else:  # 如果只是文件名，使用当前目录
+            output_path = os.path.abspath(output_path)
 
-        # 使用 cairosvg 将 SVG 转换为 PNG
-        # 如果 background_color 为 None，则使用透明背景
-        cairosvg.svg2png(
-            bytestring=svg_content.encode('utf-8'),
-            write_to=output_path,
-            background_color=background_color  # None = transparent
-        )
+        # 创建临时文件（使用绝对路径）
+        temp_dir = tempfile.mkdtemp()
+        temp_svg_path = os.path.abspath(os.path.join(temp_dir, 'temp.svg'))
+        temp_html_path = os.path.abspath(os.path.join(temp_dir, 'temp.html'))
 
-        print(f"SVG 转 PNG 成功: {output_path}")
-        return True
+        # 1. 将 SVG 内容保存到临时文件
+        with open(temp_svg_path, 'w', encoding='utf-8') as f:
+            f.write(svg_content)
+
+        # 2. 将 SVG 转换为 HTML
+        convert_svg_to_html(temp_svg_path, temp_html_path)
+
+        # 3. 使用 screenshot 将 HTML 转换为 PNG
+        driver = get_driver()
+        take_screenshot(driver, temp_html_path)
+
+        # 4. 移动生成的 PNG 到目标路径
+        temp_png_path = os.path.join(temp_dir, 'temp.png')
+        if not os.path.exists(temp_png_path):
+            # 尝试使用 replace 方式
+            temp_png_path = temp_html_path.replace('.html', '.png')
+        
+        if os.path.exists(temp_png_path):
+            # 确保目标路径是绝对路径
+            output_path = os.path.abspath(output_path)
+            shutil.move(temp_png_path, output_path)
+            print(f"SVG 转 PNG 成功: {output_path}")
+            return True
+        else:
+            print(f"SVG 转 PNG 失败: 未找到生成的 PNG 文件，期望路径: {temp_png_path}")
+            # 列出临时目录中的文件以便调试
+            if temp_dir and os.path.exists(temp_dir):
+                files = os.listdir(temp_dir)
+                print(f"临时目录中的文件: {files}")
+            return False
 
     except Exception as e:
         print(f"SVG 转 PNG 失败: {e}")
+        import traceback
+        traceback.print_exc()
         return False
+    finally:
+        # 清理 driver
+        if driver:
+            try:
+                driver.quit()
+            except Exception as e:
+                print(f"清理 driver 时出错: {e}")
+        # 清理临时文件
+        if temp_dir and os.path.exists(temp_dir):
+            try:
+                shutil.rmtree(temp_dir, ignore_errors=True)
+            except Exception as e:
+                print(f"清理临时文件时出错: {e}")
 
 
 def auto_crop_image(image_path: str, background_color: str = '#ffffff', padding: int = 50) -> str:

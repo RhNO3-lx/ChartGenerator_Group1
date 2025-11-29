@@ -35,6 +35,10 @@ function Workbench() {
   const [canvas, setCanvas] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState('');
+  const [titleLoading, setTitleLoading] = useState(false);
+  const [titleLoadingText, setTitleLoadingText] = useState('');
+  const [pictogramLoading, setPictogramLoading] = useState(false);
+  const [pictogramLoadingText, setPictogramLoadingText] = useState('');
   const [previewTimestamp, setPreviewTimestamp] = useState(Date.now());
   const [layoutNeedsFreshLoad, setLayoutNeedsFreshLoad] = useState(false);
 
@@ -192,10 +196,34 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
 
     // Initialize Canvas
     const container = document.querySelector('.canvas-wrapper');
-    const computedWidth = container ? container.clientWidth - 80 : 800;
-    const computedHeight = container ? container.clientHeight - 80 : 600;
-    const canvasWidth = Math.max(computedWidth, CANVAS_MIN_WIDTH);
-    const canvasHeight = Math.max(computedHeight, CANVAS_MIN_HEIGHT);
+    if (!container) {
+      console.warn('Canvas wrapper not found, retrying...');
+      setTimeout(() => {
+        const retryContainer = document.querySelector('.canvas-wrapper');
+        if (retryContainer) {
+          const computedWidth = retryContainer.clientWidth - 80;
+          const computedHeight = retryContainer.clientHeight - 80;
+          const canvasWidth = Math.max(computedWidth, CANVAS_MIN_WIDTH);
+          const canvasHeight = Math.max(computedHeight, CANVAS_MIN_HEIGHT);
+          const c = new fabric.Canvas('workbenchCanvas', {
+            width: canvasWidth,
+            height: canvasHeight,
+            backgroundColor: '#ffffff',
+            selection: true,
+            preserveObjectStacking: true
+          });
+          c.setViewportTransform([1, 0, 0, 1, 0, 0]);
+          setCanvas(c);
+        }
+      }, 100);
+      return;
+    }
+    const computedWidth = container.clientWidth - 80;
+    const computedHeight = container.clientHeight - 80;
+    // Use container size, but ensure minimum size for usability
+    // If container is smaller than minimum, use container size to avoid overflow
+    const canvasWidth = computedWidth >= CANVAS_MIN_WIDTH ? computedWidth : Math.max(computedWidth, 800);
+    const canvasHeight = computedHeight >= CANVAS_MIN_HEIGHT ? computedHeight : Math.max(computedHeight, 600);
     
     const initialBgColor = '#ffffff';
     const c = new fabric.Canvas('workbenchCanvas', {
@@ -336,8 +364,10 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
         if (container && c) {
             const computedWidth = container.clientWidth - 80;
             const computedHeight = container.clientHeight - 80;
-            const newWidth = Math.max(computedWidth, CANVAS_MIN_WIDTH);
-            const newHeight = Math.max(computedHeight, CANVAS_MIN_HEIGHT);
+            // Use container size, but ensure minimum size for usability
+            // If container is smaller than minimum, use container size to avoid overflow
+            const newWidth = computedWidth >= CANVAS_MIN_WIDTH ? computedWidth : Math.max(computedWidth, 800);
+            const newHeight = computedHeight >= CANVAS_MIN_HEIGHT ? computedHeight : Math.max(computedHeight, 600);
             c.setWidth(newWidth);
             c.setHeight(newHeight);
             c.renderAll();
@@ -700,8 +730,8 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
   };
 
   const generateTitle = async () => {
-      setLoading(true);
-      setLoadingText('Generating title...');
+      setTitleLoading(true);
+      setTitleLoadingText('Generating title...');
       try {
           await axios.get(`/api/start_title_generation/${selectedFile}`);
           pollStatus(async (statusData) => {
@@ -719,18 +749,19 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
               const titleText = statusData.title_options && statusData.title_options[newTitleImage] 
                                 ? statusData.title_options[newTitleImage].title_text 
                                 : (statusData.selected_title || 'InfoGraphic');
-                                
+              
+              setTitleLoading(false);
               await generatePictogram(titleText, newTitleImage);
           }, 'title_generation', false);
       } catch (err) {
           console.error(err);
-          setLoading(false);
+          setTitleLoading(false);
       }
   };
 
   const regenerateTitle = async () => {
-      setLoading(true);
-      setLoadingText('Regenerating title...');
+      setTitleLoading(true);
+      setTitleLoadingText('Regenerating title...');
       try {
           await axios.get(`/api/regenerate_title/${selectedFile}`);
           pollStatus(async (statusData) => {
@@ -739,17 +770,17 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
               setTitleOptions(options);
               setTitleImage(options[0]);
               setPreviewTimestamp(Date.now()); // Force refresh images
-              setLoading(false);
+              setTitleLoading(false);
           }, 'title_generation');
       } catch (err) {
           console.error(err);
-          setLoading(false);
+          setTitleLoading(false);
       }
   };
 
   const generatePictogram = async (titleText, currentTitleImage = null) => {
-      setLoading(true);
-      setLoadingText('Generating pictogram...');
+      setPictogramLoading(true);
+      setPictogramLoadingText('Generating pictogram...');
       try {
           // If titleText is not provided (e.g. manual regeneration), try to get it or use default
           const text = titleText || 'InfoGraphic'; 
@@ -782,7 +813,7 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
               setSelectedPictograms(newPictograms);
               
               setPreviewTimestamp(Date.now()); // Force refresh images
-              setLoading(false);
+              setPictogramLoading(false);
               
               // Force update canvas with new assets
               // Use the passed title image if available (since state update might be pending)
@@ -799,13 +830,13 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
           }, 'pictogram_generation', true);
       } catch (err) {
           console.error(err);
-          setLoading(false);
+          setPictogramLoading(false);
       }
   };
 
   const regeneratePictogram = async () => {
-      setLoading(true);
-      setLoadingText('Regenerating pictogram...');
+      setPictogramLoading(true);
+      setPictogramLoadingText('Regenerating pictogram...');
       try {
           const text = 'InfoGraphic'; 
           await axios.get(`/api/regenerate_pictogram/${encodeURIComponent(text)}`);
@@ -827,11 +858,11 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
               setPictogramOptions(options);
               setSelectedPictograms([options[0]]);
               setPreviewTimestamp(Date.now()); // Force refresh images
-              setLoading(false);
+              setPictogramLoading(false);
           }, 'pictogram_generation');
       } catch (err) {
           console.error(err);
-          setLoading(false);
+          setPictogramLoading(false);
       }
   };
 
@@ -2333,7 +2364,18 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
               <div className="config-section">
                 <div className="section-title">元素生成结果</div>
 
-                {titleOptions.length > 0 ? (
+                {titleLoading ? (
+                  <div className="asset-group" style={{marginBottom: '15px', position: 'relative'}}>
+                    <div className="asset-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
+                      <label style={{fontSize: '1rem', fontWeight: '600', color: '#666'}}>标题</label>
+                      <button disabled style={{fontSize: '0.875rem', padding: '2px 6px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'not-allowed', opacity: 0.6}}>重新生成</button>
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', minHeight: '120px'}}>
+                      <div className="loading-spinner" style={{width: '32px', height: '32px', border: '3px solid var(--border-color)', borderTop: '3px solid var(--primary-color)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', marginBottom: '12px'}}></div>
+                      <div style={{fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center'}}>{titleLoadingText}</div>
+                    </div>
+                  </div>
+                ) : titleOptions.length > 0 ? (
                   <div className="asset-group" style={{marginBottom: '15px'}}>
                     <div className="asset-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
                       <label style={{fontSize: '1rem', fontWeight: '600', color: '#666'}}>标题</label>
@@ -2378,7 +2420,18 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
                   )
                 )}
 
-                {pictogramOptions.length > 0 ? (
+                {pictogramLoading ? (
+                  <div className="asset-group" style={{position: 'relative'}}>
+                    <div className="asset-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
+                      <label style={{fontSize: '1rem', fontWeight: '600', color: '#666'}}>图像（可多选）</label>
+                      <button disabled style={{fontSize: '0.875rem', padding: '2px 6px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'not-allowed', opacity: 0.6}}>重新生成</button>
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', minHeight: '120px'}}>
+                      <div className="loading-spinner" style={{width: '32px', height: '32px', border: '3px solid var(--border-color)', borderTop: '3px solid var(--primary-color)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', marginBottom: '12px'}}></div>
+                      <div style={{fontSize: '0.875rem', color: 'var(--text-secondary)', textAlign: 'center'}}>{pictogramLoadingText}</div>
+                    </div>
+                  </div>
+                ) : pictogramOptions.length > 0 ? (
                   <div className="asset-group">
                     <div className="asset-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
                       <label style={{fontSize: '1rem', fontWeight: '600', color: '#666'}}>图像（可多选）</label>
@@ -2612,7 +2665,9 @@ Generate a stunning infographic that transforms the raw chart into a visually ap
             </button>
           </div>
         </div>
-        <canvas id="workbenchCanvas" />
+        <div className="canvas-wrapper" ref={canvasWrapperRef}>
+          <canvas id="workbenchCanvas" />
+        </div>
   
       </div>
 
