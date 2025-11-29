@@ -5,3 +5,9 @@ __pycache__
 /frontend/node_modules
 generation_status_cache.json
 buffer/
+title_cache.json
+variation.json
+*.swp
+*.pyc
+chart_modules/ChartGalaxy/example_based_generation/generate_title_image_prompt.md
+chart_modules/ChartGalaxy/example_based_generation/generate_pictogram_prompt.md

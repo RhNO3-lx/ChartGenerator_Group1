@@ -34,6 +34,7 @@ body {
   background-color: var(--bg-color);
 }
 
+
 .workbench-container {
   display: flex;
   height: 100vh;
@@ -45,15 +46,16 @@ body {
 
 /* ==================== Sidebar ==================== */
 
- .sidebar {
-   width: 35%;
-   background-color: var(--sidebar-bg);
-   border-right: 1px solid var(--border-color);
-   display: flex;
-   flex-direction: column;
+.sidebar {
+  width: 35%;
+   max-width: 420px;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
    padding: 18px 16px;
    overflow: hidden; /* 防止整块滚动 */
-   flex-shrink: 0;
+  flex-shrink: 0;
    gap: 12px;
  }
  
@@ -61,24 +63,24 @@ body {
    flex: 1;
    overflow-y: auto;
    padding-right: 8px;
- }
- 
+}
+
  .sidebar-scroll::-webkit-scrollbar {
-   width: 6px;
- }
- 
+  width: 6px;
+}
+
  .sidebar-scroll::-webkit-scrollbar-track {
-   background: transparent;
- }
- 
+  background: transparent;
+}
+
  .sidebar-scroll::-webkit-scrollbar-thumb {
-   background: var(--border-color);
-   border-radius: 3px;
- }
- 
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
  .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-   background: var(--text-muted);
- }
+  background: var(--text-muted);
+}
 
 .sidebar-header {
   font-size: 1.5rem;
@@ -412,10 +414,10 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  position: relative;
   background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-  overflow: hidden;
+  overflow: auto;
   margin-left: 24px;
+  position: relative;
 }
 
 .main-preview::before {
@@ -426,33 +428,50 @@ body {
     radial-gradient(circle at 1px 1px, var(--border-color) 1px, transparent 0);
   background-size: 24px 24px;
   opacity: 0.5;
+  pointer-events: none;
+}
+
+.preview-toolbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 32px 12px 32px;
+  backdrop-filter: blur(6px);
+  background: rgba(241, 245, 249, 0.9);
 }
 
 .preview-header {
-  position: absolute;
-  top: 20px;
-  left: 32px;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-secondary);
-  z-index: 5;
   background: rgba(255, 255, 255, 0.9);
   padding: 10px 18px;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(8px);
 }
 
 .canvas-wrapper {
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
   padding: 60px 32px 20px 32px;
   position: relative;
   z-index: 1;
-  min-height: 0;
+  min-width: 1200px;
+  min-height: 900px;
+}
+
+.canvas-controls {
+  display: flex;
+  gap: 8px;
 }
 
 /* ==================== Edit FAB Button ==================== */
