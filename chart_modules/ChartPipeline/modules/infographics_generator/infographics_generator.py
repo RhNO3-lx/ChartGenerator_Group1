@@ -14,7 +14,7 @@ import base64
 import io
 import tempfile
 import random
-import fcntl
+#import fcntl
 
 # 创建tmp目录（如果不存在）
 os.makedirs("tmp", exist_ok=True)
@@ -968,28 +968,31 @@ def process(input: str, output: str, base_url: str, api_key: str, chart_name: st
                 # 写入SVG文件
                 with open(output_path, "w", encoding="utf-8") as f:
                     try:
-                        fcntl.flock(f, fcntl.LOCK_EX)
+                        #fcntl.flock(f, fcntl.LOCK_EX)
                         f.write(final_svg)
                     finally:
-                        fcntl.flock(f, fcntl.LOCK_UN)
+                        pass
+                        #fcntl.flock(f, fcntl.LOCK_UN)
 
                 # 写入info文件
                 with open(info_path, "w", encoding="utf-8") as f:
                     try:
-                        fcntl.flock(f, fcntl.LOCK_EX)
+                        #fcntl.flock(f, fcntl.LOCK_EX)
                         layout_info_str = json.dumps(layout_info, indent=4)
                         f.write(layout_info_str)
                     finally:
-                        fcntl.flock(f, fcntl.LOCK_UN)
+                        pass
+                        #fcntl.flock(f, fcntl.LOCK_UN)
 
                 # 写入datatable文件
                 with open(datatable_path, "w", encoding="utf-8") as f:
                     try:
-                        fcntl.flock(f, fcntl.LOCK_EX)
+                        #fcntl.flock(f, fcntl.LOCK_EX)
                         datatable_str = json.dumps(data["data"], indent=4)
                         f.write(datatable_str)
                     finally:
-                        fcntl.flock(f, fcntl.LOCK_UN)
+                        #fcntl.flock(f, fcntl.LOCK_UN)
+                        pass
 
                 # 转换为PNG
                 subprocess.run([
@@ -1021,11 +1024,12 @@ def process(input: str, output: str, base_url: str, api_key: str, chart_name: st
         # 保存最终的SVG
         with open(output_path, "w", encoding="utf-8") as f:
             try:
-                fcntl.flock(f, fcntl.LOCK_EX)
+                #fcntl.flock(f, fcntl.LOCK_EX)
+
                 f.write(final_svg)
             finally:
-                fcntl.flock(f, fcntl.LOCK_UN)
-                
+                #fcntl.flock(f, fcntl.LOCK_UN)
+                pass
     except Exception as e:
         logger.error(f"Error processing infographics: {e}")
         return False

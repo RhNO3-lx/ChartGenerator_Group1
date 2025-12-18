@@ -310,7 +310,7 @@ def check_template_compatibility(data: Dict, templates: Dict, specific_chart_nam
     return compatible_templates
 
 
-import fcntl  # 用于文件锁
+#import fcntl  # 用于文件锁
 def select_template(compatible_templates: List[str]) -> Tuple[str, str, str]:
     """
     根据variation.json中的使用统计选择模板
@@ -339,12 +339,13 @@ def select_template(compatible_templates: List[str]) -> Tuple[str, str, str]:
     try:
         with open('variation.json', 'r') as f:
             # 获取文件锁
-            fcntl.flock(f, fcntl.LOCK_EX)
+            #fcntl.flock(f, fcntl.LOCK_EX)
             try:
                 variation_stats = json.load(f)
             finally:
                 # 释放文件锁
-                fcntl.flock(f, fcntl.LOCK_UN)
+                #fcntl.flock(f, fcntl.LOCK_UN)
+                pass
     except:
         variation_stats = {}
 
@@ -388,7 +389,7 @@ def select_template(compatible_templates: List[str]) -> Tuple[str, str, str]:
     try:
         with open('variation.json', 'r+') as f:
             # 获取文件锁
-            fcntl.flock(f, fcntl.LOCK_EX)
+            #fcntl.flock(f, fcntl.LOCK_EX)
             try:
                 # 重新读取以确保获取最新数据
                 variation_stats = json.load(f)
@@ -409,7 +410,8 @@ def select_template(compatible_templates: List[str]) -> Tuple[str, str, str]:
                 f.truncate()
             finally:
                 # 释放文件锁
-                fcntl.flock(f, fcntl.LOCK_UN)
+                #fcntl.flock(f, fcntl.LOCK_UN)
+                pass
     except FileNotFoundError:
         # 如果文件不存在,创建新的variation_stats
         variation_stats = {
