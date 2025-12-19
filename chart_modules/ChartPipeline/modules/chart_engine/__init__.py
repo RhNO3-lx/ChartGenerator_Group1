@@ -1,3 +1,0 @@
-"""
-Chart Engine package initialization.
-""" 
