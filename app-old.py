@@ -17,6 +17,8 @@ from pathlib import Path
 from datetime import datetime
 import difflib
 
+
+
 project_root = Path(__file__).parent.parent  # 根据实际结构调整
 sys.path.append("ChartPipeline")
 # print(f"Python路径: {sys.path}")
@@ -31,6 +33,255 @@ from chart_modules.ChartPipeline.modules.chart_type_recommender.chart_type_recom
 
 app = Flask(__name__)
 CORS(app)
+
+
+#-----------------newly added code---------------------------
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
+
+# 缓存存储
+class DataCache:
+    def __init__(self):
+        self.cache = {}
+    
+    def set(self, key, value):
+        self.cache[key] = value
+    
+    def get(self, key):
+        return self.cache.get(key)
+    
+    def clear(self):
+        self.cache.clear()
+
+cache = DataCache()
+
+def extract_zip(zip_path, extract_to):
+    """解压ZIP文件"""
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
+
+def read_student_behavior_stats(folder_path):
+    """
+    读取课堂行为统计文件夹下的Excel表格
+    返回结构: {学号: {课堂题目作答情况: {...}, 出勤次数: ...}}
+    """
+    result = {}
+    
+    for filename in os.listdir(folder_path):
+        if filename.endswith(('.xlsx', '.xls')):
+            filepath = os.path.join(folder_path, filename)
+            df = pd.read_excel(filepath)
+            
+            # 假设第一列是学号，可以根据实际情况调整
+            student_col = df.columns[0]
+            
+            for _, row in df.iterrows():
+                student_id = str(row[student_col])
+                
+                if student_id not in result:
+                    result[student_id] = {
+                        '课堂题目作答情况': {},
+                        '出勤次数': 0
+                    }
+                
+                # 处理章节数据（假设从第二列开始是章节题目数据）
+                for col in df.columns[1:]:
+                    if '出勤' in col:
+                        result[student_id]['出勤次数'] += int(row[col]) if pd.notna(row[col]) else 0
+                    else:
+                        chapter_match = re.search(r'(第?\d+[章课])', col)
+                        if chapter_match:
+                            chapter = chapter_match.group(1)
+                            if chapter not in result[student_id]['课堂题目作答情况']:
+                                result[student_id]['课堂题目作答情况'][chapter] = {}
+                            
+                            # 假设单元格包含题目和答案信息
+                            cell_value = row[col]
+                            if pd.notna(cell_value):
+                                # 这里根据实际Excel格式进行解析
+                                result[student_id]['课堂题目作答情况'][chapter][col] = str(cell_value)
+    
+    return result
+
+def extract_questions_from_ppt(ppt_folder_path):
+    """
+    从PPT中提取题目信息
+    这里只是模拟实现，实际应用中可能需要使用python-pptx或其他库
+    """
+    questions = {}
+    
+    for root, dirs, files in os.walk(ppt_folder_path):
+        for file in files:
+            if file.endswith(('.pptx', '.ppt')):
+                # 实际处理PPT文件提取题目信息
+                # 这里简化为返回空字典，实际实现需要根据具体PPT内容处理
+                ppt_path = os.path.join(root, file)
+                questions[file] = "从PPT中提取的题目信息"
+    
+    return questions
+
+def ocr_image_content(image_path):
+    """
+    使用OCR识别图片中的文字内容
+    """
+    try:
+        img = Image.open(image_path)
+        text = pytesseract.image_to_string(img, lang='chi_sim')
+        return text.strip()
+    except Exception as e:
+        print(f"OCR识别失败: {str(e)}")
+        return ""
+
+def read_homework_answers(folder_path):
+    """
+    读取课后作业题目及作答文件夹下的题目与学生回答
+    学生回答是图片形式，需要OCR识别
+    """
+    result = {}
+    
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+                image_path = os.path.join(root, file)
+                
+                # 从文件名中提取学号和题目信息
+                # 假设文件名格式为 "学号_题目编号_描述.jpg"
+                match = re.match(r'^(\d+)_(.+)', file)
+                if match:
+                    student_id = match.group(1)
+                    question_info = match.group(2)
+                    
+                    if student_id not in result:
+                        result[student_id] = {}
+                    
+                    # OCR识别图片中的回答内容
+                    answer_content = ocr_image_content(image_path)
+                    result[student_id][question_info] = {
+                        '图片路径': image_path,
+                        'OCR识别内容': answer_content
+                    }
+    
+    return result
+
+@app.route('/upload', methods=['POST'])
+def upload_zip():
+    """
+    接收前端发来的压缩包文件
+    """
+    if 'file' not in request.files:
+        return jsonify({'error': '没有上传文件'}), 400
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': '没有选择文件'}), 400
+    
+    if not file.filename.lower().endswith('.zip'):
+        return jsonify({'error': '仅支持ZIP格式文件'}), 400
+    
+    try:
+        # 保存上传的ZIP文件
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.zip') as tmp_file:
+            file.save(tmp_file.name)
+            zip_path = tmp_file.name
+        
+        # 创建临时解压目录
+        with tempfile.TemporaryDirectory() as temp_dir:
+            extract_zip(zip_path, temp_dir)
+            
+            # 处理三个子文件夹
+            behavior_stats = {}
+            homework_answers = {}
+            ppt_questions = {}
+            
+            for folder_name in os.listdir(temp_dir):
+                folder_path = os.path.join(temp_dir, folder_name)
+                
+                if os.path.isdir(folder_path):
+                    if '课堂行为统计' in folder_name:
+                        behavior_stats = read_student_behavior_stats(folder_path)
+                    elif '课后作业题目及作答' in folder_name:
+                        homework_answers = read_homework_answers(folder_path)
+                    elif '上课使用的ppt' in folder_name:
+                        ppt_questions = extract_questions_from_ppt(folder_path)
+            
+            # 将数据存储到缓存
+            cache.set('behavior_stats', behavior_stats)
+            cache.set('homework_answers', homework_answers)
+            cache.set('ppt_questions', ppt_questions)
+            
+            # 合并数据形成最终JSON结构
+            combined_data = {}
+            
+            # 添加课堂行为统计数据
+            for student_id, stats in behavior_stats.items():
+                if student_id not in combined_data:
+                    combined_data[student_id] = {}
+                combined_data[student_id]['课堂题目作答情况'] = stats.get('课堂题目作答情况', {})
+                combined_data[student_id]['出勤次数'] = stats.get('出勤次数', 0)
+            
+            # 添加课后作业数据
+            for student_id, answers in homework_answers.items():
+                if student_id not in combined_data:
+                    combined_data[student_id] = {}
+                combined_data[student_id]['课后作业'] = answers
+            
+            # 返回处理结果
+            return jsonify({
+                'status': 'success',
+                'message': '文件上传并处理成功',
+                'student_count': len(combined_data),
+                'sample_data': dict(list(combined_data.items())[:2])  # 返回前两个学生的数据样本
+            })
+    
+    except Exception as e:
+        return jsonify({'error': f'处理文件时出错: {str(e)}'}), 500
+    
+    finally:
+        # 清理临时ZIP文件
+        if os.path.exists(zip_path):
+            os.remove(zip_path)
+
+@app.route('/get-data', methods=['GET'])
+def get_cached_data():
+    """
+    获取缓存中的数据
+    """
+    behavior_stats = cache.get('behavior_stats')
+    homework_answers = cache.get('homework_answers')
+    ppt_questions = cache.get('ppt_questions')
+    
+    return jsonify({
+        '课堂行为统计': behavior_stats,
+        '课后作业作答': homework_answers,
+        'PPT题目信息': ppt_questions
+    })
+
+@app.route('/get-combined-data', methods=['GET'])
+def get_combined_data():
+    """
+    获取合并后的学生数据
+    """
+    behavior_stats = cache.get('behavior_stats') or {}
+    homework_answers = cache.get('homework_answers') or {}
+    
+    combined_data = {}
+    
+    # 添加课堂行为统计数据
+    for student_id, stats in behavior_stats.items():
+        if student_id not in combined_data:
+            combined_data[student_id] = {}
+        combined_data[student_id]['课堂题目作答情况'] = stats.get('课堂题目作答情况', {})
+        combined_data[student_id]['出勤次数'] = stats.get('出勤次数', 0)
+    
+    # 添加课后作业数据
+    for student_id, answers in homework_answers.items():
+        if student_id not in combined_data:
+            combined_data[student_id] = {}
+        combined_data[student_id]['课后作业'] = answers
+    
+    return jsonify(combined_data)
+
+#---------------newly added------------
+
 
 # 加载parsed_variations.json
 PARSED_VARIATIONS = []
