@@ -51,7 +51,7 @@ npm run dev
 
 ## 技术栈
 
-- **后端**: Python Flask
+- **后端**: Python Flask 
 - **前端**: React + Vite + Fabric.js
 - **数据处理**: Pandas
 

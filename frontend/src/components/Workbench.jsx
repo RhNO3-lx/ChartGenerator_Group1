@@ -454,6 +454,71 @@ Generate a high-fidelity design that combines the *data* of the Original Image w
     }
   };
 
+  const handleJsonFileSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const jsonData = JSON.parse(text);
+      
+      // Here you can process the JSON data
+      // For example, you could set it as custom data or configuration
+      console.log('Loaded JSON data:', jsonData);
+      
+      // You can add logic here to handle the JSON data
+      // For example, set it as a custom dataset or configuration
+      alert(`成功加载JSON文件: ${file.name}\n数据包含 ${Object.keys(jsonData).length} 个字段`);
+      
+    } catch (err) {
+      console.error('Error loading JSON file:', err);
+      alert('加载JSON文件失败，请检查文件格式是否正确');
+    }
+  };
+
+  const handleArchiveFileSelect = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      const fileName = file.name.toLowerCase();
+      let expectedExtension = '';
+      let formatName = '';
+
+      switch (type) {
+        case 'zip':
+          expectedExtension = '.zip';
+          formatName = 'ZIP';
+          break;
+        case 'rar':
+          expectedExtension = '.rar';
+          formatName = 'RAR';
+          break;
+        case '7z':
+          expectedExtension = '.7z';
+          formatName = '7Z';
+          break;
+        default:
+          throw new Error('未知的压缩包类型');
+      }
+
+      if (!fileName.endsWith(expectedExtension)) {
+        alert(`请选择有效的${formatName}文件`);
+        return;
+      }
+
+      console.log(`Selected ${formatName} file:`, file.name, 'Size:', file.size, 'bytes');
+
+      // Here you can add logic to handle the archive file
+      // For example, upload to server, extract contents, etc.
+      alert(`成功选择${formatName}文件: ${file.name}\n文件大小: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+
+    } catch (err) {
+      console.error('Error selecting archive file:', err);
+      alert('选择压缩包文件失败，请重试');
+    }
+  };
+
   // --- Logic: Data Preview ---
   const handleDataPreview = async () => {
     if (!selectedFile) {
@@ -2485,6 +2550,99 @@ Generate a high-fidelity design that combines the *data* of the Original Image w
                 >
                   👁️
                 </button>
+              </div>
+              <div style={{marginTop: '10px'}}>
+                <label htmlFor="json_upload_input" style={{display: 'block', marginBottom: '5px', fontSize: '0.9rem', fontWeight: '600', color: '#666'}}>
+                  选择JSON文件：
+                </label>
+                <input
+                  type="file"
+                  id="json_upload_input"
+                  accept=".json"
+                  onChange={handleJsonFileSelect}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #ddd',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem',
+                    backgroundColor: '#fff'
+                  }}
+                />
+              </div>
+              <div style={{marginTop: '10px'}}>
+                <label style={{display: 'block', marginBottom: '8px', fontSize: '0.9rem', fontWeight: '600', color: '#666'}}>
+                  选择压缩包文件：
+                </label>
+                <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+                  <button
+                    onClick={() => document.getElementById('zip_file_input').click()}
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '6px',
+                      backgroundColor: '#fff',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      flex: '1',
+                      minWidth: '80px'
+                    }}
+                  >
+                    选择.zip文件
+                  </button>
+                  <button
+                    onClick={() => document.getElementById('rar_file_input').click()}
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '6px',
+                      backgroundColor: '#fff',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      flex: '1',
+                      minWidth: '80px'
+                    }}
+                  >
+                    选择.rar文件
+                  </button>
+                  <button
+                    onClick={() => document.getElementById('sevenz_file_input').click()}
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '6px',
+                      backgroundColor: '#fff',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      flex: '1',
+                      minWidth: '80px'
+                    }}
+                  >
+                    选择.7z文件
+                  </button>
+                </div>
+                {/* Hidden file inputs */}
+                <input
+                  type="file"
+                  id="zip_file_input"
+                  accept=".zip"
+                  onChange={(e) => handleArchiveFileSelect(e, 'zip')}
+                  style={{display: 'none'}}
+                />
+                <input
+                  type="file"
+                  id="rar_file_input"
+                  accept=".rar"
+                  onChange={(e) => handleArchiveFileSelect(e, 'rar')}
+                  style={{display: 'none'}}
+                />
+                <input
+                  type="file"
+                  id="sevenz_file_input"
+                  accept=".7z"
+                  onChange={(e) => handleArchiveFileSelect(e, '7z')}
+                  style={{display: 'none'}}
+                />
               </div>
             </div>
 
