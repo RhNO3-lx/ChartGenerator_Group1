@@ -1299,11 +1299,43 @@ def get_files():
 @app.route('/api/data/preview/<filename>')
 def preview_data(filename):
     """
-    预览CSV数据
+    预览数据（支持CSV和用户上传的JSON）
     返回前10行数据
     """
     try:
-        # 读取CSV文件
+        # 检查是否是用户上传的JSON数据
+        if filename.startswith('user_data_'):
+            json_file_path = os.path.join('processed_data', filename + '.json')
+            if not os.path.exists(json_file_path):
+                return jsonify({'error': 'User data file not found'}), 404
+            
+            # 读取JSON文件
+            with open(json_file_path, 'r', encoding='utf-8') as f:
+                json_data = json.load(f)
+            
+            # 解析JSON结构，假设格式为 {"data": {"data": [...]}}
+            if 'data' in json_data and 'data' in json_data['data']:
+                data_array = json_data['data']['data']
+                if data_array and len(data_array) > 0:
+                    # 转换为DataFrame
+                    df = pd.DataFrame(data_array)
+                    
+                    # 获取列名和前10行数据
+                    columns = df.columns.tolist()
+                    preview_rows = df.head(10).values.tolist()
+                    total_rows = len(df)
+                    
+                    return jsonify({
+                        'columns': columns,
+                        'rows': preview_rows,
+                        'total_rows': total_rows
+                    })
+                else:
+                    return jsonify({'error': 'No data in JSON file'}), 400
+            else:
+                return jsonify({'error': 'Invalid JSON data structure'}), 400
+        
+        # 处理普通CSV文件
         file_path = os.path.join('processed_data', filename)
         if not os.path.exists(file_path):
             return jsonify({'error': 'File not found'}), 404
@@ -1321,7 +1353,188 @@ def preview_data(filename):
             'total_rows': total_rows
         })
     except Exception as e:
-        print(f"Error previewing data: {e}")
+        print(f"Error previewing data for {filename}: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/upload_json', methods=['POST'])
+def upload_json():
+    """
+    处理用户上传的JSON数据文件
+    """
+    try:
+        print("收到上传JSON请求")
+        data = request.json
+        print(f"请求数据: {data}")
+        
+        json_data = data.get('json_data')
+        filename = data.get('filename', 'user_data')
+        print(f"文件名: {filename}, 数据类型: {type(json_data)}")
+
+        if not json_data:
+            print("错误: 缺少JSON数据")
+            return jsonify({'error': '缺少JSON数据'}), 400
+
+        # 生成用户数据ID
+        import time
+        user_id = int(time.time() * 1000) % 10000  # 简单生成ID
+        user_filename = f"user_data_{user_id}.json"
+        print(f"生成的用户文件名: {user_filename}")
+
+        # 保存到processed_data目录
+        filepath = os.path.join('processed_data', user_filename)
+        print(f"保存路径: {filepath}")
+        print(f"processed_data目录存在: {os.path.exists('processed_data')}")
+        print(f"目录可写: {os.access('processed_data', os.W_OK)}")
+        
+        try:
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(json_data, f, ensure_ascii=False, indent=2)
+            print(f"文件写入成功，大小: {os.path.getsize(filepath)} bytes")
+        except Exception as write_error:
+            print(f"文件写入失败: {write_error}")
+            return jsonify({'error': f'文件写入失败: {str(write_error)}'}), 500
+        
+        print(f"文件保存成功: {filepath}")
+
+        # 返回对应的数据集名称（去掉.json）
+        dataset_name = user_filename.replace('.json', '')
+
+        response_data = {
+            'success': True,
+            'dataset_name': dataset_name,
+            'filename': user_filename
+        }
+        print(f"返回响应: {response_data}")
+        
+        return jsonify(response_data)
+
+    except Exception as e:
+        print(f"上传JSON时发生错误: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/upload_archive', methods=['POST'])
+def upload_archive():
+    """
+    处理用户上传的压缩包文件，解压并提取JS文件
+    """
+    try:
+        print("收到压缩包上传请求")
+        
+        if 'archive_file' not in request.files:
+            return jsonify({'error': '没有找到上传的文件'}), 400
+            
+        file = request.files['archive_file']
+        archive_type = request.form.get('archive_type', 'zip')
+        
+        if file.filename == '':
+            return jsonify({'error': '没有选择文件'}), 400
+            
+        print(f"上传文件: {file.filename}, 类型: {archive_type}")
+        
+        # 保存上传的压缩包到临时目录
+        import tempfile
+        import zipfile
+        import os
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            archive_path = os.path.join(temp_dir, file.filename)
+            file.save(archive_path)
+            print(f"压缩包保存到: {archive_path}")
+            
+            # 创建解压目录
+            extract_dir = os.path.join(temp_dir, 'extracted')
+            os.makedirs(extract_dir, exist_ok=True)
+            
+            # 根据类型解压
+            if archive_type == 'zip':
+                try:
+                    with zipfile.ZipFile(archive_path, 'r') as zip_ref:
+                        zip_ref.extractall(extract_dir)
+                    print("ZIP解压完成")
+                except Exception as e:
+                    print(f"ZIP解压失败: {e}")
+                    return jsonify({'error': f'解压ZIP文件失败: {str(e)}'}), 400
+            else:
+                return jsonify({'error': f'暂不支持 {archive_type} 格式的解压'}), 400
+            
+            # 查找所有.js和.json文件
+            js_files = []
+            for root, dirs, files in os.walk(extract_dir):
+                for file in files:
+                    if file.lower().endswith(('.js', '.json')):
+                        js_files.append(os.path.join(root, file))
+            
+            print(f"找到 {len(js_files)} 个JS/JSON文件: {[os.path.basename(f) for f in js_files]}")
+            
+            # 处理每个JS/JSON文件
+            new_datasets = []
+            for js_file_path in js_files:
+                try:
+                    # 读取文件内容
+                    with open(js_file_path, 'r', encoding='utf-8') as f:
+                        file_content = f.read()
+                    
+                    file_ext = os.path.splitext(js_file_path)[1].lower()
+                    
+                    # 根据文件类型解析数据
+                    if file_ext == '.json':
+                        # JSON文件直接解析
+                        json_data = json.loads(file_content)
+                        print(f"成功解析JSON文件: {os.path.basename(js_file_path)}")
+                    elif file_ext == '.js':
+                        # JS文件尝试解析为JSON
+                        try:
+                            json_data = json.loads(file_content)
+                            print(f"成功直接解析JS文件: {os.path.basename(js_file_path)}")
+                        except json.JSONDecodeError:
+                            # 如果直接解析失败，尝试提取JSON部分
+                            # 简单的启发式：查找第一个{和最后一个}
+                            start_idx = file_content.find('{')
+                            end_idx = file_content.rfind('}')
+                            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                                json_str = file_content[start_idx:end_idx+1]
+                                json_data = json.loads(json_str)
+                                print(f"成功提取并解析JS文件中的JSON: {os.path.basename(js_file_path)}")
+                            else:
+                                print(f"无法从JS文件 {os.path.basename(js_file_path)} 提取JSON数据")
+                                continue
+                    else:
+                        print(f"不支持的文件类型: {file_ext}")
+                        continue
+                    # 生成用户数据ID
+                    user_id = int(time.time() * 1000) % 10000
+                    user_filename = f"user_data_{user_id}.json"
+                    
+                    # 保存到processed_data目录
+                    filepath = os.path.join('processed_data', user_filename)
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        json.dump(json_data, f, ensure_ascii=False, indent=2)
+                    
+                    dataset_name = user_filename.replace('.json', '')
+                    new_datasets.append(dataset_name)
+                    
+                    print(f"成功处理文件: {os.path.basename(js_file_path)} -> {dataset_name}")
+                    
+                except Exception as e:
+                    print(f"处理文件 {os.path.basename(js_file_path)} 失败: {e}")
+                    continue
+            
+            print(f"总共添加了 {len(new_datasets)} 个数据集: {new_datasets}")
+            
+            return jsonify({
+                'success': True,
+                'datasets': new_datasets,
+                'message': f'成功解压并处理了 {len(new_datasets)} 个文件'
+            })
+            
+    except Exception as e:
+        print(f"压缩包上传处理失败: {e}")
+        import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 

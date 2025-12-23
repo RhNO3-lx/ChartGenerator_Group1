@@ -458,21 +458,61 @@ Generate a high-fidelity design that combines the *data* of the Original Image w
     const file = e.target.files[0];
     if (!file) return;
 
+    // 检查文件类型
+    const allowedExtensions = ['.json', '.js'];
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
+    if (!allowedExtensions.includes(fileExtension)) {
+      alert('请选择有效的JSON或JS文件');
+      return;
+    }
+
     try {
+      console.log('开始读取文件:', file.name, '大小:', file.size, 'bytes');
+      
+      // 读取文件内容
       const text = await file.text();
+      console.log('文件内容长度:', text.length);
+      console.log('文件内容预览:', text.substring(0, 200) + (text.length > 200 ? '...' : ''));
+      
+      // 解析JSON
       const jsonData = JSON.parse(text);
+      console.log('JSON解析成功，数据结构:', typeof jsonData, Array.isArray(jsonData) ? 'Array' : 'Object');
       
-      // Here you can process the JSON data
-      // For example, you could set it as custom data or configuration
-      console.log('Loaded JSON data:', jsonData);
-      
-      // You can add logic here to handle the JSON data
-      // For example, set it as a custom dataset or configuration
-      alert(`成功加载JSON文件: ${file.name}\n数据包含 ${Object.keys(jsonData).length} 个字段`);
+      // 发送JSON数据到后端
+      console.log('发送数据到后端...');
+      const response = await axios.post('/api/upload_json', {
+        json_data: jsonData,
+        filename: file.name
+      });
+      console.log('后端响应:', response.data);
+
+      if (response.data.success) {
+        const datasetName = response.data.dataset_name;
+        
+        // 将新的数据集添加到文件列表中
+        setCsvFiles(prevFiles => [...prevFiles, datasetName]);
+        
+        alert(`成功上传文件: ${file.name}\n已添加到数据集列表: ${datasetName}`);
+      } else {
+        alert('上传文件失败: ' + response.data.error);
+      }
       
     } catch (err) {
-      console.error('Error loading JSON file:', err);
-      alert('加载JSON文件失败，请检查文件格式是否正确');
+      console.error('详细错误信息:', err);
+      console.error('错误类型:', err.constructor.name);
+      console.error('错误消息:', err.message);
+      
+      if (err instanceof SyntaxError) {
+        alert('文件内容不是有效的JSON格式，请检查文件内容\n错误详情: ' + err.message);
+      } else if (err.code === 'NETWORK_ERROR' || err.message.includes('Network Error')) {
+        alert('网络连接失败，请检查服务器是否运行');
+      } else if (err.response) {
+        // 后端返回了错误响应
+        alert('服务器错误: ' + (err.response.data?.error || err.response.statusText));
+      } else {
+        alert('加载文件失败: ' + err.message + '\n请查看控制台获取详细错误信息');
+      }
     }
   };
 
@@ -507,15 +547,45 @@ Generate a high-fidelity design that combines the *data* of the Original Image w
         return;
       }
 
-      console.log(`Selected ${formatName} file:`, file.name, 'Size:', file.size, 'bytes');
+      console.log(`开始上传 ${formatName} 文件:`, file.name, 'Size:', file.size, 'bytes');
 
-      // Here you can add logic to handle the archive file
-      // For example, upload to server, extract contents, etc.
-      alert(`成功选择${formatName}文件: ${file.name}\n文件大小: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+      // 创建FormData来上传文件
+      const formData = new FormData();
+      formData.append('archive_file', file);
+      formData.append('archive_type', type);
+
+      // 发送到后端处理
+      const response = await axios.post('/api/upload_archive', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('压缩包上传响应:', response.data);
+
+      if (response.data.success) {
+        const newDatasets = response.data.datasets || [];
+        
+        // 将新的数据集添加到文件列表中
+        if (newDatasets.length > 0) {
+          setCsvFiles(prevFiles => [...prevFiles, ...newDatasets]);
+          alert(`成功上传并解压${formatName}文件: ${file.name}\n提取了 ${newDatasets.length} 个JS/JSON文件\n已添加到数据集列表: ${newDatasets.join(', ')}`);
+        } else {
+          alert(`上传成功但未找到有效的JS/JSON文件: ${file.name}`);
+        }
+      } else {
+        alert('上传压缩包失败: ' + response.data.error);
+      }
 
     } catch (err) {
-      console.error('Error selecting archive file:', err);
-      alert('选择压缩包文件失败，请重试');
+      console.error('压缩包上传错误:', err);
+      if (err.response) {
+        alert('服务器错误: ' + (err.response.data?.error || err.response.statusText));
+      } else if (err.code === 'NETWORK_ERROR' || err.message.includes('Network Error')) {
+        alert('网络连接失败，请检查服务器是否运行');
+      } else {
+        alert('上传压缩包失败: ' + err.message);
+      }
     }
   };
 
@@ -2553,12 +2623,12 @@ Generate a high-fidelity design that combines the *data* of the Original Image w
               </div>
               <div style={{marginTop: '10px'}}>
                 <label htmlFor="json_upload_input" style={{display: 'block', marginBottom: '5px', fontSize: '0.9rem', fontWeight: '600', color: '#666'}}>
-                  选择JSON文件：
+                  选择JSON/JS文件：
                 </label>
                 <input
                   type="file"
                   id="json_upload_input"
-                  accept=".json"
+                  accept=".json,.js"
                   onChange={handleJsonFileSelect}
                   style={{
                     width: '100%',

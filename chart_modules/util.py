@@ -124,18 +124,47 @@ def get_csv_files():
     if os.path.exists(data_dir):
         files = os.listdir(data_dir)
         csv_files = [f for f in files if f.endswith('.csv')]
+        
+        # 添加用户上传的JSON数据集（去掉.json扩展名）
+        user_data_files = [f.replace('.json', '') for f in files if f.startswith('user_data_') and f.endswith('.json')]
+        csv_files.extend(user_data_files)
+    
     print(f"csv_files:{csv_files}")
     return csv_files
 
 # 读取CSV文件内容
 def read_csv_data(filename):
     try:
+        # 检查是否是用户上传的JSON数据
+        if filename.startswith('user_data_'):
+            json_filepath = os.path.join('processed_data', filename + '.json')
+            if os.path.exists(json_filepath):
+                with open(json_filepath, 'r', encoding='utf-8') as f:
+                    json_data = json.load(f)
+                
+                # 假设JSON格式为 {"data": {"data": [...]}}
+                if 'data' in json_data and 'data' in json_data['data']:
+                    data_array = json_data['data']['data']
+                    if data_array:
+                        # 转换为DataFrame格式
+                        df = pd.DataFrame(data_array)
+                        print(f"Loaded user JSON data: {filename}")
+                        print(df.head())
+                        return df.to_dict('records'), list(df.columns)
+                else:
+                    print(f"Invalid JSON format for {filename}")
+                    return [], []
+            else:
+                print(f"User JSON file not found: {json_filepath}")
+                return [], []
+        
+        # 普通CSV文件处理
         filepath = os.path.join('processed_data', filename)
         df = pd.read_csv(filepath)
         print(df)
         return df.to_dict('records'), list(df.columns)
     except Exception as e:
-        print(f"Error reading CSV file {filename}: {e}")
+        print(f"Error reading data file {filename}: {e}")
         return [], []
 
 
